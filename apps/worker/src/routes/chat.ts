@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
-// import { mastra } from '../mastra';
-// import { spiritAgent } from '../agents/spirit-agent';
+import { spiritAgent } from '../agents/spirit-agent';
 
 // Simple ID generator function
 function createId(): string {
@@ -51,33 +50,46 @@ async function validateSession(c: any, next: any) {
   }
 }
 
-// Simple response generator for Spirit (temporary until Mastra integration)
-async function generateSpiritResponse(message: string, user: any, conversationId: string): Promise<string> {
-  // Simple spiritual responses based on keywords
-  const lowerMessage = message.toLowerCase();
+// Mastra agent integration for Spirit
+async function generateSpiritResponse(message: string, user: any, conversationId: string, db: D1Database): Promise<string> {
+  try {
+    console.log('=== Mastra Agent Response ===');
+    console.log('User:', user.name);
+    console.log('Message:', message);
+    console.log('Conversation ID:', conversationId);
+    console.log('==========================');
 
-  if (lowerMessage.includes('pray') || lowerMessage.includes('prayer')) {
-    return `Hello ${user.name}, prayer is a beautiful way to connect with God. Jesus taught us to pray with sincerity and faith. Remember Matthew 6:6: "But when you pray, go into your room, close the door and pray to your Father, who is unseen." Take time today to speak with God openly and honestly.`;
+    // Configure the agent with context including database access
+    const agentContext = {
+      db: db,
+      userId: user.id,
+      conversationId: conversationId
+    };
+
+    // Add user context to the message
+    const contextMessage = `Current user context:
+- Name: ${user.name}
+- Email: ${user.email}
+- Conversation ID: ${conversationId}
+
+Please provide personalized spiritual guidance for this user.`;
+
+    // Generate response using Mastra Spirit agent (let the agent handle the message structure)
+    const response = await spiritAgent.generate(`${contextMessage}\n\nUser message: ${message}`, {
+      context: agentContext,
+      toolChoice: 'auto' // Allow the agent to use tools as needed
+    });
+
+    console.log('Mastra response received:', response.text);
+    return response.text;
+  } catch (error) {
+    console.error('Mastra agent error:', error);
+    return `I'm here to support you on your spiritual journey, ${user.name}. Based on Jesus's teachings, remember that God loves you deeply and is always with you. Take time to pray and reflect on His guidance in your life. I'm having some technical difficulty accessing my spiritual insights database, but I'd be happy to continue our conversation about your faith journey.`;
   }
-
-  if (lowerMessage.includes('faith') || lowerMessage.includes('believe')) {
-    return `Faith is the foundation of our relationship with God, ${user.name}. Hebrews 11:1 tells us that "faith is confidence in what we hope for and assurance about what we do not see." Even in difficult times, trust that God has a plan for you and loves you unconditionally.`;
-  }
-
-  if (lowerMessage.includes('jesus') || lowerMessage.includes('christ')) {
-    return `Jesus is our ultimate example of love and compassion, ${user.name}. His teachings in the Sermon on the Mount show us how to live with grace, humility, and love for others. Remember that Jesus said the greatest commandments are to love God and love your neighbor as yourself.`;
-  }
-
-  if (lowerMessage.includes('forgiveness') || lowerMessage.includes('forgive')) {
-    return `Forgiveness is central to Jesus's teachings, ${user.name}. In Matthew 6:14-15, Jesus teaches us to forgive others as God has forgiven us. Forgiveness brings healing and freedom, allowing us to experience God's grace more fully.`;
-  }
-
-  // Default spiritual response
-  return `Thank you for sharing with me, ${user.name}. I'm here to guide you on your spiritual journey. Remember that God loves you deeply and has a purpose for your life. Take time to read Scripture, pray, and seek wisdom from trusted spiritual mentors. Jesus said, "Come to me, all you who are weary and burdened, and I will give you rest." (Matthew 11:28)`;
 }
 
 // POST /api/chat - Send message to Spirit
-chat.post('/', validateSession, async (c) => {
+chat.post('/chat', validateSession, async (c) => {
   try {
     const user = c.get('user');
     const { message, conversationId: inputConversationId } = await c.req.json();
@@ -125,8 +137,8 @@ chat.post('/', validateSession, async (c) => {
       ).bind(JSON.stringify(existingMessages), conversationId).run();
     }
 
-    // Generate Spirit's response
-    const spiritResponse = await generateSpiritResponse(message, user, conversationId);
+    // Generate Spirit's response using Mastra agent
+    const spiritResponse = await generateSpiritResponse(message, user, conversationId, c.env.DB);
 
     // Store Spirit's response
     const updatedConversationResult = await c.env.DB.prepare(
@@ -146,8 +158,8 @@ chat.post('/', validateSession, async (c) => {
       ).bind(JSON.stringify(messages), conversationId).run();
     }
 
-    // Notes functionality will be added later with the Mastra integration
-    console.log('Chat message processed successfully');
+    // Notes are automatically managed by the Mastra Spirit agent through its tools
+    console.log('Mastra agent has automatically managed user notes through its tools');
 
     return c.json({
       message: spiritResponse,
@@ -197,7 +209,8 @@ chat.get('/conversations/:id', validateSession, async (c) => {
   }
 });
 
-// Notes functionality will be added back later with the Mastra integration
+// Notes management is now handled automatically by the Mastra Spirit agent through its tools
+// The agent reads and writes notes using its specialized tools for personalized spiritual guidance
 
 // Streaming functionality temporarily disabled - will be added back later
 

@@ -1,20 +1,15 @@
 ---
 // src/pages/index.astro
-import '../styles/global.css';
+import Layout from '../layouts/Layout.astro'
 
 // Extract environment variable at build time/server-side
 const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
 ---
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>3in1 - Spiritual Guidance with Spirit</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<Layout title="3in1 - Spiritual Guidance with Spirit">
+  <slot name="head">
     <meta name="description" content="3in1 - A spiritual app where you chat with Spirit, an AI guide who understands Jesus's teachings and provides personalized spiritual guidance." />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  </head>
-  <body class="bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 min-h-screen">
+  </slot>
     <!-- Navigation Header -->
     <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
       <nav class="container mx-auto px-6 py-4">
@@ -292,5 +287,4 @@ const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
       // Check session on page load
       checkSession();
     </script>
-  </body>
-</html>
+</Layout>

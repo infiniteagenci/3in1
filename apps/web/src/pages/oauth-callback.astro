@@ -1,18 +1,13 @@
 ---
 // src/pages/oauth-callback.astro
+import Layout from '../layouts/Layout.astro'
 
 // Extract environment variable at build time/server-side
 const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Processing Login - Base 42</title>
-    <meta name="viewport" content="width=device-width" />
-  </head>
-  <body>
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+<Layout title="Processing Login - 3in1 Spiritual App">
+    <div class="oauth-callback-container">
       <p id="status-message">Processing login, please wait...</p>
     </div>
 
@@ -87,5 +82,4 @@ const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
         }, 2000);
       }
     </script>
-  </body>
-</html>
+</Layout>
