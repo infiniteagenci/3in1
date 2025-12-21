@@ -44,6 +44,19 @@ app.get('/api/test', (c) => {
   });
 });
 
+// Debug route to check environment variables
+app.get('/debug/env', (c) => {
+  return c.json({
+    envVars: {
+      OPENAI_API_KEY: c.env.OPENAI_API_KEY ? 'Present' : 'Missing',
+      GOOGLE_OAUTH_CLIENT_ID: c.env.GOOGLE_OAUTH_CLIENT_ID ? 'Present' : 'Missing',
+      GOOGLE_OAUTH_CLIENT_SECRET: c.env.GOOGLE_OAUTH_CLIENT_SECRET ? 'Present' : 'Missing',
+      ENVIRONMENT: c.env.ENVIRONMENT || 'Missing',
+      DB: c.env.DB ? 'Present' : 'Missing'
+    }
+  });
+});
+
 // Protected route example
 app.get('/api/me', async (c) => {
   const authHeader = c.req.header('Authorization');

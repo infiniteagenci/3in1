@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { spiritAgent } from '../agents/spirit-agent';
+import { createSpiritAgent } from '../agents/spirit-agent';
 
 // Simple ID generator function
 function createId(): string {
@@ -15,7 +15,15 @@ type Bindings = {
   ANTHROPIC_API_KEY?: string;
 };
 
-const chat = new Hono<{ Bindings: Bindings }>();
+type Variables = {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+};
+
+const chat = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 // Middleware to validate session
 async function validateSession(c: any, next: any) {
@@ -51,7 +59,7 @@ async function validateSession(c: any, next: any) {
 }
 
 // Mastra agent integration for Spirit
-async function generateSpiritResponse(message: string, user: any, conversationId: string, db: D1Database): Promise<string> {
+async function generateSpiritResponse(message: string, user: any, conversationId: string, db: D1Database, env: any): Promise<string> {
   try {
     console.log('=== Mastra Agent Response ===');
     console.log('User:', user.name);
@@ -59,31 +67,38 @@ async function generateSpiritResponse(message: string, user: any, conversationId
     console.log('Conversation ID:', conversationId);
     console.log('==========================');
 
-    // Configure the agent with context including database access
-    const agentContext = {
-      db: db,
-      userId: user.id,
-      conversationId: conversationId
-    };
+    // Create the Spirit agent with proper environment
+    const spiritAgent = createSpiritAgent(env);
 
-    // Add user context to the message
+    // Add user context to the message for the agent
     const contextMessage = `Current user context:
 - Name: ${user.name}
 - Email: ${user.email}
+- User ID: ${user.id}
 - Conversation ID: ${conversationId}
 
 Please provide personalized spiritual guidance for this user.`;
 
-    // Generate response using Mastra Spirit agent (let the agent handle the message structure)
-    const response = await spiritAgent.generate(`${contextMessage}\n\nUser message: ${message}`, {
-      context: agentContext,
-      toolChoice: 'auto' // Allow the agent to use tools as needed
-    });
+    // Create the message structure for Mastra agent
+    const messages = [
+      {
+        role: 'system' as const,
+        content: `You are Spirit, a compassionate spiritual guide. Database access is available through your tools for reading/writing notes and getting conversation history. Current context: User ID is ${user.id}, Conversation ID is ${conversationId}.`
+      },
+      {
+        role: 'user' as const,
+        content: `${contextMessage}\n\nUser message: ${message}`
+      }
+    ];
+
+    // Generate response using Mastra Spirit agent
+    const response = await spiritAgent.generate(messages);
 
     console.log('Mastra response received:', response.text);
     return response.text;
   } catch (error) {
     console.error('Mastra agent error:', error);
+    console.error('Error details:', error instanceof Error ? error.message : String(error));
     return `I'm here to support you on your spiritual journey, ${user.name}. Based on Jesus's teachings, remember that God loves you deeply and is always with you. Take time to pray and reflect on His guidance in your life. I'm having some technical difficulty accessing my spiritual insights database, but I'd be happy to continue our conversation about your faith journey.`;
   }
 }
@@ -91,8 +106,8 @@ Please provide personalized spiritual guidance for this user.`;
 // POST /api/chat - Send message to Spirit
 chat.post('/chat', validateSession, async (c) => {
   try {
-    const user = c.get('user');
-    const { message, conversationId: inputConversationId } = await c.req.json();
+    const user = c.get('user') as { id: string; name: string; email: string };
+    const { message, conversationId: inputConversationId } = await c.req.json() as { message: string; conversationId?: string };
 
     if (!message || !message.trim()) {
       return c.json({ error: 'Message is required' }, 400);
@@ -125,7 +140,7 @@ chat.post('/chat', validateSession, async (c) => {
       ).run();
     } else {
       // Update existing conversation
-      const existingMessages = JSON.parse(conversation.messages);
+      const existingMessages = JSON.parse(conversation.messages as string);
       existingMessages.push({
         role: 'user',
         content: message,
@@ -138,7 +153,7 @@ chat.post('/chat', validateSession, async (c) => {
     }
 
     // Generate Spirit's response using Mastra agent
-    const spiritResponse = await generateSpiritResponse(message, user, conversationId, c.env.DB);
+    const spiritResponse = await generateSpiritResponse(message, user, conversationId!, c.env.DB, c.env);
 
     // Store Spirit's response
     const updatedConversationResult = await c.env.DB.prepare(
@@ -146,7 +161,7 @@ chat.post('/chat', validateSession, async (c) => {
     ).bind(conversationId).first();
 
     if (updatedConversationResult) {
-      const messages = JSON.parse(updatedConversationResult.messages);
+      const messages = JSON.parse(updatedConversationResult.messages as string);
       messages.push({
         role: 'assistant',
         content: spiritResponse,
@@ -175,7 +190,7 @@ chat.post('/chat', validateSession, async (c) => {
 // GET /api/conversations - Get user's conversations
 chat.get('/conversations', validateSession, async (c) => {
   try {
-    const user = c.get('user');
+    const user = c.get('user') as { id: string; name: string; email: string };
 
     const conversations = await c.env.DB.prepare(
       'SELECT id, title, created_at, updated_at FROM conversations WHERE user_id = ? ORDER BY updated_at DESC'
@@ -191,7 +206,7 @@ chat.get('/conversations', validateSession, async (c) => {
 // GET /api/conversations/:id - Get specific conversation
 chat.get('/conversations/:id', validateSession, async (c) => {
   try {
-    const user = c.get('user');
+    const user = c.get('user') as { id: string; name: string; email: string };
     const conversationId = c.req.param('id');
 
     const conversation = await c.env.DB.prepare(

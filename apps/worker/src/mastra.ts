@@ -1,11 +1,15 @@
 import { Mastra } from '@mastra/core';
-import { spiritAgent } from './agents/spirit-agent';
+import { createSpiritAgent } from './agents/spirit-agent';
 
-// Create Mastra instance and register the Spirit agent
-export const mastra = new Mastra({
-  agents: {
-    spirit: spiritAgent,
-  },
-});
+// Factory function to create Mastra instance with proper environment
+export function createMastra(env: any) {
+  const spiritAgent = createSpiritAgent(env);
 
-export default mastra;
+  return new Mastra({
+    agents: {
+      spirit: spiritAgent,
+    },
+  });
+}
+
+export default createMastra;

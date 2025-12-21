@@ -4,7 +4,7 @@
   "private": true,
   "description": "3in1 Spiritual App Worker - Backend API with Spirit AI agent",
   "scripts": {
-    "dev": "wrangler dev --env development",
+    "dev": "wrangler dev --env development --port 8787",
     "dev:local": "wrangler dev --env development --local",
     "build": "tsc",
     "build:watch": "tsc --watch",
@@ -27,17 +27,19 @@
     "test": "npm run type-check"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^2.0.88",
     "@mastra/core": "^0.24.9",
     "@mastra/memory": "^0.15.13",
     "@paralleldrive/cuid2": "^3.0.4",
+    "ai": "^5.0.116",
     "hono": "^4.11.1",
     "mastra": "^0.18.9",
     "openai": "^6.15.0",
     "zod": "^4.2.1"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20251217.0",
+    "@cloudflare/workers-types": "^4.20251221.0",
     "typescript": "^5.9.3",
-    "wrangler": "^4.55.0"
+    "wrangler": "^4.56.0"
   }
 }
