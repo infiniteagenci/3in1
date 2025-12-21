@@ -1,0 +1,43 @@
+{
+  "name": "3in1-worker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "3in1 Spiritual App Worker - Backend API with Spirit AI agent",
+  "scripts": {
+    "dev": "wrangler dev --env development",
+    "dev:local": "wrangler dev --env development --local",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "deploy": "wrangler deploy --env production",
+    "deploy:staging": "wrangler deploy --env staging",
+    "deploy:dev": "wrangler deploy --env development",
+    "db:create": "wrangler d1 create 3in1-db",
+    "db:create-staging": "wrangler d1 create 3in1-db-staging --env staging",
+    "db:migrate": "wrangler d1 migrations list --env production",
+    "db:migrate-staging": "wrangler d1 migrations list --env staging",
+    "db:preview": "wrangler d1 execute 3in1-db-dev --command \"SELECT * FROM users LIMIT 10\" --env development",
+    "db:seed": "wrangler d1 execute 3in1-db-dev --file=./db/seed.sql --env development",
+    "kv:create": "wrangler kv create --env production",
+    "logs": "wrangler tail --env production",
+    "logs:staging": "wrangler tail --env staging",
+    "secrets:list": "wrangler secret list --env production",
+    "secrets:set": "echo 'Set secrets: OPENAI_API_KEY, GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET'",
+    "test": "npm run type-check"
+  },
+  "dependencies": {
+    "@mastra/core": "^0.24.9",
+    "@mastra/memory": "^0.15.13",
+    "@paralleldrive/cuid2": "^3.0.4",
+    "hono": "^4.11.1",
+    "mastra": "^0.18.9",
+    "openai": "^6.15.0",
+    "zod": "^4.2.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20251217.0",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.55.0"
+  }
+}

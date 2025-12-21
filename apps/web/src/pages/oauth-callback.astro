@@ -1,0 +1,91 @@
+---
+// src/pages/oauth-callback.astro
+
+// Extract environment variable at build time/server-side
+const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Processing Login - Base 42</title>
+    <meta name="viewport" content="width=device-width" />
+  </head>
+  <body>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+      <p id="status-message">Processing login, please wait...</p>
+    </div>
+
+    <script define:vars={{PUBLIC_WORKER_API_URL: import.meta.env.PUBLIC_WORKER_API_URL || 'http://localhost:8787'}}>
+      // Check for OAuth callback in URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      const error = urlParams.get('error');
+      const statusMessageEl = document.getElementById('status-message');
+
+      if (error) {
+        console.error('OAuth error:', error);
+        statusMessageEl.textContent = `Error: ${error}`;
+        // Handle error case - redirect after a delay to allow user to see error
+        setTimeout(() => {
+          window.location.href = '/login?error=' + encodeURIComponent(error);
+        }, 2000);
+        return;
+      }
+
+      if (!code) {
+        console.error('No authorization code received');
+        statusMessageEl.textContent = 'No authorization code received. Redirecting...';
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 1000);
+        return;
+      }
+
+      // Processing the code
+      statusMessageEl.textContent = 'Exchanging code for token...';
+
+      try {
+        fetch(PUBLIC_WORKER_API_URL + '/auth/google/callback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ code })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.session_token) {
+            // Store the session token in localStorage
+            localStorage.setItem('session_token', data.session_token);
+            statusMessageEl.textContent = 'Success! Redirecting to dashboard...';
+
+            // Redirect to protected page or dashboard after a short delay
+            setTimeout(() => {
+              window.location.href = '/dashboard';
+            }, 1000);
+          } else {
+            console.error('No session token received from server');
+            statusMessageEl.textContent = 'No session token received. Redirecting...';
+            setTimeout(() => {
+              window.location.href = '/login?error=no_token';
+            }, 2000);
+          }
+        })
+        .catch(error => {
+          console.error('Error during OAuth callback:', error);
+          statusMessageEl.textContent = 'An error occurred. Redirecting...';
+          setTimeout(() => {
+            window.location.href = '/login?error=network_error';
+          }, 2000);
+        });
+      } catch (error) {
+        console.error('Error processing OAuth callback:', error);
+        statusMessageEl.textContent = 'An error occurred. Redirecting...';
+        setTimeout(() => {
+          window.location.href = '/login?error=js_error';
+        }, 2000);
+      }
+    </script>
+  </body>
+</html>

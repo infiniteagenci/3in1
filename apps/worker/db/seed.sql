@@ -1,0 +1,2 @@
+-- This file is for initial seed data if needed
+-- For now, we'll leave it empty as users will be created through OAuth
