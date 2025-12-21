@@ -1,0 +1,685 @@
+---
+// src/pages/chat.astro
+
+// Extract environment variable at build time/server-side
+const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Chat with Spirit - 3in1 Spiritual App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      /* Mobile-first CSS */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .chat-container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        max-width: 100vw;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      /* Animated background */
+      .chat-container::before {
+        content: '';
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at 20% 80%, rgba(147, 51, 234, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(236, 72, 153, 0.2) 0%, transparent 50%);
+        animation: float 20s ease-in-out infinite;
+        z-index: -1;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translate(-10%, -10%) rotate(0deg); }
+        33% { transform: translate(10%, -10%) rotate(120deg); }
+        66% { transform: translate(-10%, 10%) rotate(240deg); }
+      }
+
+      /* Header */
+      .header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        z-index: 10;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1rem;
+        flex-shrink: 0;
+      }
+
+      .spirit-info h1 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.125rem;
+      }
+
+      .spirit-info p {
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+
+      .logout-btn {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+
+      .logout-btn:hover {
+        background: #dc2626;
+        transform: translateY(-1px);
+      }
+
+      /* Messages container */
+      .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        scroll-behavior: smooth;
+      }
+
+      /* Hide scrollbar */
+      .messages-container::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .messages-container::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .messages-container::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+      }
+
+      .message {
+        display: flex;
+        gap: 0.75rem;
+        max-width: 100%;
+        animation: slideUp 0.3s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .message.user {
+        flex-direction: row-reverse;
+      }
+
+      .message-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        font-size: 0.875rem;
+        flex-shrink: 0;
+      }
+
+      .message.spirit .message-avatar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .message.user .message-avatar {
+        background: #e5e7eb;
+        color: #374151;
+      }
+
+      .message-content {
+        max-width: 70%;
+        word-wrap: break-word;
+      }
+
+      .message-bubble {
+        padding: 0.75rem 1rem;
+        border-radius: 1rem;
+        line-height: 1.5;
+        position: relative;
+      }
+
+      .message.spirit .message-bubble {
+        background: rgba(255, 255, 255, 0.95);
+        color: #1f2937;
+        border-bottom-left-radius: 0.25rem;
+      }
+
+      .message.user .message-bubble {
+        background: rgba(255, 255, 255, 0.9);
+        color: #1f2937;
+        border-bottom-right-radius: 0.25rem;
+      }
+
+      .message-time {
+        font-size: 0.75rem;
+        color: #9ca3af;
+        margin-top: 0.25rem;
+        text-align: right;
+      }
+
+      .message.user .message-time {
+        text-align: left;
+      }
+
+      /* Typing indicator */
+      .typing-indicator {
+        display: flex;
+        gap: 0.25rem;
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 1rem;
+        border-bottom-left-radius: 0.25rem;
+        width: fit-content;
+      }
+
+      .typing-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #9ca3af;
+        animation: typing 1.4s infinite ease-in-out;
+      }
+
+      .typing-dot:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .typing-dot:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes typing {
+        0%, 80%, 100% {
+          transform: scale(0.8);
+          opacity: 0.5;
+        }
+        40% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* Input area */
+      .input-area {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 1rem;
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-end;
+        position: relative;
+        z-index: 10;
+      }
+
+      .input-wrapper {
+        flex: 1;
+        position: relative;
+      }
+
+      .message-input {
+        width: 100%;
+        min-height: 44px;
+        max-height: 120px;
+        padding: 0.75rem 3rem 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 1rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        resize: none;
+        transition: all 0.2s;
+        background: white;
+      }
+
+      .message-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .send-btn {
+        position: absolute;
+        right: 0.5rem;
+        bottom: 0.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .send-btn:hover:not(:disabled) {
+        transform: scale(1.05);
+      }
+
+      .send-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* Welcome message */
+      .welcome-message {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: white;
+      }
+
+      .welcome-message h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      .welcome-message p {
+        font-size: 1rem;
+        opacity: 0.9;
+        line-height: 1.6;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      /* Loading state */
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-size: 1.125rem;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      /* Tablet styles */
+      @media (min-width: 768px) {
+        .chat-container {
+          max-width: 100vw;
+        }
+
+        .header {
+          padding: 1rem 1.5rem;
+        }
+
+        .messages-container {
+          padding: 1.5rem;
+        }
+
+        .message-content {
+          max-width: 65%;
+        }
+
+        .input-area {
+          padding: 1.5rem;
+        }
+
+        .avatar {
+          width: 48px;
+          height: 48px;
+        }
+
+        .message-avatar {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      /* Desktop styles */
+      @media (min-width: 1024px) {
+        .chat-container {
+          max-width: 900px;
+          margin: 0 auto;
+          height: 95vh;
+          margin-top: 2.5vh;
+          border-radius: 1rem;
+          overflow: hidden;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .message-content {
+          max-width: 60%;
+        }
+
+        .spirit-info h1 {
+          font-size: 1.25rem;
+        }
+
+        .spirit-info p {
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="loading">
+      Checking authentication...
+    </div>
+
+    <!-- Main Chat Interface -->
+    <div id="chat-container" class="chat-container hidden">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-content">
+          <div class="avatar">S</div>
+          <div class="spirit-info">
+            <h1>Spirit</h1>
+            <p>Your spiritual guide</p>
+          </div>
+        </div>
+        <button id="logout-btn" class="logout-btn">Logout</button>
+      </header>
+
+      <!-- Messages Container -->
+      <div id="messages-container" class="messages-container">
+        <!-- Welcome message -->
+        <div class="welcome-message">
+          <h2>Welcome! I'm Spirit</h2>
+          <p>I'm here to guide you on your spiritual journey through Jesus's teachings. Feel free to ask me anything about faith, prayer, or spiritual growth.</p>
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="input-area">
+        <div class="input-wrapper">
+          <textarea
+            id="message-input"
+            class="message-input"
+            placeholder="Ask Spirit for spiritual guidance..."
+            rows="1"
+          ></textarea>
+          <button id="send-btn" class="send-btn" disabled>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script define:vars={{PUBLIC_WORKER_API_URL: import.meta.env.PUBLIC_WORKER_API_URL || 'http://localhost:8787'}}>
+      // DOM elements
+      const app = document.getElementById('app');
+      const chatContainer = document.getElementById('chat-container');
+      const messagesContainer = document.getElementById('messages-container');
+      const messageInput = document.getElementById('message-input');
+      const sendBtn = document.getElementById('send-btn');
+      const logoutBtn = document.getElementById('logout-btn');
+
+      let currentUser = null;
+      let isLoading = false;
+
+      // Initialize app
+      async function init() {
+        try {
+          const token = localStorage.getItem('session_token');
+          if (!token) {
+            window.location.href = '/login';
+            return;
+          }
+
+          const response = await fetch(PUBLIC_WORKER_API_URL + '/auth/validate', {
+            headers: {
+              'Authorization': 'Bearer ' + token
+            }
+          });
+
+          if (response.ok) {
+            const { user } = await response.json();
+            currentUser = user;
+
+            // Hide loading, show chat
+            app.classList.add('hidden');
+            chatContainer.classList.remove('hidden');
+
+            // Initialize chat functionality
+            setupChat();
+          } else {
+            localStorage.removeItem('session_token');
+            window.location.href = '/login';
+          }
+        } catch (error) {
+          console.error('Error initializing app:', error);
+          window.location.href = '/login';
+        }
+      }
+
+      // Setup chat functionality
+      function setupChat() {
+        // Auto-resize textarea
+        messageInput.addEventListener('input', function() {
+          this.style.height = 'auto';
+          this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+
+          // Enable/disable send button
+          sendBtn.disabled = !this.value.trim() || isLoading;
+        });
+
+        // Handle Enter key
+        messageInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+
+        // Send button click
+        sendBtn.addEventListener('click', sendMessage);
+
+        // Logout
+        logoutBtn.addEventListener('click', handleLogout);
+      }
+
+      // Send message
+      async function sendMessage() {
+        const message = messageInput.value.trim();
+        if (!message || isLoading) return;
+
+        isLoading = true;
+        sendBtn.disabled = true;
+
+        // Add user message to UI
+        addMessage(message, 'user');
+
+        // Clear input
+        messageInput.value = '';
+        messageInput.style.height = 'auto';
+
+        // Show typing indicator
+        const typingIndicator = showTypingIndicator();
+
+        try {
+          // Send to backend
+          const response = await fetch(PUBLIC_WORKER_API_URL + '/api/chat', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + localStorage.getItem('session_token')
+            },
+            body: JSON.stringify({ message })
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+
+            // Remove typing indicator
+            removeTypingIndicator(typingIndicator);
+
+            // Add Spirit's response
+            addMessage(data.message, 'spirit');
+          } else {
+            throw new Error('Failed to send message');
+          }
+        } catch (error) {
+          console.error('Error sending message:', error);
+
+          // Remove typing indicator
+          removeTypingIndicator(typingIndicator);
+
+          // Add error message
+          addMessage("Sorry, I'm having trouble responding right now. Please try again.", 'spirit');
+        } finally {
+          isLoading = false;
+          sendBtn.disabled = false;
+        }
+      }
+
+      // Add message to chat
+      function addMessage(text, sender) {
+        // Remove welcome message if this is the first message
+        const welcomeMsg = messagesContainer.querySelector('.welcome-message');
+        if (welcomeMsg) {
+          welcomeMsg.remove();
+        }
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        avatar.textContent = sender === 'spirit' ? 'S' : currentUser?.name?.charAt(0).toUpperCase() || 'U';
+
+        const content = document.createElement('div');
+        content.className = 'message-content';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'message-bubble';
+        bubble.textContent = text;
+
+        const time = document.createElement('div');
+        time.className = 'message-time';
+        time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        content.appendChild(bubble);
+        content.appendChild(time);
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(content);
+
+        messagesContainer.appendChild(messageDiv);
+
+        // Scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      // Show typing indicator
+      function showTypingIndicator() {
+        const indicator = document.createElement('div');
+        indicator.className = 'message spirit';
+        indicator.innerHTML = `
+          <div class="message-avatar">S</div>
+          <div class="message-content">
+            <div class="typing-indicator">
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+            </div>
+          </div>
+        `;
+
+        messagesContainer.appendChild(indicator);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        return indicator;
+      }
+
+      // Remove typing indicator
+      function removeTypingIndicator(indicator) {
+        if (indicator && indicator.parentNode) {
+          indicator.parentNode.removeChild(indicator);
+        }
+      }
+
+      // Handle logout
+      async function handleLogout() {
+        try {
+          const token = localStorage.getItem('session_token');
+          if (token) {
+            await fetch(PUBLIC_WORKER_API_URL + '/auth/logout', {
+              method: 'POST',
+              headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+              }
+            });
+          }
+
+          localStorage.removeItem('session_token');
+          window.location.href = '/';
+        } catch (error) {
+          console.error('Error logging out:', error);
+        }
+      }
+
+      // Initialize on load
+      init();
+    </script>
+  </body>
+</html>

@@ -36,7 +36,9 @@ const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
               </a>
             </div>
             <div id="nav-logged-in" class="hidden flex items-center space-x-6">
-              <a href="/dashboard" class="text-gray-600 hover:text-gray-900 transition-colors">Chat with Spirit</a>
+              <a href="/chat" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                Chat with Spirit
+              </a>
               <button id="nav-logout-link" class="text-gray-600 hover:text-gray-900 transition-colors">
                 Logout
               </button>
@@ -84,10 +86,10 @@ const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
             <!-- Logged in content -->
             <div id="logged-in-content" class="hidden">
               <h2 id="welcome-text" class="text-3xl font-bold text-gray-900 mb-4">Welcome back!</h2>
-              <p class="text-lg text-gray-600 mb-8">Spirit is here to guide you on your spiritual journey.</p>
+              <p class="text-lg text-gray-600 mb-8">Spirit is ready to continue guiding you on your spiritual journey.</p>
               <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="/dashboard" class="bg-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
-                  Continue Your Conversation
+                <a href="/chat" class="bg-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                  Start Chatting with Spirit
                 </a>
                 <button id="logout-btn" class="bg-red-50 text-red-600 px-8 py-4 rounded-xl font-semibold hover:bg-red-100 transition-colors border border-red-200">
                   Logout

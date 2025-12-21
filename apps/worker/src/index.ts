@@ -36,6 +36,14 @@ app.route('/auth', auth);
 // Chat routes
 app.route('/api', chat);
 
+// Debug route to test if chat module is loaded
+app.get('/api/test', (c) => {
+  return c.json({
+    message: 'API routes are working!',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Protected route example
 app.get('/api/me', async (c) => {
   const authHeader = c.req.header('Authorization');

@@ -48,7 +48,8 @@ auth.post('/google/callback', async (c) => {
 
     const clientId = c.env.GOOGLE_OAUTH_CLIENT_ID;
     const clientSecret = c.env.GOOGLE_OAUTH_CLIENT_SECRET;
-    const redirectUri = `${new URL(c.req.url).origin}/auth/google/callback`;
+    // Use the same redirect URI that was sent in the OAuth request
+    const redirectUri = c.req.url.includes('localhost') ? 'http://localhost:4321/login' : `${new URL(c.req.url).origin}/login`;
 
     // Debug logging
     console.log('=== Google OAuth Token Exchange Debug ===');

@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
-import { mastra } from '../mastra';
-import { spiritAgent } from '../agents/spirit-agent';
+// import { mastra } from '../mastra';
+// import { spiritAgent } from '../agents/spirit-agent';
 
 // Simple ID generator function
 function createId(): string {
@@ -51,44 +51,29 @@ async function validateSession(c: any, next: any) {
   }
 }
 
-// Mastra agent integration for Spirit
-async function generateSpiritResponse(message: string, user: any, conversationId: string, apiKey: string, db: D1Database): Promise<string> {
-  try {
-    // Configure the agent with context including database access
-    const agentContext = {
-      db: db,
-      openaiApiKey: apiKey,
-    };
+// Simple response generator for Spirit (temporary until Mastra integration)
+async function generateSpiritResponse(message: string, user: any, conversationId: string): Promise<string> {
+  // Simple spiritual responses based on keywords
+  const lowerMessage = message.toLowerCase();
 
-    // Generate response using Mastra Spirit agent
-    const response = await spiritAgent.generate(message, {
-      context: agentContext,
-      toolChoice: 'auto', // Allow the agent to use tools as needed
-      messages: [
-        {
-          role: 'system',
-          content: `Current user context:
-- User ID: ${user.id}
-- Name: ${user.name}
-- Email: ${user.email}
-- Conversation ID: ${conversationId}
-
-You have access to tools to read/write notes and get conversation history. Use these tools to provide personalized spiritual guidance.
-
-Important: Always start by reading the user's notes to understand their spiritual journey, then provide personalized guidance based on what you know about them.`
-        },
-        {
-          role: 'user',
-          content: message
-        }
-      ]
-    });
-
-    return response.text;
-  } catch (error) {
-    console.error('Mastra agent error:', error);
-    return "I'm here to support you on your spiritual journey. Based on Jesus's teachings, remember that God loves you deeply and is always with you. Take time to pray and reflect on His guidance in your life.";
+  if (lowerMessage.includes('pray') || lowerMessage.includes('prayer')) {
+    return `Hello ${user.name}, prayer is a beautiful way to connect with God. Jesus taught us to pray with sincerity and faith. Remember Matthew 6:6: "But when you pray, go into your room, close the door and pray to your Father, who is unseen." Take time today to speak with God openly and honestly.`;
   }
+
+  if (lowerMessage.includes('faith') || lowerMessage.includes('believe')) {
+    return `Faith is the foundation of our relationship with God, ${user.name}. Hebrews 11:1 tells us that "faith is confidence in what we hope for and assurance about what we do not see." Even in difficult times, trust that God has a plan for you and loves you unconditionally.`;
+  }
+
+  if (lowerMessage.includes('jesus') || lowerMessage.includes('christ')) {
+    return `Jesus is our ultimate example of love and compassion, ${user.name}. His teachings in the Sermon on the Mount show us how to live with grace, humility, and love for others. Remember that Jesus said the greatest commandments are to love God and love your neighbor as yourself.`;
+  }
+
+  if (lowerMessage.includes('forgiveness') || lowerMessage.includes('forgive')) {
+    return `Forgiveness is central to Jesus's teachings, ${user.name}. In Matthew 6:14-15, Jesus teaches us to forgive others as God has forgiven us. Forgiveness brings healing and freedom, allowing us to experience God's grace more fully.`;
+  }
+
+  // Default spiritual response
+  return `Thank you for sharing with me, ${user.name}. I'm here to guide you on your spiritual journey. Remember that God loves you deeply and has a purpose for your life. Take time to read Scripture, pray, and seek wisdom from trusted spiritual mentors. Jesus said, "Come to me, all you who are weary and burdened, and I will give you rest." (Matthew 11:28)`;
 }
 
 // POST /api/chat - Send message to Spirit
@@ -140,9 +125,8 @@ chat.post('/', validateSession, async (c) => {
       ).bind(JSON.stringify(existingMessages), conversationId).run();
     }
 
-    // Generate Spirit's response using Mastra agent
-    // The agent will handle reading notes and conversation history through its tools
-    const spiritResponse = await generateSpiritResponse(message, user, conversationId, c.env.OPENAI_API_KEY, c.env.DB);
+    // Generate Spirit's response
+    const spiritResponse = await generateSpiritResponse(message, user, conversationId);
 
     // Store Spirit's response
     const updatedConversationResult = await c.env.DB.prepare(
@@ -162,8 +146,8 @@ chat.post('/', validateSession, async (c) => {
       ).bind(JSON.stringify(messages), conversationId).run();
     }
 
-    // Notes are automatically managed by the Mastra Spirit agent through its write-notes tool
-    console.log('Spirit agent has automatically managed user notes through its tools');
+    // Notes functionality will be added later with the Mastra integration
+    console.log('Chat message processed successfully');
 
     return c.json({
       message: spiritResponse,
@@ -213,170 +197,15 @@ chat.get('/conversations/:id', validateSession, async (c) => {
   }
 });
 
-// Notes management is now handled automatically by the Mastra Spirit agent through its tools
-// The agent reads and writes notes using its specialized tools for personalized spiritual guidance
+// Notes functionality will be added back later with the Mastra integration
 
-// Streaming Mastra agent integration
-async function* generateSpiritResponseStream(message: string, user: any, conversationId: string, apiKey: string, db: D1Database): AsyncGenerator<string, void, unknown> {
-  try {
-    // Configure the agent with context including database access
-    const agentContext = {
-      db: db,
-      openaiApiKey: apiKey,
-    };
+// Streaming functionality temporarily disabled - will be added back later
 
-    // Generate streaming response using Mastra Spirit agent
-    const response = await spiritAgent.stream(message, {
-      context: agentContext,
-      toolChoice: 'auto', // Allow the agent to use tools as needed
-      messages: [
-        {
-          role: 'system',
-          content: `Current user context:
-- User ID: ${user.id}
-- Name: ${user.name}
-- Email: ${user.email}
-- Conversation ID: ${conversationId}
-
-You have access to tools to read/write notes and get conversation history. Use these tools to provide personalized spiritual guidance.
-
-Important: Always start by reading the user's notes to understand their spiritual journey, then provide personalized guidance based on what you know about them.`
-        },
-        {
-          role: 'user',
-          content: message
-        }
-      ]
-    });
-
-    // Stream the response text chunks
-    for await (const chunk of response.textStream) {
-      yield chunk;
-    }
-  } catch (error) {
-    console.error('Mastra agent streaming error:', error);
-    yield "I'm here to support you on your spiritual journey. Based on Jesus's teachings, remember that God loves you deeply and is always with you. Take time to pray and reflect on His guidance in your life.";
-  }
-}
-
-// POST /api/chat/stream - Stream message to Spirit
-chat.post('/stream', validateSession, async (c) => {
-  try {
-    const user = c.get('user');
-    const { message, conversationId: inputConversationId } = await c.req.json();
-
-    if (!message || !message.trim()) {
-      return c.json({ error: 'Message is required' }, 400);
-    }
-
-    // Get or create conversation
-    let conversation;
-    let conversationId = inputConversationId;
-
-    if (conversationId) {
-      conversation = await c.env.DB.prepare(
-        'SELECT * FROM conversations WHERE id = ? AND user_id = ?'
-      ).bind(conversationId, user.id).first();
-    }
-
-    if (!conversation) {
-      // Create new conversation
-      conversationId = createId();
-      const initialMessages = JSON.stringify([
-        { role: 'user', content: message, timestamp: new Date().toISOString() }
-      ]);
-
-      await c.env.DB.prepare(
-        'INSERT INTO conversations (id, user_id, title, messages) VALUES (?, ?, ?, ?)'
-      ).bind(
-        conversationId,
-        user.id,
-        message.substring(0, 50) + (message.length > 50 ? '...' : ''),
-        initialMessages
-      ).run();
-    } else {
-      // Update existing conversation with user message
-      const existingMessages = JSON.parse(conversation.messages);
-      existingMessages.push({
-        role: 'user',
-        content: message,
-        timestamp: new Date().toISOString()
-      });
-
-      await c.env.DB.prepare(
-        'UPDATE conversations SET messages = ?, updated_at = datetime("now") WHERE id = ?'
-      ).bind(JSON.stringify(existingMessages), conversationId).run();
-    }
-
-    // Set up server-sent events for Cloudflare Workers
-    const { readable, writable } = new TransformStream();
-    const writer = writable.getWriter();
-
-    // Start streaming in the background
-    (async () => {
-      try {
-        // Send conversation ID first
-        await writer.write(new TextEncoder().encode(`event: conversation_id\ndata: ${JSON.stringify({ conversationId })}\n\n`));
-
-        // Stream Spirit's response using Mastra agent
-        let fullResponse = '';
-        const stream = generateSpiritResponseStream(message, user, conversationId, c.env.OPENAI_API_KEY, c.env.DB);
-
-        for await (const chunk of stream) {
-          fullResponse += chunk;
-          await writer.write(new TextEncoder().encode(`event: message\ndata: ${JSON.stringify({ chunk })}\n\n`));
-        }
-
-        // Store complete response in database
-        try {
-          const updatedConversationResult = await c.env.DB.prepare(
-            'SELECT messages FROM conversations WHERE id = ?'
-          ).bind(conversationId).first();
-
-          if (updatedConversationResult) {
-            const messages = JSON.parse(updatedConversationResult.messages);
-            messages.push({
-              role: 'assistant',
-              content: fullResponse,
-              timestamp: new Date().toISOString()
-            });
-
-            await c.env.DB.prepare(
-              'UPDATE conversations SET messages = ?, updated_at = datetime("now") WHERE id = ?'
-            ).bind(JSON.stringify(messages), conversationId).run();
-          }
-
-          // Notes are automatically managed by the Mastra Spirit agent through its tools during streaming
-          console.log('Spirit agent has automatically managed user notes during streaming');
-
-        } catch (error) {
-          console.error('Error saving conversation:', error);
-        }
-
-        // Send completion event
-        await writer.write(new TextEncoder().encode(`event: done\ndata: ${JSON.stringify({ complete: true })}\n\n`));
-
-      } catch (error) {
-        console.error('Streaming error:', error);
-        await writer.write(new TextEncoder().encode(`event: error\ndata: ${JSON.stringify({ error: 'Streaming failed' })}\n\n`));
-      } finally {
-        await writer.close();
-      }
-    })();
-
-    return new Response(readable, {
-      headers: {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
-      },
-    });
-
-  } catch (error) {
-    console.error('Chat streaming error:', error);
-    return c.json({ error: 'Failed to process message' }, 500);
-  }
-});
+// POST /api/chat/stream - Stream message to Spirit (temporarily disabled)
+// chat.post('/stream', validateSession, async (c) => {
+//   // Streaming functionality will be added back later
+//   return c.json({ error: 'Streaming temporarily disabled' }, 503);
+// });
 
 // Helper function to extract important information from conversation
 function extractImportantInfo(userMessage: string, spiritResponse: string): string[] {
