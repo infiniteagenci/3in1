@@ -1,8 +1,13 @@
 import { Agent } from '@mastra/core/agent';
 import { createGateway } from '@ai-sdk/gateway';
-import { createOpenAI } from "@ai-sdk/openai";
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
+
+// Type for Cloudflare Worker environment
+type WorkerEnv = {
+  AI_GATEWAY_API_KEY?: string;
+  OPENAI_API_KEY: string;
+};
 
 // Simple ID generator function
 function createId(): string {
@@ -45,7 +50,7 @@ const readNotesTool = createTool({
   inputSchema: z.object({
     userId: z.string().describe('The ID of the user whose notes to read'),
   }),
-  execute: async ({ context, runtimeContext }) => {
+  execute: async (context) => {
     try {
       const { userId } = context;
       // For now, we'll disable database access in tools
@@ -75,7 +80,7 @@ const writeNotesTool = createTool({
     success: z.boolean().describe('Whether the notes were successfully updated'),
     notesUpdated: z.string().describe('Confirmation of what was added to the notes'),
   }),
-  execute: async ({ context, runtimeContext }) => {
+  execute: async (context) => {
     try {
       const { userId, observation, conversationContext } = context;
       console.log(`Write notes tool called with userId: ${userId}, observation: ${observation}`);
@@ -110,7 +115,7 @@ const getConversationHistoryTool = createTool({
       timestamp: z.string(),
     })).describe('Recent conversation messages'),
   }),
-  execute: async ({ context, runtimeContext }) => {
+  execute: async (context) => {
     try {
       const { conversationId, userId, maxMessages } = context;
       console.log(`Conversation history tool called with conversationId: ${conversationId}, userId: ${userId}`);
@@ -133,7 +138,7 @@ const getConversationHistoryTool = createTool({
 });
 
 // Create the Spirit agent with Mastra - factory function to handle environment variables
-export function createSpiritAgent(env: any) {
+export function createSpiritAgent(env: WorkerEnv) {
   console.log('Creating Spirit agent with env:', {
     hasOpenAIKey: !!env.OPENAI_API_KEY,
     hasAIGatewayKey: !!env.AI_GATEWAY_API_KEY,
@@ -184,13 +189,12 @@ Key Principles:
 
 Remember that you are walking with users on their spiritual journey. Be a compassionate companion who points them toward Christ.`,
 
-    // Create OpenAI provider with the API key from environment
-    //
-    // model: createOpenAI({ apiKey: env.OPENAI_API_KEY })('gpt-4o-mini'),
-
-     model: createGateway({
-       apiKey: env.AI_GATEWAY_API_KEY || env.OPENAI_API_KEY,
-     })('alibaba/qwen-3-14b'),
+    // Use AI Gateway with model identifier as string
+    model: {
+      id: 'openai/gpt-4o-mini',
+      apiKey: env.AI_GATEWAY_API_KEY || env.OPENAI_API_KEY,
+      provider: 'gateway',
+    },
 
     // Add the tools for Spirit to use
     tools: {

@@ -1,6 +1,8 @@
 ---
 // src/pages/chat.astro
 import Layout from '../layouts/Layout.astro'
+import ChatInterface from '../components/ChatInterface.jsx'
+
 
 // Extract environment variable at build time/server-side
 const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
@@ -12,58 +14,37 @@ const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
   </div>
 
   <!-- Main Chat Interface -->
-  <div id="chat-container" class="chat-container hidden">
+  <div id="chat-container" class="chat-container hidden flex flex-col h-screen">
     <!-- Header -->
-    <header class="chat-header">
-      <div class="chat-header-content">
-        <div class="avatar">S</div>
-        <div class="spirit-info">
-          <h1>Spirit</h1>
-          <p>Your spiritual guide</p>
+    <header class="w-full bg-gradient-to-r from-purple-400 via-purple-500 to-blue-400 shadow-md">
+      <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="avatar w-10 h-10 rounded-full bg-white text-purple-600 flex items-center justify-center font-bold mr-3 shadow-sm">S</div>
+          <div>
+            <h1 class="font-semibold text-white">Spirit</h1>
+            <p class="text-xs text-purple-100">Your spiritual guide</p>
+          </div>
         </div>
+        <button id="logout-btn" class="logout-btn bg-white/20 text-white px-4 py-1.5 rounded-full text-sm hover:bg-white/30 transition-colors backdrop-blur-sm border border-white/30">Logout</button>
       </div>
-      <button id="logout-btn" class="logout-btn">Logout</button>
     </header>
 
-    <!-- Messages Container -->
-    <div id="messages-container" class="messages-container">
-      <!-- Welcome message -->
-      <div class="welcome-message">
-        <h2>Welcome! I'm Spirit</h2>
-        <p>I'm here to guide you on your spiritual journey through Jesus's teachings. Feel free to ask me anything about faith, prayer, or spiritual growth.</p>
-      </div>
-    </div>
-
-    <!-- Input Area -->
-    <div class="input-area">
-      <div class="input-wrapper">
-        <textarea
-          id="message-input"
-          class="message-input"
-          placeholder="Ask Spirit for spiritual guidance..."
-          rows="1"
-        ></textarea>
-        <button id="send-btn" class="send-btn" disabled>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="22" y1="2" x2="11" y2="13"></line>
-            <polygon points="22 2 15 22 11 13 2 9 22 2 9 20 2 21 12 19 30 14 9 22 2 19 30 14 9 22 2 19 30 14 9 22 2 19 30 14 9 22 2 19 30"></polygon>
-          </svg>
-        </button>
-      </div>
+    <!-- AI Chat Interface -->
+    <div class="flex-1 w-full">
+      <ChatInterface client:load />
     </div>
   </div>
 
   <script define:vars={{PUBLIC_WORKER_API_URL: import.meta.env.PUBLIC_WORKER_API_URL || 'http://localhost:8787'}}>
+    // Make API URL available globally for React components
+    window.PUBLIC_WORKER_API_URL = PUBLIC_WORKER_API_URL;
+
     // DOM elements
     const app = document.getElementById('app');
     const chatContainer = document.getElementById('chat-container');
-    const messagesContainer = document.getElementById('messages-container');
-    const messageInput = document.getElementById('message-input');
-    const sendBtn = document.getElementById('send-btn');
     const logoutBtn = document.getElementById('logout-btn');
 
     let currentUser = null;
-    let isLoading = false;
 
     // Initialize app
     async function init() {
@@ -87,9 +68,6 @@ const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
           // Hide loading, show chat
           app.classList.add('hidden');
           chatContainer.classList.remove('hidden');
-
-          // Initialize chat functionality
-          setupChat();
         } else {
           localStorage.removeItem('session_token');
           window.location.href = '/login';
@@ -97,151 +75,6 @@ const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
       } catch (error) {
         console.error('Error initializing app:', error);
         window.location.href = '/login';
-      }
-    }
-
-    // Setup chat functionality
-    function setupChat() {
-      // Auto-resize textarea
-      messageInput.addEventListener('input', function() {
-        this.style.height = 'auto';
-        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-
-        // Enable/disable send button
-        sendBtn.disabled = !this.value.trim() || isLoading;
-      });
-
-      // Handle Enter key
-      messageInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          sendMessage();
-        }
-      });
-
-      // Send button click
-      sendBtn.addEventListener('click', sendMessage);
-
-      // Logout
-      logoutBtn.addEventListener('click', handleLogout);
-    }
-
-    // Send message
-    async function sendMessage() {
-      const message = messageInput.value.trim();
-      if (!message || isLoading) return;
-
-      isLoading = true;
-      sendBtn.disabled = true;
-
-      // Add user message to UI
-      addMessage(message, 'user');
-
-      // Clear input
-      messageInput.value = '';
-      messageInput.style.height = 'auto';
-
-      // Show typing indicator
-      const typingIndicator = showTypingIndicator();
-
-      try {
-        // Send to backend
-        const response = await fetch(PUBLIC_WORKER_API_URL + '/api/chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + localStorage.getItem('session_token')
-          },
-          body: JSON.stringify({ message })
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-
-          // Remove typing indicator
-          removeTypingIndicator(typingIndicator);
-
-          // Add Spirit's response
-          addMessage(data.message, 'spirit');
-        } else {
-          throw new Error('Failed to send message');
-        }
-      } catch (error) {
-        console.error('Error sending message:', error);
-
-        // Remove typing indicator
-        removeTypingIndicator(typingIndicator);
-
-        // Add error message
-        addMessage("Sorry, I'm having trouble responding right now. Please try again.", 'spirit');
-      } finally {
-        isLoading = false;
-        sendBtn.disabled = false;
-      }
-    }
-
-    // Add message to chat
-    function addMessage(text, sender) {
-      // Remove welcome message if this is the first message
-      const welcomeMsg = messagesContainer.querySelector('.welcome-message');
-      if (welcomeMsg) {
-        welcomeMsg.remove();
-      }
-
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `message ${sender}`;
-
-      const avatar = document.createElement('div');
-      avatar.className = 'message-avatar';
-      avatar.textContent = sender === 'spirit' ? 'S' : currentUser?.name?.charAt(0).toUpperCase() || 'U';
-
-      const content = document.createElement('div');
-      content.className = 'message-content';
-
-      const bubble = document.createElement('div');
-      bubble.className = 'message-bubble';
-      bubble.textContent = text;
-
-      const time = document.createElement('div');
-      time.className = 'message-time';
-      time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-      content.appendChild(bubble);
-      content.appendChild(time);
-      messageDiv.appendChild(avatar);
-      messageDiv.appendChild(content);
-
-      messagesContainer.appendChild(messageDiv);
-
-      // Scroll to bottom
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
-    // Show typing indicator
-    function showTypingIndicator() {
-      const indicator = document.createElement('div');
-      indicator.className = 'message spirit';
-      indicator.innerHTML = `
-        <div class="message-avatar">S</div>
-        <div class="message-content">
-          <div class="typing-indicator">
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-          </div>
-        </div>
-      `;
-
-      messagesContainer.appendChild(indicator);
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-      return indicator;
-    }
-
-    // Remove typing indicator
-    function removeTypingIndicator(indicator) {
-      if (indicator && indicator.parentNode) {
-        indicator.parentNode.removeChild(indicator);
       }
     }
 
@@ -266,7 +99,22 @@ const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
       }
     }
 
+    // Logout button event listener
+    logoutBtn.addEventListener('click', handleLogout);
+
     // Initialize on load
     init();
   </script>
+
+  <style>
+    #app.loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+  </style>
 </Layout>

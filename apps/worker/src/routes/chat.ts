@@ -1,5 +1,7 @@
 import { Hono } from 'hono';
 import { createSpiritAgent } from '../agents/spirit-agent';
+import { streamText, convertToModelMessages } from 'ai';
+import { createGateway } from '@ai-sdk/gateway';
 
 // Simple ID generator function
 function createId(): string {
@@ -13,6 +15,7 @@ type Bindings = {
   ENVIRONMENT: string;
   OPENAI_API_KEY: string;
   ANTHROPIC_API_KEY?: string;
+  AI_GATEWAY_API_KEY?: string;
 };
 
 type Variables = {
@@ -58,132 +61,69 @@ async function validateSession(c: any, next: any) {
   }
 }
 
-// Mastra agent integration for Spirit
-async function generateSpiritResponse(message: string, user: any, conversationId: string, db: D1Database, env: any): Promise<string> {
-  try {
-    console.log('=== Mastra Agent Response ===');
-    console.log('User:', user.name);
-    console.log('Message:', message);
-    console.log('Conversation ID:', conversationId);
-    console.log('==========================');
-
-    // Create the Spirit agent with proper environment
-    const spiritAgent = createSpiritAgent(env);
-
-    // Add user context to the message for the agent
-    const contextMessage = `Current user context:
-- Name: ${user.name}
-- Email: ${user.email}
-- User ID: ${user.id}
-- Conversation ID: ${conversationId}
-
-Please provide personalized spiritual guidance for this user.`;
-
-    // Create the message structure for Mastra agent
-    const messages = [
-      {
-        role: 'system' as const,
-        content: `You are Spirit, a compassionate spiritual guide. Database access is available through your tools for reading/writing notes and getting conversation history. Current context: User ID is ${user.id}, Conversation ID is ${conversationId}.`
-      },
-      {
-        role: 'user' as const,
-        content: `${contextMessage}\n\nUser message: ${message}`
-      }
-    ];
-
-    // Generate response using Mastra Spirit agent
-    const response = await spiritAgent.generate(messages);
-
-    console.log('Mastra response received:', response.text);
-    return response.text;
-  } catch (error) {
-    console.error('Mastra agent error:', error);
-    console.error('Error details:', error instanceof Error ? error.message : String(error));
-    return `I'm here to support you on your spiritual journey, ${user.name}. Based on Jesus's teachings, remember that God loves you deeply and is always with you. Take time to pray and reflect on His guidance in your life. I'm having some technical difficulty accessing my spiritual insights database, but I'd be happy to continue our conversation about your faith journey.`;
-  }
-}
-
-// POST /api/chat - Send message to Spirit
+// POST /api/chat - Send message to Spirit (AI SDK v6 streaming)
 chat.post('/chat', validateSession, async (c) => {
   try {
     const user = c.get('user') as { id: string; name: string; email: string };
-    const { message, conversationId: inputConversationId } = await c.req.json() as { message: string; conversationId?: string };
+    const body = await c.req.json();
 
-    if (!message || !message.trim()) {
-      return c.json({ error: 'Message is required' }, 400);
+    console.log('Request body:', JSON.stringify(body, null, 2));
+
+    // AI SDK v5 sends messages in UIMessage format with parts array
+    const messages = body.messages || [];
+
+    if (!messages || messages.length === 0) {
+      return c.json({ error: 'Messages are required' }, 400);
     }
 
-    // Get or create conversation
-    let conversation;
-    let conversationId = inputConversationId;
-
-    if (conversationId) {
-      conversation = await c.env.DB.prepare(
-        'SELECT * FROM conversations WHERE id = ? AND user_id = ?'
-      ).bind(conversationId, user.id).first();
-    }
-
-    if (!conversation) {
-      // Create new conversation
-      conversationId = createId();
-      const initialMessages = JSON.stringify([
-        { role: 'user', content: message, timestamp: new Date().toISOString() }
-      ]);
-
-      await c.env.DB.prepare(
-        'INSERT INTO conversations (id, user_id, title, messages) VALUES (?, ?, ?, ?)'
-      ).bind(
-        conversationId,
-        user.id,
-        message.substring(0, 50) + (message.length > 50 ? '...' : ''),
-        initialMessages
-      ).run();
-    } else {
-      // Update existing conversation
-      const existingMessages = JSON.parse(conversation.messages as string);
-      existingMessages.push({
-        role: 'user',
-        content: message,
-        timestamp: new Date().toISOString()
-      });
-
-      await c.env.DB.prepare(
-        'UPDATE conversations SET messages = ?, updated_at = datetime("now") WHERE id = ?'
-      ).bind(JSON.stringify(existingMessages), conversationId).run();
-    }
-
-    // Generate Spirit's response using Mastra agent
-    const spiritResponse = await generateSpiritResponse(message, user, conversationId!, c.env.DB, c.env);
-
-    // Store Spirit's response
-    const updatedConversationResult = await c.env.DB.prepare(
-      'SELECT messages FROM conversations WHERE id = ?'
-    ).bind(conversationId).first();
-
-    if (updatedConversationResult) {
-      const messages = JSON.parse(updatedConversationResult.messages as string);
-      messages.push({
-        role: 'assistant',
-        content: spiritResponse,
-        timestamp: new Date().toISOString()
-      });
-
-      await c.env.DB.prepare(
-        'UPDATE conversations SET messages = ?, updated_at = datetime("now") WHERE id = ?'
-      ).bind(JSON.stringify(messages), conversationId).run();
-    }
-
-    // Notes are automatically managed by the Mastra Spirit agent through its tools
-    console.log('Mastra agent has automatically managed user notes through its tools');
-
-    return c.json({
-      message: spiritResponse,
-      conversationId
+    // Build conversation history from messages
+    const conversationHistory = messages.map((msg: any) => {
+      const text = msg.parts
+        ?.filter((p: any) => p.type === 'text')
+        .map((p: any) => p.text)
+        .join(' ') || '';
+      return {
+        role: (msg.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
+        content: text
+      };
     });
+
+    // Get the last user message
+    const lastMessage = conversationHistory[conversationHistory.length - 1];
+    const userMessage = lastMessage?.content || '';
+
+    if (!userMessage.trim()) {
+      return c.json({ error: 'Message text is required' }, 400);
+    }
+
+    // Build messages with system prompt - use the format directly without conversion
+    const modelMessages = [
+      {
+        role: 'system' as const,
+        content: `Current user: ${user.name} (ID: ${user.id}). You are Spirit, a compassionate spiritual guide who provides guidance based on Jesus's teachings and Catholic principles.`
+      },
+      ...conversationHistory
+    ];
+
+    // Use AI Gateway streaming
+    const gateway = createGateway({
+      apiKey: c.env.AI_GATEWAY_API_KEY || c.env.OPENAI_API_KEY,
+    });
+
+    const result = await streamText({
+      model: gateway('openai/gpt-4o-mini'),
+      messages: modelMessages,
+      temperature: 0.7,
+      maxOutputTokens: 1000,
+    });
+
+    return result.toUIMessageStreamResponse();
 
   } catch (error) {
     console.error('Chat error:', error);
-    return c.json({ error: 'Failed to process message' }, 500);
+    console.error('Error details:', error instanceof Error ? error.message : String(error));
+    console.error('Stack:', error instanceof Error ? error.stack : 'No stack trace');
+    return c.json({ error: 'Failed to process message', details: String(error) }, 500);
   }
 });
 

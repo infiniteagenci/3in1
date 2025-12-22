@@ -16,7 +16,8 @@ auth.get('/google/url', (c) => {
   // Redirect to frontend login page which will handle the OAuth callback
   // Default to 4321 for Astro dev, but check if frontend is on different port
   const frontendUrl = c.req.url.includes('localhost') ? 'http://localhost:4321' : `${c.req.url.split('/').slice(0, 3).join('/')}`;
-  const redirectUri = `https://3in1.ai-labs.pro/login`;
+  const redirectUri = c.env.ENVIRONMENT === 'development' ? 'http://localhost:4321/login' : `https://3in1.ai-labs.pro/login`;
+  console.log('redirectUri',redirectUri)
   const scope = 'openid email profile';
 
   // Debug logging
@@ -50,8 +51,8 @@ auth.post('/google/callback', async (c) => {
     const clientSecret = c.env.GOOGLE_OAUTH_CLIENT_SECRET;
     // Use the same redirect URI that was sent in the OAuth request
     // const redirectUri = c.req.url.includes('localhost') ? 'http://localhost:4321/login' : `${new URL(c.req.url).origin}/login`;
-  const redirectUri = `https://3in1.ai-labs.pro/login`;
-    // Debug logging
+    const redirectUri = c.env.ENVIRONMENT === 'development' ? 'http://localhost:4321/login' : `https://3in1.ai-labs.pro/login`;
+    // Debug logging4321
     console.log('=== Google OAuth Token Exchange Debug ===');
     console.log('Client ID:', clientId);
     console.log('Client Secret:', clientSecret);
