@@ -1,5 +1,5 @@
 import { Agent } from '@mastra/core/agent';
-import { openai } from "@ai-sdk/openai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
 
@@ -144,7 +144,8 @@ export function createSpiritAgent(env: any) {
     throw new Error('OpenAI API key is missing. Please check your .dev.vars file.');
   }
 
-  // Configure the OpenAI provider - the API key should be available in process.env thanks to middleware
+  // Configure the OpenAI provider with the API key from the environment
+  // In Cloudflare Workers, we pass the API key directly rather than relying on process.env
   return new Agent({
     id: 'spirit-agent',
     name: 'Spirit',
@@ -180,8 +181,8 @@ Key Principles:
 
 Remember that you are walking with users on their spiritual journey. Be a compassionate companion who points them toward Christ.`,
 
-    // Configure the model using AI SDK provider (should find API key in process.env)
-    model: openai('gpt-4o-mini'),
+    // Create OpenAI provider with the API key from environment
+    model: createOpenAI({ apiKey: env.OPENAI_API_KEY })('gpt-4o-mini'),
 
     // Add the tools for Spirit to use
     tools: {

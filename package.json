@@ -18,7 +18,7 @@
     "type-check": "turbo run type-check",
     "clean": "turbo run clean && rm -rf node_modules",
     "clean:build": "turbo run clean",
-    "deploy": "./deploy.sh",
+    "deploy": "turbo deploy",
     "deploy:worker": "cd apps/worker && bun run deploy",
     "deploy:worker:staging": "cd apps/worker && bun run deploy:staging",
     "deploy:worker:dev": "cd apps/worker && bun run deploy:dev",

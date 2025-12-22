@@ -1,5 +1,5 @@
 {
-  "name": "3in1-worker",
+  "name": "3in1-api",
   "version": "1.0.0",
   "private": true,
   "description": "3in1 Spiritual App Worker - Backend API with Spirit AI agent",
@@ -10,7 +10,7 @@
     "build:watch": "tsc --watch",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist",
-    "deploy": "wrangler deploy --env production",
+    "deploy": "tsc && wrangler deploy --env production",
     "deploy:staging": "wrangler deploy --env staging",
     "deploy:dev": "wrangler deploy --env development",
     "db:create": "wrangler d1 create 3in1-db",

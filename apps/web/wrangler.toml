@@ -1,45 +1,41 @@
 name = "3in1"
 compatibility_date = "2025-01-21"
-
+pages_build_output_dir="dist"
 # Cloudflare Pages configuration
 [env.production]
 compatibility_flags = ["nodejs_compat"]
 
-[env.staging]
-compatibility_flags = ["nodejs_compat"]
 
 [env.preview]
 compatibility_flags = ["nodejs_compat"]
 
 # Build configuration
-[build]
-command = "bun run build"
-cwd = "."
-watch_dir = "src"
+# [build]
+# command = "bun run build"
+# cwd = "."
+# watch_dir = "src"
 
 # Output directory
-[build.upload]
-format = "directory"
-dir = "dist"
+# [build.upload]
+# format = "directory"
+# dir = "dist"
 
 # Functions configuration (for server-side functions)
-[functions]
+# [functions]
 # Define any server-side functions here if needed
 
 # Environment variables
 [env.production.vars]
-PUBLIC_WORKER_API_URL = "https://3in1-worker.your-account.workers.dev"
+PUBLIC_WORKER_API_URL = "https://3in1-worker.ailabs-hq.workers.dev/"
 
-[env.staging.vars]
-PUBLIC_WORKER_API_URL = "https://3in1-worker-staging.your-account.workers.dev"
 
 [env.preview.vars]
 PUBLIC_WORKER_API_URL = "http://localhost:8788"
 
 # Routing configuration
-[[routes]]
-pattern = "/api/*"
-custom_domain = false
+# [[routes]]
+# pattern = "/api/*"
+# custom_domain = false
 
 # Custom domain configuration (uncomment and configure as needed)
 # [env.production]

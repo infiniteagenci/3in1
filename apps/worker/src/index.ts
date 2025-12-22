@@ -15,50 +15,11 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-// Middleware to set environment variables globally for Mastra/AI SDK compatibility
+// Middleware to make environment variables available to AI SDK
 app.use('*', async (c, next) => {
-  // Store original process.env to restore later
-  const originalEnv = typeof process !== 'undefined' ? { ...process.env } : null;
-
-  try {
-    // Set the API key in global process.env for Mastra/AI SDK compatibility
-    if (typeof process !== 'undefined' && process.env) {
-      if (c.env.OPENAI_API_KEY) {
-        process.env.OPENAI_API_KEY = c.env.OPENAI_API_KEY;
-      }
-      if (c.env.ANTHROPIC_API_KEY) {
-        process.env.ANTHROPIC_API_KEY = c.env.ANTHROPIC_API_KEY;
-      }
-    } else if (typeof globalThis !== 'undefined') {
-      if (!globalThis.process) {
-        globalThis.process = { env: {} } as any;
-      }
-      globalThis.process.env = {
-        ...(globalThis.process.env || {}),
-        OPENAI_API_KEY: c.env.OPENAI_API_KEY,
-        ANTHROPIC_API_KEY: c.env.ANTHROPIC_API_KEY
-      };
-    }
-
-    await next();
-  } finally {
-    // Restore original process.env to prevent potential conflicts between concurrent requests
-    if (originalEnv && typeof process !== 'undefined' && process.env) {
-      Object.keys(process.env).forEach(key => {
-        if (originalEnv[key] === undefined) {
-          delete process.env[key];
-        } else {
-          process.env[key] = originalEnv[key];
-        }
-      });
-      // Add back any keys that were in originalEnv but might have been removed
-      Object.keys(originalEnv).forEach(key => {
-        if (process.env[key] === undefined) {
-          process.env[key] = originalEnv[key];
-        }
-      });
-    }
-  }
+  // In Cloudflare Workers, we pass environment variables through the context
+  // The Mastra agent will receive the environment through its creation function
+  await next();
 });
 
 app.use('*', cors());

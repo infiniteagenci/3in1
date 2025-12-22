@@ -12,9 +12,9 @@ binding = "DB"
 database_name = "3in1"
 database_id = "ea691e25-4a91-4ce2-a192-8b5b03393be4"
 
-[[env.production.kv_namespaces]]
-binding = "CACHE"
-id = "your-kv-namespace-id-here"
+# [[env.production.kv_namespaces]]
+# binding = "CACHE"
+# id = "your-kv-namespace-id-here"
 
 # Staging environment configuration
 [env.staging]
@@ -25,9 +25,9 @@ binding = "DB"
 database_name = "3in1-db-staging"
 database_id = "your-staging-database-id-here"
 
-[[env.staging.kv_namespaces]]
-binding = "CACHE"
-id = "your-staging-kv-namespace-id-here"
+# [[env.staging.kv_namespaces]]
+# binding = "CACHE"
+# id = "your-staging-kv-namespace-id-here"
 
 # Development environment configuration (local)
 [env.development]
@@ -50,5 +50,5 @@ command = ""
 watch_dir = "src"
 
 # Configure limits and timeouts
-[limits]
-cpu_ms = 50000
+# [limits]
+# cpu_ms = 50000

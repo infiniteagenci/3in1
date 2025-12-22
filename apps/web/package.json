@@ -1,5 +1,5 @@
 {
-  "name": "3in1-web",
+  "name": "3in1",
   "type": "module",
   "version": "1.0.0",
   "description": "3in1 Spiritual App - Frontend web app for chatting with Spirit",
@@ -13,7 +13,7 @@
     "lint:fix": "eslint . --fix",
     "type-check": "tsc --noEmit",
     "deploy:pages": "wrangler pages deploy",
-    "deploy:pages:production": "wrangler pages deploy --env production",
+    "deploy": "astro build && wrangler pages deploy --branch main",
     "deploy:pages:staging": "wrangler pages deploy --env staging",
     "deploy:pages:preview": "wrangler pages deploy --env preview"
   },
