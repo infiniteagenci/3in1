@@ -3,9 +3,14 @@ main = "src/index.ts"
 compatibility_date = "2025-01-21"
 compatibility_flags = ["nodejs_compat"]
 
+[env.production.vars]
+GOOGLE_OAUTH_CLIENT_ID="296576517620-sur4nmf89q803b5h83f1e4m930vrp3tc.apps.googleusercontent.com"
+
 # Production environment configuration
 [env.production]
 name = "3in1-worker"
+GOOGLE_OAUTH_CLIENT_ID="296576517620-sur4nmf89q803b5h83f1e4m930vrp3tc.apps.googleusercontent.com"
+
 
 [[env.production.d1_databases]]
 binding = "DB"
