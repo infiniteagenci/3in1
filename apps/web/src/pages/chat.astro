@@ -2,10 +2,6 @@
 // src/pages/chat.astro
 import Layout from '../layouts/Layout.astro'
 import ChatInterface from '../components/ChatInterface.jsx'
-
-
-// Extract environment variable at build time/server-side
-const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
 ---
 
 <Layout title="Chat with Spirit - 3in1 Spiritual App">
@@ -35,9 +31,12 @@ const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
     </div>
   </div>
 
-  <script define:vars={{PUBLIC_WORKER_API_URL: import.meta.env.PUBLIC_WORKER_API_URL || 'http://localhost:8787'}}>
-    // Make API URL available globally for React components
-    window.PUBLIC_WORKER_API_URL = PUBLIC_WORKER_API_URL;
+  <script>
+    // Set API URL based on current environment
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    window.PUBLIC_WORKER_API_URL = isLocalhost
+      ? 'http://localhost:8787'
+      : 'https://3in1-api.raina.workers.dev';
 
     // DOM elements
     const app = document.getElementById('app');

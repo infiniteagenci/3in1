@@ -6,4 +6,5 @@
 7:30 am - 9:00 | fixing deployment issues
 10:00 am - 12:30    | fixing google OAuth on prod
 2:30 pm -  4:30 pm  | Swap OAI to Vercel AI Gateway , & AI essentials components
-7:30 pm - | Fix the chat text box issue
+7:30 pm -8:30 pm  | Fix the chat text box issue mostly by upgrading to the latest version of npm packages
+8:45 pm | Fix login on prod

@@ -1,9 +1,6 @@
 ---
 // src/pages/index.astro
 import Layout from '../layouts/Layout.astro'
-
-// Extract environment variable at build time/server-side
-const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
 ---
 
 <Layout title="3in1 - Spiritual Guidance with Spirit">
@@ -144,47 +141,97 @@ const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
         </div>
       </section>
 
-      <!-- Tech Stack Section -->
-      <section class="py-20">
+      <!-- Benefits Section -->
+      <section class="bg-gradient-to-br from-purple-50 to-indigo-50 py-20">
         <div class="container mx-auto px-6">
-          <div class="text-center mb-12">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Powered by Modern Technologies</h2>
+          <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">
+              How Spirit Helps Your Spiritual Journey
+            </h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+              Experience spiritual growth through personalized, compassionate guidance
+            </p>
           </div>
-          <div class="flex flex-wrap items-center justify-center gap-8 opacity-60">
-            <!-- Astro -->
-            <div class="flex items-center space-x-2">
-              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M3.22 6.412A1 1 0 0 1 4 6h16a1 1 0 0 1 .894 1.447l-8 16a1 1 0 0 1-1.788 0l-8-16a1 1 0 0 1 .114-1.035zM12 10.236L9.382 16h5.236L12 10.236z"/>
-              </svg>
-              <span class="font-medium">Astro</span>
-            </div>
-            <!-- TypeScript -->
-            <div class="flex items-center space-x-2">
-              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0zm17.363 9.75c.612 0 1.154.037 1.627.111a6.38 6.38 0 0 1 1.306.34v2.458a3.95 3.95 0 0 0-.643-.361 5.093 5.093 0 0 0-.717-.26 5.453 5.453 0 0 0-1.426-.2c-.3 0-.573.028-.819.086a2.1 2.1 0 0 0-.623.242c-.17.104-.3.229-.393.374a.888.888 0 0 0-.14.49c0 .196.053.373.156.529.104.156.252.304.443.444s.423.276.696.41c.273.135.582.274.926.416.47.197.892.407 1.266.628.374.222.695.473.963.753.268.279.472.598.614.957.142.359.214.776.214 1.253 0 .657-.125 1.21-.373 1.656a3.033 3.033 0 0 1-1.012 1.085 4.38 4.38 0 0 1-1.487.596c-.566.12-1.163.18-1.79.18a9.916 9.916 0 0 1-1.84-.164 5.544 5.544 0 0 1-1.512-.493v-2.63c.208.139.438.27.69.393.252.123.514.23.784.321.27.091.537.162.8.213.262.051.505.077.727.077.352 0 .66-.048.926-.144a1.29 1.29 0 0 0 .595-.418c.03-.04.056-.082.078-.127a.999.999 0 0 0 .156-.547.923.923 0 0 0-.187-.571 2.144 2.144 0 0 0-.538-.5 5.173 5.173 0 0 0-.807-.444 27.72 27.72 0 0 0-1.007-.436c-.918-.383-1.602-.852-2.053-1.406-.45-.553-.676-1.255-.676-2.104 0-.614.123-1.141.369-1.582.246-.441.58-.804 1.004-1.088a4.494 4.494 0 0 1 1.47-.629 7.536 7.536 0 0 1 1.77-.201zm-15.113.188h9.563v2.166H9.506v9.646H6.77v-9.646H3.375z"/>
-              </svg>
-              <span class="font-medium">TypeScript</span>
-            </div>
-            <!-- Tailwind -->
-            <div class="flex items-center space-x-2">
-              <div class="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center">
-                <span class="text-white font-bold text-sm">TW</span>
+
+          <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <!-- Benefit 1 -->
+            <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
+              <div class="flex items-start space-x-4">
+                <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center shrink-0">
+                  <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-xl font-semibold text-gray-900 mb-2">Scripture-Based Guidance</h3>
+                  <p class="text-gray-600">All guidance is rooted in Jesus's teachings and Catholic tradition, helping you grow in faith with wisdom from the Bible</p>
+                </div>
               </div>
-              <span class="font-medium">Tailwind CSS</span>
             </div>
-            <!-- Cloudflare -->
-            <div class="flex items-center space-x-2">
-              <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-                <span class="text-white font-bold text-xs">CF</span>
+
+            <!-- Benefit 2 -->
+            <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
+              <div class="flex items-start space-x-4">
+                <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
+                  <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-xl font-semibold text-gray-900 mb-2">Non-Judgmental Support</h3>
+                  <p class="text-gray-600">Spirit responds with warmth, compassion, and empathy - never judgment - meeting you exactly where you are on your journey</p>
+                </div>
               </div>
-              <span class="font-medium">Cloudflare</span>
             </div>
+
+            <!-- Benefit 3 -->
+            <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
+              <div class="flex items-start space-x-4">
+                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center shrink-0">
+                  <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-xl font-semibold text-gray-900 mb-2">Personalized Conversations</h3>
+                  <p class="text-gray-600">Spirit remembers your conversations and learns about you, providing increasingly personalized guidance over time</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Benefit 4 -->
+            <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
+              <div class="flex items-start space-x-4">
+                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center shrink-0">
+                  <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-xl font-semibold text-gray-900 mb-2">Available 24/7</h3>
+                  <p class="text-gray-600">Whenever you need spiritual guidance, encouragement, or someone to pray with - Spirit is here for you day or night</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div class="text-center mt-16">
+            <p class="text-gray-600 mb-6">Start your spiritual journey today</p>
+            <a href="/login" class="inline-block bg-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
+              Begin Conversing with Spirit
+            </a>
           </div>
         </div>
       </section>
     </main>
 
-    <script define:vars={{PUBLIC_WORKER_API_URL: import.meta.env.PUBLIC_WORKER_API_URL || 'http://localhost:8787'}}>
+    <script>
+      // Set API URL based on current environment
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const PUBLIC_WORKER_API_URL = isLocalhost
+        ? 'http://localhost:8787'
+        : 'https://3in1-api.raina.workers.dev';
       // DOM elements
       const loggedOutContent = document.getElementById('logged-out-content');
       const loggedInContent = document.getElementById('logged-in-content');
