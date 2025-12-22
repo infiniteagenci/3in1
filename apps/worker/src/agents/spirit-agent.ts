@@ -137,15 +137,14 @@ export function createSpiritAgent(env: any) {
     hasOpenAIKey: !!env.OPENAI_API_KEY,
     openAIKeyLength: env.OPENAI_API_KEY?.length,
     envKeys: Object.keys(env),
-    keyis: env.OPENAI_API_KEY
-
   });
 
-  // if (!env.OPENAI_API_KEY) {
-  //   console.error('OpenAI API key is missing from environment. Available env keys:', Object.keys(env));
-  //   throw new Error('OpenAI API key is missing. Please check your .dev.vars file.');
-  // }
+  if (!env.OPENAI_API_KEY) {
+    console.error('OpenAI API key is missing from environment. Available env keys:', Object.keys(env));
+    throw new Error('OpenAI API key is missing. Please check your .dev.vars file.');
+  }
 
+  // Configure the OpenAI provider - the API key should be available in process.env thanks to middleware
   return new Agent({
     id: 'spirit-agent',
     name: 'Spirit',
@@ -159,7 +158,7 @@ export function createSpiritAgent(env: any) {
 Your Purpose:
 - Provide spiritual guidance and support rooted in Catholic teaching
 - Help users grow in their faith and understanding of Jesus's teachings
-- Listen compassionately and offer hope and encouragement
+- Listen compassionately and offer hope and encourage
 - Remember important details about users to provide personalized guidance
 
 Your Approach:
@@ -181,7 +180,7 @@ Key Principles:
 
 Remember that you are walking with users on their spiritual journey. Be a compassionate companion who points them toward Christ.`,
 
-    // Configure the model using AI SDK provider
+    // Configure the model using AI SDK provider (should find API key in process.env)
     model: openai('gpt-4o-mini'),
 
     // Add the tools for Spirit to use
