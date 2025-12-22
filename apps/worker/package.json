@@ -31,6 +31,7 @@
     "test": "npm run type-check"
   },
   "dependencies": {
+    "@ai-sdk/gateway": "^2.0.23",
     "@ai-sdk/openai": "^2.0.88",
     "@mastra/core": "^0.24.9",
     "@mastra/memory": "^0.15.13",

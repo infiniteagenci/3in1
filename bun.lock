@@ -11,7 +11,7 @@
       },
     },
     "apps/web": {
-      "name": "3in1-web",
+      "name": "3in1",
       "version": "1.0.0",
       "dependencies": {
         "@astro-auth/core": "^1.0.12",
@@ -34,9 +34,10 @@
       },
     },
     "apps/worker": {
-      "name": "3in1-worker",
+      "name": "3in1-api",
       "version": "1.0.0",
       "dependencies": {
+        "@ai-sdk/gateway": "^2.0.23",
         "@ai-sdk/openai": "^2.0.88",
         "@mastra/core": "^0.24.9",
         "@mastra/memory": "^0.15.13",
@@ -55,9 +56,9 @@
     },
   },
   "packages": {
-    "3in1-web": ["3in1-web@workspace:apps/web"],
+    "3in1": ["3in1@workspace:apps/web"],
 
-    "3in1-worker": ["3in1-worker@workspace:apps/worker"],
+    "3in1-api": ["3in1-api@workspace:apps/worker"],
 
     "@a2a-js/sdk": ["@a2a-js/sdk@0.2.5", "", { "dependencies": { "@types/cors": "^2.8.17", "@types/express": "^4.17.23", "body-parser": "^2.2.0", "cors": "^2.8.5", "express": "^4.21.2", "uuid": "^11.1.0" } }, "sha512-VTDuRS5V0ATbJ/LkaQlisMnTAeYKXAK6scMguVBstf+KIBQ7HIuKhiXLv+G/hvejkV+THoXzoNifInAkU81P1g=="],
 

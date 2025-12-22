@@ -1,4 +1,5 @@
 import { Agent } from '@mastra/core/agent';
+import { createGateway } from '@ai-sdk/gateway';
 import { createOpenAI } from "@ai-sdk/openai";
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
@@ -135,13 +136,15 @@ const getConversationHistoryTool = createTool({
 export function createSpiritAgent(env: any) {
   console.log('Creating Spirit agent with env:', {
     hasOpenAIKey: !!env.OPENAI_API_KEY,
+    hasAIGatewayKey: !!env.AI_GATEWAY_API_KEY,
     openAIKeyLength: env.OPENAI_API_KEY?.length,
+    aiGatewayKeyLength: env.AI_GATEWAY_API_KEY?.length,
     envKeys: Object.keys(env),
   });
 
-  if (!env.OPENAI_API_KEY) {
-    console.error('OpenAI API key is missing from environment. Available env keys:', Object.keys(env));
-    throw new Error('OpenAI API key is missing. Please check your .dev.vars file.');
+  if (!env.AI_GATEWAY_API_KEY && !env.OPENAI_API_KEY) {
+    console.error('Neither AI Gateway API key nor OpenAI API key is available from environment. Available env keys:', Object.keys(env));
+    throw new Error('AI Gateway API key or OpenAI API key is missing. Please check your .dev.vars file.');
   }
 
   // Configure the OpenAI provider with the API key from the environment
@@ -182,7 +185,12 @@ Key Principles:
 Remember that you are walking with users on their spiritual journey. Be a compassionate companion who points them toward Christ.`,
 
     // Create OpenAI provider with the API key from environment
-    model: createOpenAI({ apiKey: env.OPENAI_API_KEY })('gpt-4o-mini'),
+    //
+    // model: createOpenAI({ apiKey: env.OPENAI_API_KEY })('gpt-4o-mini'),
+
+     model: createGateway({
+       apiKey: env.AI_GATEWAY_API_KEY || env.OPENAI_API_KEY,
+     })('alibaba/qwen-3-14b'),
 
     // Add the tools for Spirit to use
     tools: {
