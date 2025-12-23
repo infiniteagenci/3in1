@@ -51,3 +51,5 @@ bun.lockb
 .parcel-cache/
 .next/
 out/
+
+theme-design

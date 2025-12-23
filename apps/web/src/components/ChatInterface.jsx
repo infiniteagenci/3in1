@@ -144,7 +144,7 @@ export default function ChatInterface() {
     : 'http://localhost:8787';
 
   const [input, setInput] = useState('');
-  const [showSuggestions, setShowSuggestions] = useState(true);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
       api: `${PUBLIC_WORKER_API_URL}/api/chat`,
@@ -159,15 +159,6 @@ export default function ChatInterface() {
     return generateContextualSuggestions(messages);
   }, [messages]);
 
-  // Show suggestions when not streaming and user is not typing
-  useEffect(() => {
-    if (status !== 'streaming' && status !== 'submitted' && !input) {
-      setShowSuggestions(true);
-    } else if (input) {
-      setShowSuggestions(false);
-    }
-  }, [status, input]);
-
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
     if (input.trim()) {
@@ -180,6 +171,10 @@ export default function ChatInterface() {
   const handleSuggestionClick = useCallback((suggestion) => {
     setInput(suggestion);
     setShowSuggestions(false);
+  }, []);
+
+  const toggleSuggestions = useCallback(() => {
+    setShowSuggestions(prev => !prev);
   }, []);
 
   return (
@@ -222,27 +217,49 @@ export default function ChatInterface() {
         </ConversationContent>
       </Conversation>
 
-      {/* Suggestions - shown based on conversation state */}
-      {showSuggestions && status !== 'streaming' && status !== 'submitted' && (
-        <div className="px-4 py-3 bg-gradient-to-b from-[var(--color-stone-50)] to-white border-t border-[var(--color-stone-200)]">
-          <p className="text-sm text-[var(--color-stone-700)] font-medium mb-3 text-center tracking-tight font-geist">
-            {messages.length === 0
-              ? '✨ What would you like to ask Spirit?'
-              : '💫 Continue the conversation...'}
-          </p>
-          <Suggestions className="justify-center">
-            {suggestedQuestions.map((question) => (
-              <Suggestion
-                key={question}
-                suggestion={question}
-                onClick={handleSuggestionClick}
-              />
-            ))}
-          </Suggestions>
+      {/* Suggestions - collapsible accordion */}
+      {status !== 'streaming' && status !== 'submitted' && (
+        <div className="border-t border-[var(--color-stone-200)] bg-white">
+          {/* Accordion Header */}
+          <button
+            onClick={toggleSuggestions}
+            className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[var(--color-stone-50)] transition-colors"
+          >
+            <span className="text-sm text-[var(--color-stone-700)] font-medium tracking-tight font-geist">
+              {messages.length === 0 ? '✨ Suggested questions' : '💫 Follow-up questions'}
+            </span>
+            <svg
+              className={`w-4 h-4 text-[var(--color-stone-500)] transition-transform duration-200 ${showSuggestions ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {/* Accordion Content */}
+          <div
+            className={`overflow-hidden transition-all duration-200 ease-in-out ${
+              showSuggestions ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+            }`}
+          >
+            <div className="px-4 pb-4">
+              <Suggestions className="justify-center">
+                {suggestedQuestions.map((question) => (
+                  <Suggestion
+                    key={question}
+                    suggestion={question}
+                    onClick={handleSuggestionClick}
+                  />
+                ))}
+              </Suggestions>
+            </div>
+          </div>
         </div>
       )}
 
-      <div className="border-t border-[var(--color-stone-200)] p-4 bg-white">
+      <div className="border-t border-[var(--color-stone-200)] p-4 pb-4 bg-white">
         <form onSubmit={handleSubmit} className="flex items-end gap-2">
           <textarea
             value={input}
