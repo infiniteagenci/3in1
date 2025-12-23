@@ -96,11 +96,35 @@ chat.post('/chat', validateSession, async (c) => {
       return c.json({ error: 'Message text is required' }, 400);
     }
 
-    // Build messages with system prompt - use the format directly without conversion
+    // Get current date, time context for every message
+    const now = new Date();
+    const dateContext = {
+      date: now.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }),
+      time: now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZoneName: 'short'
+      }),
+      isoDate: now.toISOString(),
+      dayOfWeek: now.toLocaleDateString('en-US', { weekday: 'long' }),
+      // Could add location context from request headers or user settings in the future
+    };
+
+    // Build messages with system prompt - include date/time context
     const modelMessages = [
       {
         role: 'system' as const,
-        content: `Current user: ${user.name} (ID: ${user.id}). You are Spirit, a compassionate spiritual guide who provides guidance based on Jesus's teachings and Catholic principles.`
+        content: `Current user: ${user.name} (ID: ${user.id}).
+Current date and time: ${dateContext.date} at ${dateContext.time}.
+Day of week: ${dateContext.dayOfWeek}.
+
+You are Spirit, a compassionate spiritual guide who provides guidance based on Jesus's teachings and Catholic principles.
+When users ask about daily readings, today's Scripture, or liturgical content, use the live-search tool to find relevant content for the current date (${dateContext.date}).`
       },
       ...conversationHistory
     ];

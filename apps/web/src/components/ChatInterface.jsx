@@ -10,6 +10,7 @@ import { Response } from './ai-elements/response';
 import { Message, MessageContent } from './ai-elements/message';
 import { Conversation, ConversationContent } from './ai-elements/conversation';
 import { Loader } from './ai-elements/loader';
+import { Suggestions, Suggestion } from './ai-elements/suggestion';
 
 // Icons
 const SendIcon = () => (
@@ -31,6 +32,7 @@ export default function ChatInterface() {
     : 'http://localhost:8787';
 
   const [input, setInput] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(true);
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
       api: `${PUBLIC_WORKER_API_URL}/api/chat`,
@@ -45,8 +47,22 @@ export default function ChatInterface() {
     if (input.trim()) {
       sendMessage({ text: input });
       setInput('');
+      setShowSuggestions(false);
     }
   }, [input, sendMessage]);
+
+  const handleSuggestionClick = useCallback((suggestion) => {
+    setInput(suggestion);
+    setShowSuggestions(false);
+  }, []);
+
+  // Suggested questions for new users
+  const suggestedQuestions = [
+    "What's the Bible reading for today?",
+    "How can I find peace in difficult times?",
+    "What does Jesus say about forgiveness?",
+    "Help me understand God's plan for my life",
+  ];
 
   return (
     <div className="flex flex-col h-full max-w-4xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden">
@@ -87,6 +103,24 @@ export default function ChatInterface() {
           {(status === 'submitted' || status === 'streaming') && <Loader />}
         </ConversationContent>
       </Conversation>
+
+      {/* Suggestions - shown when no messages yet */}
+      {showSuggestions && messages.length === 0 && (
+        <div className="px-4 py-3 bg-gradient-to-b from-purple-50 to-white border-t border-purple-100">
+          <p className="text-sm text-purple-700 font-medium mb-3 text-center">
+            ✨ What would you like to ask Spirit?
+          </p>
+          <Suggestions className="justify-center">
+            {suggestedQuestions.map((question) => (
+              <Suggestion
+                key={question}
+                suggestion={question}
+                onClick={handleSuggestionClick}
+              />
+            ))}
+          </Suggestions>
+        </div>
+      )}
 
       <div className="border-t border-gray-200 p-4 bg-white">
         <form onSubmit={handleSubmit} className="flex items-end gap-2">
