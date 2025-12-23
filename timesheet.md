@@ -10,4 +10,4 @@
 8:45 pm 9:00 pm | Fix login on prod
 
 ## 23 Dec - Vinci
-9:00 am -  | Adding suggestions pill buttons.
+9:00 am - 9:30 | Adding suggestions pill buttons and fixing chat message formatting issues.
