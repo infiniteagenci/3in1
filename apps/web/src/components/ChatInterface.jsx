@@ -1,6 +1,6 @@
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect, useMemo } from 'react';
 import {
   Reasoning,
   ReasoningContent,
@@ -26,6 +26,118 @@ const SpinnerIcon = () => (
   </svg>
 );
 
+// Default suggestions for new users
+const defaultSuggestions = [
+  "What's the Bible reading for today?",
+  "How can I find peace in difficult times?",
+  "What does Jesus say about forgiveness?",
+  "Help me understand God's plan for my life",
+];
+
+// Generate contextual suggestions based on conversation
+function generateContextualSuggestions(messages) {
+  if (messages.length === 0) return defaultSuggestions;
+
+  // Get recent conversation text
+  const recentText = messages
+    .slice(-6) // Last 3 exchanges
+    .map(m => m.parts?.map((p) => p.text).join(' ') || '')
+    .join(' ')
+    .toLowerCase();
+
+  // Extract key themes and generate follow-up suggestions
+  const suggestions = [];
+
+  // Prayer-related suggestions
+  if (recentText.includes('pray') || recentText.includes('prayer')) {
+    suggestions.push("Can you teach me how to pray?");
+    suggestions.push("What's a good prayer for right now?");
+  }
+
+  // Forgiveness-related
+  if (recentText.includes('forgiv') || recentText.includes('sorry') || recentText.includes('guilt')) {
+    suggestions.push("How do I forgive myself?");
+    suggestions.push("What does Jesus say about second chances?");
+  }
+
+  // Faith/doubt-related
+  if (recentText.includes('faith') || recentText.includes('doubt') || recentText.includes('believe')) {
+    suggestions.push("How can I strengthen my faith?");
+    suggestions.push("Is it normal to have doubts?");
+  }
+
+  // Bible/Scripture-related
+  if (recentText.includes('bible') || recentText.includes('scripture') || recentText.includes('verse')) {
+    suggestions.push("What's a good verse for encouragement?");
+    suggestions.push("How should I start reading the Bible?");
+  }
+
+  // Struggle/hardship-related
+  if (recentText.includes('struggle') || recentText.includes('hard') || recentText.includes('difficult') || recentText.includes('suffer')) {
+    suggestions.push("Why does God allow suffering?");
+    suggestions.push("How do I trust God in hard times?");
+  }
+
+  // Love/relationships
+  if (recentText.includes('love') || recentText.includes('relationship') || recentText.includes('marriage') || recentText.includes('family')) {
+    suggestions.push("What does the Bible say about love?");
+    suggestions.push("How do I show Christ's love to others?");
+  }
+
+  // Fear/anxiety
+  if (recentText.includes('fear') || recentText.includes('anxious') || recentText.includes('worried') || recentText.includes('stress')) {
+    suggestions.push("What verses help with anxiety?");
+    suggestions.push("How can I give my worries to God?");
+  }
+
+  // Church/community
+  if (recentText.includes('church') || recentText.includes('community') || recentText.includes('fellowship')) {
+    suggestions.push("Why is church community important?");
+    suggestions.push("How do I find a good church?");
+  }
+
+  // Sin/temptation
+  if (recentText.includes('sin') || recentText.includes('temptation') || recentText.includes('addict')) {
+    suggestions.push("How do I overcome temptation?");
+    suggestions.push("What does God say about repentance?");
+  }
+
+  // Grace/mercy
+  if (recentText.includes('grace') || recentText.includes('mercy')) {
+    suggestions.push("Can you explain God's grace?");
+    suggestions.push("What's the difference between grace and mercy?");
+  }
+
+  // Purpose/calling
+  if (recentText.includes('purpose') || recentText.includes('calling') || recentText.includes('vocation') || recentText.includes('mission')) {
+    suggestions.push("How do I discover my God-given purpose?");
+    suggestions.push("What does it mean to be called by God?");
+  }
+
+  // Hope/joy
+  if (recentText.includes('hope') || recentText.includes('joy') || recentText.includes('happy')) {
+    suggestions.push("How do I find lasting joy?");
+    suggestions.push("What gives Christians hope?");
+  }
+
+  // Add general follow-ups if we didn't generate enough
+  while (suggestions.length < 3) {
+    const generalFollowUps = [
+      "Can you explain that more deeply?",
+      "What's a practical way to apply this?",
+      "Can you pray with me about this?",
+      "What should I do next?",
+      "How can I grow in this area?",
+    ];
+    const nextSuggestion = generalFollowUps.find(s => !suggestions.includes(s));
+    if (nextSuggestion) suggestions.push(nextSuggestion);
+    else break;
+  }
+
+  // Shuffle and return up to 4 suggestions
+  return suggestions.slice(0, 4);
+}
+
 export default function ChatInterface() {
   const PUBLIC_WORKER_API_URL = typeof window !== 'undefined'
     ? window.PUBLIC_WORKER_API_URL || 'http://localhost:8787'
@@ -42,6 +154,20 @@ export default function ChatInterface() {
     }),
   });
 
+  // Generate dynamic suggestions based on conversation
+  const suggestedQuestions = useMemo(() => {
+    return generateContextualSuggestions(messages);
+  }, [messages]);
+
+  // Show suggestions when not streaming and user is not typing
+  useEffect(() => {
+    if (status !== 'streaming' && status !== 'submitted' && !input) {
+      setShowSuggestions(true);
+    } else if (input) {
+      setShowSuggestions(false);
+    }
+  }, [status, input]);
+
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
     if (input.trim()) {
@@ -56,17 +182,9 @@ export default function ChatInterface() {
     setShowSuggestions(false);
   }, []);
 
-  // Suggested questions for new users
-  const suggestedQuestions = [
-    "What's the Bible reading for today?",
-    "How can I find peace in difficult times?",
-    "What does Jesus say about forgiveness?",
-    "Help me understand God's plan for my life",
-  ];
-
   return (
-    <div className="flex flex-col h-full max-w-4xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden">
-      <Conversation className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+    <div className="flex flex-col h-full min-h-0 max-w-4xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden">
+      <Conversation className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4 bg-gray-50">
         <ConversationContent>
           {messages.map((message) => (
             <Message key={message.id} from={message.role === 'user' ? 'user' : 'ai'}>
@@ -104,11 +222,13 @@ export default function ChatInterface() {
         </ConversationContent>
       </Conversation>
 
-      {/* Suggestions - shown when no messages yet */}
-      {showSuggestions && messages.length === 0 && (
+      {/* Suggestions - shown based on conversation state */}
+      {showSuggestions && status !== 'streaming' && status !== 'submitted' && (
         <div className="px-4 py-3 bg-gradient-to-b from-purple-50 to-white border-t border-purple-100">
           <p className="text-sm text-purple-700 font-medium mb-3 text-center">
-            ✨ What would you like to ask Spirit?
+            {messages.length === 0
+              ? '✨ What would you like to ask Spirit?'
+              : '💫 Continue the conversation...'}
           </p>
           <Suggestions className="justify-center">
             {suggestedQuestions.map((question) => (

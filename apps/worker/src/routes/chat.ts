@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { createSpiritAgent } from '../agents/spirit-agent';
+import { createSpiritAgent, setDatabase, clearDatabase } from '../agents/spirit-agent';
 import { streamText, convertToModelMessages } from 'ai';
 import { createGateway } from '@ai-sdk/gateway';
 
@@ -69,8 +69,12 @@ chat.post('/chat', validateSession, async (c) => {
 
     console.log('Request body:', JSON.stringify(body, null, 2));
 
+    // Set database for agent tools to access
+    setDatabase(c.env.DB);
+
     // AI SDK v5 sends messages in UIMessage format with parts array
     const messages = body.messages || [];
+    const conversationId = body.conversationId;
 
     if (!messages || messages.length === 0) {
       return c.json({ error: 'Messages are required' }, 400);
@@ -134,11 +138,20 @@ When users ask about daily readings, today's Scripture, or liturgical content, u
       apiKey: c.env.AI_GATEWAY_API_KEY || c.env.OPENAI_API_KEY,
     });
 
+    // Generate the response and save on completion
     const result = await streamText({
       model: gateway('openai/gpt-4o-mini'),
       messages: modelMessages,
       temperature: 0.7,
       maxOutputTokens: 1000,
+      onFinish: async (result) => {
+        // Save conversation when stream completes
+        try {
+          await saveConversation(c.env.DB, user.id, conversationId, messages, result.text);
+        } catch (err) {
+          console.error('Failed to save conversation:', err);
+        }
+      },
     });
 
     return result.toUIMessageStreamResponse();
@@ -226,6 +239,65 @@ function extractImportantInfo(userMessage: string, spiritResponse: string): stri
   }
 
   return importantInfo;
+}
+
+// Helper function to save conversation to database
+async function saveConversation(
+  db: D1Database,
+  userId: string,
+  conversationId: string | undefined,
+  messages: any[],
+  assistantResponse: string
+) {
+  try {
+    // Add the assistant's response to messages
+    const updatedMessages = [
+      ...messages,
+      {
+        role: 'assistant',
+        content: assistantResponse,
+        createdAt: new Date().toISOString(),
+      }
+    ];
+
+    // Generate title from first user message if this is a new conversation
+    const firstUserMessage = messages.find((m: any) => m.role === 'user');
+    const title = firstUserMessage
+      ? (firstUserMessage.parts?.[0]?.text || firstUserMessage.content || 'New Conversation').substring(0, 50)
+      : 'New Conversation';
+
+    if (!conversationId) {
+      // Create new conversation
+      const newConversationId = createId();
+      await db.prepare(
+        'INSERT INTO conversations (id, user_id, title, messages, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)'
+      ).bind(
+        newConversationId,
+        userId,
+        title,
+        JSON.stringify(updatedMessages),
+        new Date().toISOString(),
+        new Date().toISOString()
+      ).run();
+      console.log('Created new conversation:', newConversationId);
+      return newConversationId;
+    } else {
+      // Update existing conversation
+      await db.prepare(
+        'UPDATE conversations SET messages = ?, updated_at = ? WHERE id = ? AND user_id = ?'
+      ).bind(
+        JSON.stringify(updatedMessages),
+        new Date().toISOString(),
+        conversationId,
+        userId
+      ).run();
+      console.log('Updated conversation:', conversationId);
+      return conversationId;
+    }
+  } catch (error) {
+    console.error('Error saving conversation:', error);
+    throw error;
+  }
 }
 
 export default chat;

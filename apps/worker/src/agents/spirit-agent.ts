@@ -7,11 +7,23 @@ import { z } from 'zod';
 type WorkerEnv = {
   AI_GATEWAY_API_KEY?: string;
   OPENAI_API_KEY: string;
+  DB?: D1Database;
 };
 
 // Simple ID generator function
 function createId(): string {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
+}
+
+// Global database reference - set by the chat route before agent execution
+let currentDB: D1Database | null = null;
+
+export function setDatabase(db: D1Database) {
+  currentDB = db;
+}
+
+export function clearDatabase() {
+  currentDB = null;
 }
 
 // Helper function to extract important information from conversation
@@ -134,13 +146,30 @@ const readNotesTool = createTool({
   execute: async (context) => {
     try {
       const { userId } = context;
-      // For now, we'll disable database access in tools
-      // TODO: Implement proper database access through Mastra context
-      console.log(`Tool called with userId: ${userId}`);
-      // For now, return empty notes - TODO: Implement database access
+
+      if (!currentDB) {
+        console.warn('Database not available in read notes tool');
+        return {
+          notes: 'Database not available',
+          exists: false
+        };
+      }
+
+      // Get the user's notes from database
+      const result = await currentDB.prepare(
+        'SELECT content FROM notes WHERE user_id = ? ORDER BY updated_at DESC LIMIT 1'
+      ).bind(userId).first();
+
+      if (!result) {
+        return {
+          notes: '',
+          exists: false
+        };
+      }
+
       return {
-        notes: 'No notes available yet - database access needs to be implemented',
-        exists: false
+        notes: (result as any).content as string,
+        exists: true
       };
     } catch (error) {
       console.error('Error reading notes:', error);
@@ -164,15 +193,42 @@ const writeNotesTool = createTool({
   execute: async (context) => {
     try {
       const { userId, observation, conversationContext } = context;
-      console.log(`Write notes tool called with userId: ${userId}, observation: ${observation}`);
 
-      // For now, just log the action - TODO: Implement database access
+      if (!currentDB) {
+        console.warn('Database not available in write notes tool');
+        return {
+          success: false,
+          notesUpdated: 'Database not available'
+        };
+      }
+
+      // Check if user already has notes
+      const existingNotes = await currentDB.prepare(
+        'SELECT content, id FROM notes WHERE user_id = ? LIMIT 1'
+      ).bind(userId).first();
+
       const timestamp = new Date().toISOString();
-      console.log(`Would store note for user ${userId} at ${timestamp}: ${observation}`);
+      const newEntry = `[${timestamp}] ${observation}${conversationContext ? `\nContext: ${conversationContext}` : ''}`;
+
+      if (existingNotes) {
+        // Append to existing notes
+        const updatedContent = `${(existingNotes as any).content}\n\n${newEntry}`;
+        await currentDB.prepare(
+          'UPDATE notes SET content = ?, updated_at = ? WHERE id = ?'
+        ).bind(updatedContent, timestamp, (existingNotes as any).id).run();
+      } else {
+        // Create new notes
+        const notesId = createId();
+        await currentDB.prepare(
+          'INSERT INTO notes (id, user_id, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?)'
+        ).bind(notesId, userId, newEntry, timestamp, timestamp).run();
+      }
+
+      console.log(`Saved note for user ${userId}: ${observation}`);
 
       return {
         success: true,
-        notesUpdated: `Note recorded at ${timestamp}: ${observation}`
+        notesUpdated: `Note recorded: ${observation}`
       };
     } catch (error) {
       console.error('Error writing notes:', error);
@@ -199,17 +255,31 @@ const getConversationHistoryTool = createTool({
   execute: async (context) => {
     try {
       const { conversationId, userId, maxMessages } = context;
-      console.log(`Conversation history tool called with conversationId: ${conversationId}, userId: ${userId}`);
 
-      // For now, return empty messages - TODO: Implement database access
+      if (!currentDB) {
+        console.warn('Database not available in conversation history tool');
+        return { messages: [] };
+      }
+
+      // Get the conversation from database
+      const conversation = await currentDB.prepare(
+        'SELECT messages FROM conversations WHERE id = ? AND user_id = ?'
+      ).bind(conversationId, userId).first();
+
+      if (!conversation) {
+        return { messages: [] };
+      }
+
+      // Parse messages and limit to maxMessages
+      const allMessages = JSON.parse((conversation as any).messages);
+      const recentMessages = allMessages.slice(-maxMessages);
+
       return {
-        messages: [
-          {
-            role: 'user' as const,
-            content: 'Conversation history not available - database access needs to be implemented',
-            timestamp: new Date().toISOString()
-          }
-        ]
+        messages: recentMessages.map((msg: any) => ({
+          role: msg.role,
+          content: msg.content || msg.parts?.[0]?.text || '',
+          timestamp: msg.createdAt || new Date().toISOString(),
+        }))
       };
     } catch (error) {
       console.error('Error getting conversation history:', error);
