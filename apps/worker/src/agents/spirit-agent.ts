@@ -48,10 +48,10 @@ function extractImportantInfo(userMessage: string, spiritResponse: string): stri
 // Live search tool for Bible readings and spiritual content
 const liveSearchTool = createTool({
   id: 'live-search',
-  description: 'Search for Bible readings, spiritual content, and daily readings. Use this when users ask about today\'s reading, Bible passages, or specific spiritual topics.',
+  description: 'Search for Bible readings, spiritual content, and daily readings. Use this when users ask about today\'s reading, Saint\'s feast, upcoming days of obligation, Bible passages, or specific spiritual topics.',
   inputSchema: z.object({
     query: z.string().describe('The search query for finding Bible readings or spiritual content'),
-    searchType: z.enum(['bible-reading', 'daily-reading', 'bible-passage', 'spiritual-topic']).optional().default('bible-reading').describe('Type of search to perform'),
+    searchType: z.enum(['bible-reading', 'daily-reading','saint\'s feast','days of obligation',  'bible-passage', 'spiritual-topic']).optional().default('bible-reading').describe('Type of search to perform'),
   }),
   outputSchema: z.object({
     results: z.array(z.object({
