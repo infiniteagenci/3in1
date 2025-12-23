@@ -11,17 +11,19 @@ import ChatInterface from '../components/ChatInterface.jsx'
 
   <!-- Main Chat Interface -->
   <div id="chat-container" class="chat-container hidden flex flex-col h-screen">
-    <!-- Header -->
-    <header class="w-full bg-gradient-to-r from-purple-400 via-purple-500 to-blue-400 shadow-md">
-      <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-        <div class="flex items-center">
-          <div class="avatar w-10 h-10 rounded-full bg-white text-purple-600 flex items-center justify-center font-bold mr-3 shadow-sm">S</div>
+    <!-- Header with theme design styles -->
+    <header class="border-[var(--color-border)] border-b backdrop-blur shadow-sm">
+      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between rounded-[var(--radius-2xl)]">
+        <div class="flex items-center  ">
+          <div class="w-10 h-10 rounded-[var(--radius-md)] bg-gradient-to-br from-[var(--color-accent-purple)] to-[var(--color-accent-blue)] flex items-center justify-center mr-3 shadow-sm">
+            <span class="text-white font-bold font-geist">S</span>
+          </div>
           <div>
-            <h1 class="font-semibold text-white">Spirit</h1>
-            <p class="text-xs text-purple-100">Your spiritual guide</p>
+            <h1 class="font-semibold text-[var(--color-stone-700)] tracking-tight font-geist">Spirit</h1>
+            <p class="text-xs text-[var(--color-stone-500)] font-geist">Your spiritual guide</p>
           </div>
         </div>
-        <button id="logout-btn" class="logout-btn bg-white/20 text-white px-4 py-1.5 rounded-full text-sm hover:bg-white/30 transition-colors backdrop-blur-sm border border-white/30">Logout</button>
+        <button id="logout-btn" class="bg-[var(--color-stone-50)] text-[var(--color-stone-600)] px-4 py-1.5 rounded-[var(--radius-md)] text-sm hover:bg-[var(--color-stone-100)] transition-colors border border-[var(--color-white)] font-geist tracking-tight">Logout</button>
       </div>
     </header>
 
@@ -114,6 +116,7 @@ import ChatInterface from '../components/ChatInterface.jsx'
       font-size: 1.2rem;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
+      font-family: 'Inter', sans-serif;
     }
   </style>
 </Layout>

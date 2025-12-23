@@ -30,8 +30,13 @@ export const Suggestion = ({
   return (
     <Button
       onClick={handleClick}
+      style={{
+        borderRadius: 'var(--radius-full)',
+        borderColor: 'var(--color-stone-200)',
+        color: 'var(--color-stone-700)',
+      }}
       className={cn(
-        "rounded-full border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300",
+        "font-geist tracking-tight hover-suggestion",
         className
       )}
       variant={variant}

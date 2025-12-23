@@ -15,19 +15,30 @@ const Message = React.forwardRef(({ from, className, ...props }, ref) => (
 
 Message.displayName = "Message"
 
-const MessageContent = React.forwardRef(({ from, className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "max-w-[80%] rounded-lg px-4 py-3",
-      from === "user"
-        ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-br-sm"
-        : "bg-white text-gray-800 rounded-bl-sm shadow-sm border border-gray-100",
-      className
-    )}
-    {...props}
-  />
-))
+const MessageContent = React.forwardRef(({ from, className, ...props }, ref) => {
+  const isUser = from === "user";
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        borderRadius: isUser
+          ? 'var(--radius-xl) var(--radius-xl) var(--radius-sm) var(--radius-xl)'
+          : 'var(--radius-xl) var(--radius-xl) var(--radius-xl) var(--radius-sm)',
+        background: isUser
+          ? 'linear-gradient(to bottom right, var(--color-accent-purple), var(--color-accent-blue))'
+          : 'white',
+        color: isUser ? 'white' : 'var(--color-stone-800)',
+        border: isUser ? 'none' : '1px solid var(--color-stone-200)',
+      }}
+      className={cn(
+        "max-w-[80%] px-4 py-3 shadow-sm font-geist",
+        className
+      )}
+      {...props}
+    />
+  );
+})
 
 MessageContent.displayName = "MessageContent"
 

@@ -2,6 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========================================
+   DESIGN TOKENS (CSS Variables)
+   ======================================== */
+:root {
+  /* Primary Colors */
+  --color-primary: rgb(234, 88, 12);
+  --color-primary-hover: rgb(194, 65, 12);
+  --color-primary-light: rgb(254, 215, 170);
+  --color-primary-bg: rgba(234, 88, 12, 0.15);
+
+  /* Accent Colors */
+  --color-accent-purple: #9333ea;
+  --color-accent-blue: #2563eb;
+
+  /* Neutral Colors */
+  --color-stone-50: #fafaf9;
+  --color-stone-100: #f5f5f4;
+  --color-stone-200: #e7e5e4;
+  --color-stone-300: #d6d3d1;
+  --color-stone-400: #a8a29e;
+  --color-stone-500: #78716c;
+  --color-stone-600: #57534e;
+  --color-stone-700: #44403c;
+  --color-stone-800: #292524;
+  --color-stone-900: #1c1917;
+
+  /* Background Colors */
+  --color-bg-slate: #f8fafc;
+  --color-bg-white: rgba(255, 255, 255, 0.8);
+  --color-bg-glass: rgba(255, 255, 255, 0.3);
+
+  /* Border Colors */
+  --color-border: rgba(231, 229, 228, 0.6);
+
+  /* Spacing */
+  --spacing-page-padding: 1rem;
+  --spacing-card-padding: 2rem;
+
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms;
+  --transition-base: 200ms;
+  --transition-slow: 300ms;
+}
+
+/* Theme Design Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Crimson+Pro:ital,wght@1,600&family=Inter:wght@300;400;500;600&display=swap');
+
 /* Global styles for all pages */
 * {
   box-sizing: border-box;
@@ -15,8 +70,79 @@ html, body {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', sans-serif;
   line-height: 1.6;
+}
+
+/* Theme Design Font Classes */
+.font-geist {
+  font-family: 'Geist', sans-serif !important;
+}
+
+.font-playfair {
+  font-family: 'Playfair Display', serif !important;
+}
+
+.font-crimson {
+  font-family: 'Crimson Pro', serif !important;
+}
+
+.font-inter {
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Theme Design Animations */
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in-slide {
+  animation: fadeInSlide 0.8s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Hover states for components using design tokens */
+.hover-suggestion:hover {
+  background-color: var(--color-stone-100);
+  border-color: var(--color-stone-300);
+}
+
+.hover-input-primary:hover {
+  border-color: var(--color-primary);
 }
 
 /* Custom utility classes */
@@ -556,7 +682,7 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f3f4f6;
+
 }
 
 .chat-header {

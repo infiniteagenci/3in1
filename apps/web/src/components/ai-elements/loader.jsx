@@ -8,11 +8,11 @@ const Loader = React.forwardRef(({ className, ...props }, ref) => (
     {...props}
   >
     <div className="flex gap-1">
-      <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-      <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-      <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+      <div className="w-2 h-2 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+      <div className="w-2 h-2 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+      <div className="w-2 h-2 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
     </div>
-    <span className="text-sm text-gray-500">Spirit is thinking...</span>
+    <span className="text-sm text-stone-500 font-geist">Spirit is thinking...</span>
   </div>
 ))
 

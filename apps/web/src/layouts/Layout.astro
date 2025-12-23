@@ -11,6 +11,12 @@ const { title } = Astro.props;
     <title>{title}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Theme Design Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Crimson+Pro:ital,wght@1,600&family=Playfair+Display:wght@400;500;600;700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <slot name="head" />
     <script type="text/javascript">
         (function(c,l,a,r,i,t,y){
@@ -21,6 +27,12 @@ const { title } = Astro.props;
     </script>
   </head>
   <body>
+      <!-- Background - Light slate with subtle gradient accents -->
+      <div class="fixed inset-0 -z-10 bg-slate-50"></div>
+      <div class="fixed inset-0 -z-10 opacity-40">
+        <div class="absolute top-0 left-3 w-3/4 h-3/4 bg-purple-600 rounded-full blur-2xl"></div>
+        <div class="absolute bottom-0 right-3 w-3/4 h-3/4 bg-blue-600 rounded-full blur-2xl"></div>
+      </div>
     <slot />
   </body>
 </html>

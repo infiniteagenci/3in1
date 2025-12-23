@@ -183,8 +183,8 @@ export default function ChatInterface() {
   }, []);
 
   return (
-    <div className="flex flex-col h-full min-h-0 max-w-4xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden">
-      <Conversation className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4 bg-gray-50">
+    <div id='chatbox' className="flex flex-col h-full min-h-0 max-w-5xl mx-auto bg-[var(--color-bg-white)] rounded-[var(--radius-xl)] shadow-sm overflow-hidden border-[var(--color-border)] border border-white opacity-70">
+      <Conversation className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4 bg-[var(--color-stone-50)]">
         <ConversationContent>
           {messages.map((message) => (
             <Message key={message.id} from={message.role === 'user' ? 'user' : 'ai'}>
@@ -207,7 +207,7 @@ export default function ChatInterface() {
                       >
                         <ReasoningTrigger title="💭 Spiritual Reasoning" />
                         <ReasoningContent>
-                          <div className="whitespace-pre-wrap">{part.text}</div>
+                          <div className="whitespace-pre-wrap font-geist text-[var(--color-stone-600)]">{part.text}</div>
                         </ReasoningContent>
                       </Reasoning>
                     );
@@ -224,8 +224,8 @@ export default function ChatInterface() {
 
       {/* Suggestions - shown based on conversation state */}
       {showSuggestions && status !== 'streaming' && status !== 'submitted' && (
-        <div className="px-4 py-3 bg-gradient-to-b from-purple-50 to-white border-t border-purple-100">
-          <p className="text-sm text-purple-700 font-medium mb-3 text-center">
+        <div className="px-4 py-3 bg-gradient-to-b from-[var(--color-stone-50)] to-white border-t border-[var(--color-stone-200)]">
+          <p className="text-sm text-[var(--color-stone-700)] font-medium mb-3 text-center tracking-tight font-geist">
             {messages.length === 0
               ? '✨ What would you like to ask Spirit?'
               : '💫 Continue the conversation...'}
@@ -242,7 +242,7 @@ export default function ChatInterface() {
         </div>
       )}
 
-      <div className="border-t border-gray-200 p-4 bg-white">
+      <div className="border-t border-[var(--color-stone-200)] p-4 bg-white">
         <form onSubmit={handleSubmit} className="flex items-end gap-2">
           <textarea
             value={input}
@@ -255,12 +255,15 @@ export default function ChatInterface() {
             }}
             placeholder="Ask Spirit for spiritual guidance..."
             rows={2}
-            className="flex-1 w-full resize-none border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-colors"
+            className="flex-1 w-full resize-none border-2 border-[var(--color-stone-200)] rounded-xl px-4 py-3 focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-light)] transition-colors font-geist text-[var(--color-stone-700)] placeholder:text-[var(--color-stone-400)]"
           />
           <button
             type="submit"
             disabled={status === 'streaming' || !input?.trim()}
-            className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg shrink-0"
+            className="flex items-center justify-center w-12 h-12 rounded-full text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-lg shrink-0"
+            style={{
+              background: 'linear-gradient(to bottom right, var(--color-accent-purple), var(--color-accent-blue))'
+            }}
           >
             {status === 'streaming' ? <SpinnerIcon /> : <SendIcon />}
           </button>
