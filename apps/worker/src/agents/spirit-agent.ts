@@ -377,7 +377,7 @@ Remember that you are walking with users on their spiritual journey. Be a compas
 
     // Use AI Gateway with model identifier as string
     model: {
-      id: 'openai/gpt-4o-mini',
+      id: 'openai/gpt-5-nano',
       apiKey: env.AI_GATEWAY_API_KEY || env.OPENAI_API_KEY,
       provider: 'gateway',
     },
