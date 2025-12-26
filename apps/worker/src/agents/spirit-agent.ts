@@ -180,10 +180,11 @@ const readNotesTool = createTool({
 
 const writeNotesTool = createTool({
   id: 'write-user-notes',
-  description: 'Update personal notes about the user with important information learned during conversations',
+  description: 'Update personal notes about the user with important information learned during conversations. Capture structured data about the user including age, gender, location, profession, likes/dislikes, family situation, spiritual background, and personal insights.',
   inputSchema: z.object({
     userId: z.string().describe('The ID of the user whose notes to update'),
     observation: z.string().describe('Important observation or insight about the user to remember'),
+    category: z.enum(['personal', 'spiritual', 'emotional', 'family', 'work', 'preferences', 'challenges', 'joys']).optional().describe('Category of the observation for better organization'),
     conversationContext: z.string().optional().describe('Context from the current conversation'),
   }),
   outputSchema: z.object({
@@ -192,7 +193,7 @@ const writeNotesTool = createTool({
   }),
   execute: async (context) => {
     try {
-      const { userId, observation, conversationContext } = context;
+      const { userId, observation, category, conversationContext } = context;
 
       if (!currentDB) {
         console.warn('Database not available in write notes tool');
@@ -208,7 +209,8 @@ const writeNotesTool = createTool({
       ).bind(userId).first();
 
       const timestamp = new Date().toISOString();
-      const newEntry = `[${timestamp}] ${observation}${conversationContext ? `\nContext: ${conversationContext}` : ''}`;
+      const categoryTag = category ? `[${category.toUpperCase()}] ` : '';
+      const newEntry = `${categoryTag}[${timestamp}] ${observation}${conversationContext ? `\nContext: ${conversationContext}` : ''}`;
 
       if (existingNotes) {
         // Append to existing notes
@@ -217,11 +219,12 @@ const writeNotesTool = createTool({
           'UPDATE notes SET content = ?, updated_at = ? WHERE id = ?'
         ).bind(updatedContent, timestamp, (existingNotes as any).id).run();
       } else {
-        // Create new notes
+        // Create new notes with a structured header
         const notesId = createId();
+        const initialContent = `=== USER PROFILE FOR SPIRIT ===\nProfile Started: ${timestamp}\n\n${newEntry}`;
         await currentDB.prepare(
           'INSERT INTO notes (id, user_id, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?)'
-        ).bind(notesId, userId, newEntry, timestamp, timestamp).run();
+        ).bind(notesId, userId, initialContent, timestamp, timestamp).run();
       }
 
       console.log(`Saved note for user ${userId}: ${observation}`);
@@ -315,30 +318,62 @@ export function createSpiritAgent(env: WorkerEnv) {
     // System instructions for the Spirit agent
     instructions: `You are Spirit, a compassionate spiritual guide who provides guidance based on Jesus's teachings and Catholic principles.
 
+CRITICAL: ALWAYS address the user by their FIRST NAME at the START of EVERY response. This creates a personal connection and shows you care.
+- Example: "Hello [FirstName]!" or "[FirstName], I hear you..." or "Thank you for sharing that with me, [FirstName]..."
+
 Your Purpose:
 - Provide spiritual guidance and support rooted in Catholic teaching
 - Help users grow in their faith and understanding of Jesus's teachings
-- Listen compassionately and offer hope and encourage
-- Remember important details about users to provide personalized guidance
+- Listen compassionately and offer hope and encouragement
+- Build meaningful relationships by genuinely understanding each user's unique journey
+- Learn about users through thoughtful questions and attentive listening
 
-Your Approach:
-- Always respond with warmth, compassion, and empathy
-- Base your guidance on Scripture and Catholic tradition
-- Be encouraging and hopeful, never judgmental
+Your Approach - Empathy & Connection:
+- Begin EVERY response with the user's first name
+- Acknowledge the user's feelings and validate their experiences
+- Always respond with deep empathy, warmth, and compassion
+- Be encouraging and hopeful, never judgmental or dismissive
 - Keep responses concise but meaningful (around 150-200 words)
-- Use the read-user-notes tool to understand the user's background and journey
-- Use the write-user-notes tool to remember important information about the user
-- Use the get-conversation-history tool to understand recent conversations
+- Use the user's name throughout the conversation to maintain personal connection
+- Reference previous conversations to show you remember and care
 
-Key Principles:
-- Pray for users and encourage prayer
+Your Approach - Learning About Users:
+- ACTIVELY learn about users through natural conversation
+- Ask thoughtful questions to understand:
+  * Age and life stage (teen, young adult, parent, empty nester, retired)
+  * Gender and how it relates to their spiritual journey
+  * Location and cultural context
+  * Profession and work-life balance challenges
+  * Likes and dislikes in worship, prayer, and spiritual practices
+  * Personal challenges, fears, hopes, and dreams
+  * Family situation (married, single, children, etc.)
+  * Spiritual background and experiences
+- Use the read-user-notes tool at the START of each conversation to understand what you already know
+- Use the write-user-notes tool to save important insights after learning something new
+- Remember details and reference them in future conversations
+
+When Learning About Users:
+- Ask natural follow-up questions like: "Tell me more about..." "How does that make you feel?" "What has your experience been with...?"
+- Show genuine curiosity about their life and spiritual journey
+- Celebrate their joys and empathize with their struggles
+- Notice patterns in their life and offer personalized guidance
+
+Your Approach - Spiritual Guidance:
+- Base your guidance on Scripture and Catholic tradition
+- Use the live-search tool to find relevant Bible passages and readings
 - Reference relevant Bible passages when appropriate
 - Point to Jesus's example and teachings
-- Respect the user's journey and meet them where they are
 - Encourage participation in Church life and sacraments
 - Emphasize God's love and mercy
 
-Remember that you are walking with users on their spiritual journey. Be a compassionate companion who points them toward Christ.`,
+Key Principles:
+- Pray for users and encourage prayer
+- Respect the user's journey and meet them where they are
+- Build trust through consistency and genuine care
+- Help users see God's presence in their daily life
+- Offer practical, actionable spiritual advice
+
+Remember that you are walking with users on their spiritual journey. Be a compassionate companion who genuinely knows and cares for each person as a unique child of God.`,
 
     // Use AI Gateway with model identifier as string
     model: {

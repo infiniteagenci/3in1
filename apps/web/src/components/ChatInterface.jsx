@@ -1,6 +1,6 @@
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
-import { useCallback, useState, useEffect, useMemo } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import {
   Reasoning,
   ReasoningContent,
@@ -34,110 +34,6 @@ const defaultSuggestions = [
   "Help me understand God's plan for my life",
 ];
 
-// Generate contextual suggestions based on conversation
-function generateContextualSuggestions(messages) {
-  if (messages.length === 0) return defaultSuggestions;
-
-  // Get recent conversation text
-  const recentText = messages
-    .slice(-6) // Last 3 exchanges
-    .map(m => m.parts?.map((p) => p.text).join(' ') || '')
-    .join(' ')
-    .toLowerCase();
-
-  // Extract key themes and generate follow-up suggestions
-  const suggestions = [];
-
-  // Prayer-related suggestions
-  if (recentText.includes('pray') || recentText.includes('prayer')) {
-    suggestions.push("Can you teach me how to pray?");
-    suggestions.push("What's a good prayer for right now?");
-  }
-
-  // Forgiveness-related
-  if (recentText.includes('forgiv') || recentText.includes('sorry') || recentText.includes('guilt')) {
-    suggestions.push("How do I forgive myself?");
-    suggestions.push("What does Jesus say about second chances?");
-  }
-
-  // Faith/doubt-related
-  if (recentText.includes('faith') || recentText.includes('doubt') || recentText.includes('believe')) {
-    suggestions.push("How can I strengthen my faith?");
-    suggestions.push("Is it normal to have doubts?");
-  }
-
-  // Bible/Scripture-related
-  if (recentText.includes('bible') || recentText.includes('scripture') || recentText.includes('verse')) {
-    suggestions.push("What's a good verse for encouragement?");
-    suggestions.push("How should I start reading the Bible?");
-  }
-
-  // Struggle/hardship-related
-  if (recentText.includes('struggle') || recentText.includes('hard') || recentText.includes('difficult') || recentText.includes('suffer')) {
-    suggestions.push("Why does God allow suffering?");
-    suggestions.push("How do I trust God in hard times?");
-  }
-
-  // Love/relationships
-  if (recentText.includes('love') || recentText.includes('relationship') || recentText.includes('marriage') || recentText.includes('family')) {
-    suggestions.push("What does the Bible say about love?");
-    suggestions.push("How do I show Christ's love to others?");
-  }
-
-  // Fear/anxiety
-  if (recentText.includes('fear') || recentText.includes('anxious') || recentText.includes('worried') || recentText.includes('stress')) {
-    suggestions.push("What verses help with anxiety?");
-    suggestions.push("How can I give my worries to God?");
-  }
-
-  // Church/community
-  if (recentText.includes('church') || recentText.includes('community') || recentText.includes('fellowship')) {
-    suggestions.push("Why is church community important?");
-    suggestions.push("How do I find a good church?");
-  }
-
-  // Sin/temptation
-  if (recentText.includes('sin') || recentText.includes('temptation') || recentText.includes('addict')) {
-    suggestions.push("How do I overcome temptation?");
-    suggestions.push("What does God say about repentance?");
-  }
-
-  // Grace/mercy
-  if (recentText.includes('grace') || recentText.includes('mercy')) {
-    suggestions.push("Can you explain God's grace?");
-    suggestions.push("What's the difference between grace and mercy?");
-  }
-
-  // Purpose/calling
-  if (recentText.includes('purpose') || recentText.includes('calling') || recentText.includes('vocation') || recentText.includes('mission')) {
-    suggestions.push("How do I discover my God-given purpose?");
-    suggestions.push("What does it mean to be called by God?");
-  }
-
-  // Hope/joy
-  if (recentText.includes('hope') || recentText.includes('joy') || recentText.includes('happy')) {
-    suggestions.push("How do I find lasting joy?");
-    suggestions.push("What gives Christians hope?");
-  }
-
-  // Add general follow-ups if we didn't generate enough
-  while (suggestions.length < 3) {
-    const generalFollowUps = [
-      "Can you explain that more deeply?",
-      "What's a practical way to apply this?",
-      "Can you pray with me about this?",
-      "What should I do next?",
-      "How can I grow in this area?",
-    ];
-    const nextSuggestion = generalFollowUps.find(s => !suggestions.includes(s));
-    if (nextSuggestion) suggestions.push(nextSuggestion);
-    else break;
-  }
-
-  // Shuffle and return up to 4 suggestions
-  return suggestions.slice(0, 4);
-}
-
 export default function ChatInterface() {
   const PUBLIC_WORKER_API_URL = typeof window !== 'undefined'
     ? window.PUBLIC_WORKER_API_URL || 'http://localhost:8787'
@@ -145,6 +41,7 @@ export default function ChatInterface() {
 
   const [input, setInput] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [personalizedSuggestions, setPersonalizedSuggestions] = useState(defaultSuggestions);
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
       api: `${PUBLIC_WORKER_API_URL}/api/chat`,
@@ -154,10 +51,38 @@ export default function ChatInterface() {
     }),
   });
 
-  // Generate dynamic suggestions based on conversation
-  const suggestedQuestions = useMemo(() => {
-    return generateContextualSuggestions(messages);
-  }, [messages]);
+  // Fetch personalized suggestions on mount and after messages change
+  useEffect(() => {
+    const fetchPersonalizedSuggestions = async () => {
+      try {
+        const token = localStorage.getItem('session_token');
+        if (!token) return;
+
+        const response = await fetch(`${PUBLIC_WORKER_API_URL}/api/suggestions`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.suggestions && data.suggestions.length > 0) {
+            setPersonalizedSuggestions(data.suggestions);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch personalized suggestions:', error);
+        // Keep default suggestions on error
+      }
+    };
+
+    // Fetch suggestions when component mounts or after user sends a message
+    if (messages.length > 0) {
+      fetchPersonalizedSuggestions();
+    }
+  }, [messages.length, PUBLIC_WORKER_API_URL]);
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
@@ -226,7 +151,7 @@ export default function ChatInterface() {
             className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[var(--color-stone-50)] transition-colors"
           >
             <span className="text-sm text-[var(--color-stone-700)] font-medium tracking-tight font-geist">
-              {messages.length === 0 ? '✨ Suggested questions' : '💫 Follow-up questions'}
+              {messages.length === 0 ? '✨ Suggested questions for you' : '💫 Personalized follow-ups'}
             </span>
             <svg
               className={`w-4 h-4 text-[var(--color-stone-500)] transition-transform duration-200 ${showSuggestions ? 'rotate-180' : ''}`}
@@ -246,7 +171,7 @@ export default function ChatInterface() {
           >
             <div className="px-4 pb-4">
               <Suggestions className="justify-center">
-                {suggestedQuestions.map((question) => (
+                {personalizedSuggestions.map((question) => (
                   <Suggestion
                     key={question}
                     suggestion={question}
@@ -259,7 +184,7 @@ export default function ChatInterface() {
         </div>
       )}
 
-      <div className="border-t border-[var(--color-stone-200)] p-4 pb-4 bg-white">
+      <div className="border-t border-[var(--color-stone-200)] p-4 pb-8 bg-white">
         <form onSubmit={handleSubmit} className="flex items-end gap-2">
           <textarea
             value={input}

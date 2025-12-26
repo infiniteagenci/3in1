@@ -3,6 +3,9 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import auth from './routes/auth';
 import chat from './routes/chat';
+import conversations from './routes/conversations';
+import notes from './routes/notes';
+import suggestions from './routes/suggestions';
 
 type Bindings = {
   DB: D1Database;
@@ -40,8 +43,11 @@ app.get('/health', (c) => {
 // Auth routes
 app.route('/auth', auth);
 
-// Chat routes
-app.route('/api', chat);
+// API routes
+app.route('/api/chat', chat);
+app.route('/api/conversations', conversations);
+app.route('/api/notes', notes);
+app.route('/api/suggestions', suggestions);
 
 // Debug route to test if chat module is loaded
 app.get('/api/test', (c) => {
