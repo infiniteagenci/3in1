@@ -4,22 +4,25 @@ import { validateSession } from './common';
 
 const suggestions = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
-// Helper function to generate personalized suggestions based on user notes
+// Helper function to generate personalized suggestions based on user notes and conversation context
 function generatePersonalizedSuggestions(notes: string, conversations: any[], userName: string): string[] {
   const suggestions: string[] = [];
 
-  // If no notes exist, return default suggestions
-  if (!notes || notes.trim().length === 0) {
+  // If no notes exist and no conversations, return default suggestions with greeting
+  const hasNotes = notes && notes.trim().length > 0;
+  const conversationCount = conversations?.length || 0;
+
+  if (!hasNotes && conversationCount === 0) {
     return [
+      `Hi ${userName.split(' ')[0]}, how are you feeling today?`,
       "What's the Bible reading for today?",
       "How can I find peace in difficult times?",
       "What does Jesus say about forgiveness?",
-      "Help me understand God's plan for my life",
     ];
   }
 
   // Parse notes for user information
-  const notesLower = notes.toLowerCase();
+  const notesLower = notes?.toLowerCase() || '';
 
   // Check for age/life stage
   if (notesLower.includes('teen') || notesLower.includes('young adult')) {
@@ -55,17 +58,47 @@ function generatePersonalizedSuggestions(notes: string, conversations: any[], us
     suggestions.push("Where should I start reading the Bible?");
   }
 
-  // Always add a personalized greeting suggestion
-  suggestions.unshift(`Hi ${userName.split(' ')[0]}, how are you feeling today?`);
+  // Add contextual follow-up suggestions based on conversation depth
+  const conversationDepth = conversationCount > 5 ? 'deep' : conversationCount > 2 ? 'medium' : 'shallow';
 
-  // If we don't have enough suggestions, add some contextual ones
+  // Vary suggestions based on conversation stage
+  const followUpSuggestions: { [key: string]: string[] } = {
+    shallow: [
+      "Tell me more about yourself",
+      "How can I pray for you today?",
+      "What's on your heart?",
+      "What would bring you peace right now?",
+    ],
+    medium: [
+      "How can I apply this to my daily life?",
+      "Can we dig deeper into this topic?",
+      "What does Scripture say about this?",
+      "How can I grow in this area?",
+    ],
+    deep: [
+      "Help me understand this more deeply",
+      "What's the spiritual truth here?",
+      "How can I be transformed by this?",
+      "What's my next step?",
+    ],
+  };
+
+  // Add appropriate follow-ups based on conversation depth
+  const stageSuggestions = followUpSuggestions[conversationDepth];
+  for (const suggestion of stageSuggestions) {
+    if (suggestions.length < 4 && !suggestions.includes(suggestion)) {
+      suggestions.push(suggestion);
+    }
+  }
+
+  // If we don't have enough suggestions, add contextual ones
   while (suggestions.length < 4) {
     const contextualSuggestions = [
       "Can you explain that more deeply?",
       "What's a practical way to apply this?",
       "Can you pray with me about this?",
-      "How can I grow in this area?",
       "What guidance does Scripture offer?",
+      "How can I find peace in this?",
     ];
     const nextSuggestion = contextualSuggestions.find(s => !suggestions.includes(s));
     if (nextSuggestion) suggestions.push(nextSuggestion);
