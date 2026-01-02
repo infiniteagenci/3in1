@@ -4,10 +4,10 @@ import { z } from 'zod';
 // Live search tool for Bible readings and spiritual content
 export const liveSearchTool = createTool({
   id: 'live-search',
-  description: 'Search for Bible readings, spiritual content, and daily readings. Use this when users ask about today\'s reading, Saint\'s feast, upcoming days of obligation, Bible passages, or specific spiritual topics.',
+  description: 'Search for Scripture readings, spiritual content, and daily readings. Use this when users ask about today\'s reading, Saint\'s feast, upcoming days of obligation, Scripture passages, or specific spiritual topics.',
   inputSchema: z.object({
-    query: z.string().describe('The search query for finding Bible readings or spiritual content'),
-    searchType: z.enum(['bible-reading', 'daily-reading', 'saint\'s feast', 'days of obligation', 'bible-passage', 'spiritual-topic']).optional().default('bible-reading').describe('Type of search to perform'),
+    query: z.string().describe('The search query for finding Scripture readings or spiritual content'),
+    searchType: z.enum(['scripture-reading', 'daily-reading', 'saint\'s feast', 'days of obligation', 'scripture-passage', 'spiritual-topic']).optional().default('scripture-reading').describe('Type of search to perform'),
   }),
   outputSchema: z.object({
     results: z.array(z.object({
@@ -15,7 +15,7 @@ export const liveSearchTool = createTool({
       content: z.string(),
       source: z.string(),
       reference: z.string().optional(),
-    })).describe('Search results with relevant Bible passages and spiritual content'),
+    })).describe('Search results with relevant Scripture passages and spiritual content'),
   }),
   execute: async (context) => {
     try {
@@ -37,7 +37,7 @@ export const liveSearchTool = createTool({
       console.log(`Live search called with query: ${query}, type: ${searchType}, date: ${dateStr}, time: ${timeStr}`);
 
       // For now, return structured mock data based on search type
-      // In production, you would integrate with a real Bible API (e.g., Bible API, API.Bible)
+      // In production, you would integrate with a real Scripture API (e.g., Vatican readings, USCCB)
       if (searchType === 'daily-reading' || query.toLowerCase().includes('today') || query.toLowerCase().includes('reading')) {
         return {
           results: [
@@ -57,7 +57,7 @@ export const liveSearchTool = createTool({
         };
       }
 
-      // General Bible search
+      // General Scripture search
       return {
         results: [
           {

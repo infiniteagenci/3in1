@@ -27,8 +27,8 @@ name = "3in1-worker-staging"
 
 [[env.staging.d1_databases]]
 binding = "DB"
-database_name = "3in1-db-staging"
-database_id = "your-staging-database-id-here"
+database_name = "3in1"
+database_id = "ea691e25-4a91-4ce2-a192-8b5b03393be4"
 
 # [[env.staging.kv_namespaces]]
 # binding = "CACHE"

@@ -15,7 +15,7 @@ function generatePersonalizedSuggestions(notes: string, conversations: any[], us
   if (!hasNotes && conversationCount === 0) {
     return [
       `Hi ${userName.split(' ')[0]}, how are you feeling today?`,
-      "What's the Bible reading for today?",
+      "What's the Gospel reading for today?",
       "How can I find peace in difficult times?",
       "What does Jesus say about forgiveness?",
     ];
@@ -40,7 +40,7 @@ function generatePersonalizedSuggestions(notes: string, conversations: any[], us
 
   // Check for relationship concerns
   if (notesLower.includes('married') || notesLower.includes('spouse') || notesLower.includes('relationship')) {
-    suggestions.push("What does the Bible say about marriage?");
+    suggestions.push("What does Scripture say about marriage?");
   }
 
   // Check for spiritual interests
@@ -55,7 +55,7 @@ function generatePersonalizedSuggestions(notes: string, conversations: any[], us
 
   // Check for faith journey
   if (notesLower.includes('new to faith') || notesLower.includes('recently converted')) {
-    suggestions.push("Where should I start reading the Bible?");
+    suggestions.push("Where should I start reading Scripture?");
   }
 
   // Add contextual follow-up suggestions based on conversation depth

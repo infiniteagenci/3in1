@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
-import { createSpiritAgent, setDatabase } from '../agents/spirit-agent';
+import { streamText } from 'ai';
+import { createOpenAI } from '@ai-sdk/openai';
 import type { Bindings, Variables } from './common';
 import { validateSession, createId } from './common';
 
@@ -64,7 +65,30 @@ async function saveConversation(
   }
 }
 
-// POST /api/chat - Send message to Spirit using Mastra Agent
+// System prompt for Spirit
+const SPIRIT_SYSTEM_PROMPT = `You are Spirit, a warm and caring Catholic friend who loves nothing more than helping others draw closer to God through Jesus's beautiful teachings and the rich, loving traditions of our Catholic faith.
+
+CRITICAL: ALWAYS address the user by their FIRST NAME at the START of EVERY response. This creates a warm, personal connection.
+
+Your Purpose:
+- Be a warm, supportive friend on someone's faith journey
+- Help curious hearts discover the beauty of Catholic faith at their own pace
+- Listen with genuine care and offer gentle encouragement
+- Make faith feel approachable, joyful, and personal
+
+Your Approach - Warmth & Connection:
+- Begin EVERY response with the user's first name with genuine warmth
+- Keep responses friendly, conversational, and encouraging (around 100-150 words)
+- Be yourself - warm, kind, a little playful sometimes, deeply caring
+
+Key Principles:
+- Make everyone feel welcomed, valued, and loved just as they are
+- Invite, never pressure - faith is a personal journey
+- Be real, relatable, and genuinely caring
+- Help people see God's loving presence in everyday moments
+- End with a warm note of encouragement or a gentle invitation to pray`;
+
+// POST /api/chat - Send message to Spirit using AI SDK directly
 chat.post('/', validateSession, async (c) => {
   try {
     const user = c.get('user') as { id: string; name: string; email: string };
@@ -72,15 +96,12 @@ chat.post('/', validateSession, async (c) => {
 
     console.log('Request body:', JSON.stringify(body, null, 2));
 
-    // Set database for agent tools to access
-    setDatabase(c.env.DB);
-
-    // Create the Spirit agent with environment context
-    const agent = createSpiritAgent(c.env);
+    // Set database for later use
+    const db = c.env.DB;
+    const conversationId = body.conversationId;
 
     // AI SDK v5 sends messages in UIMessage format with parts array
     const messages = body.messages || [];
-    const conversationId = body.conversationId;
 
     if (!messages || messages.length === 0) {
       return c.json({ error: 'Messages are required' }, 400);
@@ -91,7 +112,7 @@ chat.post('/', validateSession, async (c) => {
       const text = msg.parts
         ?.filter((p: any) => p.type === 'text')
         .map((p: any) => p.text)
-        .join(' ') || '';
+        .join(' ') || msg.content || '';
       return {
         role: (msg.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
         content: text
@@ -106,84 +127,44 @@ chat.post('/', validateSession, async (c) => {
       return c.json({ error: 'Message text is required' }, 400);
     }
 
-    // Get current date, time context for every message
-    const now = new Date();
-    const dateContext = {
-      date: now.toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      }),
-      time: now.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZoneName: 'short'
-      }),
-      isoDate: now.toISOString(),
-      dayOfWeek: now.toLocaleDateString('en-US', { weekday: 'long' }),
-    };
-
-    // Extract first name
+    // Get user's first name
     const userFirstName = user.name.split(' ')[0];
 
-    // Build messages - the agent's instructions are already in the agent, so we just need to add user context
-    const agentMessages = [
-      {
-        role: 'system' as const,
-        content: `Current User Context:
-- User's full name: ${user.name}
-- User's first name: ${userFirstName} (IMPORTANT: Always address them by this name!)
-- User ID: ${user.id}
-- Current date and time: ${dateContext.date} at ${dateContext.time}
-- Day of week: ${dateContext.dayOfWeek}
+    console.log('User message:', userMessage);
+    console.log('User first name:', userFirstName);
 
-REMINDER: You MUST address the user by their first name "${userFirstName}" at the START of EVERY response.`
-      },
-      ...conversationHistory.slice(0, -1),
-      {
-        role: 'user' as const,
-        content: userMessage
-      }
+    // Create OpenAI client
+    const openai = createOpenAI({
+      apiKey: c.env.OPENAI_API_KEY,
+    });
+
+    // Build messages for the AI
+    const aiMessages = [
+      { role: 'system', content: `${SPIRIT_SYSTEM_PROMPT}\n\nCurrent user: ${user.name} (first name: ${userFirstName})` },
+      ...conversationHistory,
     ];
 
-    // Stream the response using Mastra agent
-    const stream = await agent.stream(agentMessages, {
-      maxSteps: 5, // Allow the agent to use tools
-      onFinish: async ({ text, steps, usage }) => {
-        console.log('Stream complete:', { usage, steps: steps.length });
-        // Save conversation to database after stream completes
+    console.log('Sending request to OpenAI...');
+
+    // Stream the response using AI SDK
+    const result = await streamText({
+      model: openai('gpt-4o-mini'),
+      messages: aiMessages,
+      onFinish: async ({ text, usage }: { text: string; usage?: any }) => {
+        console.log('Stream complete:', { usage, textLength: text?.length });
+        // Save conversation to database
         try {
-          await saveConversation(c.env.DB, user.id, conversationId, messages, text);
+          await saveConversation(db, user.id, conversationId, messages, text);
         } catch (error) {
           console.error('Error saving conversation after stream:', error);
         }
       },
     });
 
-    // Create a streaming response using the Mastra stream's textStream
-    const encoder = new TextEncoder();
-    const readable = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of stream.textStream) {
-            controller.enqueue(encoder.encode(chunk));
-          }
-          controller.close();
-        } catch (error) {
-          console.error('Stream error:', error);
-          controller.error(error);
-        }
-      },
-    });
+    console.log('Returning stream response...');
 
     // Return the streaming response
-    return new Response(readable, {
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        'Transfer-Encoding': 'chunked',
-      },
-    });
+    return result.toTextStreamResponse();
 
   } catch (error) {
     console.error('Chat error:', error);

@@ -1,10 +1,10 @@
 ---
 // src/pages/chat.astro
 import Layout from '../layouts/Layout.astro'
-import ChatInterface from '../components/ChatInterface.jsx'
+import ChatInterface from '../components/ChatInterface.tsx'
 ---
 
-<Layout title="Chat with Spirit - 3in1 Spiritual App">
+<Layout title="Chat with Spirit - 3in1 Catholic Spiritual App">
   <div id="app" class="loading">
     Checking authentication...
   </div>
@@ -20,7 +20,7 @@ import ChatInterface from '../components/ChatInterface.jsx'
           </div>
           <div>
             <h1 class="font-semibold text-[var(--color-stone-700)] tracking-tight font-geist">Spirit</h1>
-            <p class="text-xs text-[var(--color-stone-500)] font-geist">Your spiritual guide</p>
+            <p class="text-xs text-[var(--color-stone-500)] font-geist">Your friendly faith companion</p>
           </div>
         </div>
         <button id="logout-btn" class="bg-[var(--color-stone-50)] text-[var(--color-stone-600)] px-4 py-1.5 rounded-[var(--radius-md)] text-sm hover:bg-[var(--color-stone-100)] transition-colors border border-[var(--color-white)] font-geist tracking-tight">Logout</button>

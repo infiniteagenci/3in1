@@ -22,7 +22,7 @@
     "deploy:worker": "cd apps/worker && bun run deploy",
     "deploy:worker:staging": "cd apps/worker && bun run deploy:staging",
     "deploy:worker:dev": "cd apps/worker && bun run deploy:dev",
-    "deploy:pages": "cd apps/web && bun run deploy:pages:production",
+    "deploy:pages": "cd apps/web && bun run deploy",
     "deploy:pages:staging": "cd apps/web && run wrangler pages deploy --env staging",
     "deploy:pages:preview": "cd apps/web && run wrangler pages deploy --env preview",
     "build:web": "cd apps/web && bun run build",
@@ -46,9 +46,10 @@
     "test:worker": "curl -s http://localhost:8788/api/health"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260101.0",
+    "concurrently": "^8.2.2",
     "turbo": "^2.0.14",
-    "typescript": "^5.3.3",
-    "concurrently": "^8.2.2"
+    "typescript": "^5.3.3"
   },
   "packageManager": "bun@1.0.30",
   "engines": {

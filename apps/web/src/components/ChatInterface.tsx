@@ -1,13 +1,12 @@
-import { useChat } from '@ai-sdk/react';
-import { DefaultChatTransport } from 'ai';
-import { useCallback, useState, useEffect } from 'react';
+import { useChat, type Message } from '@ai-sdk/react';
+import { useCallback, useState, useEffect, useRef } from 'react';
 import {
   Reasoning,
   ReasoningContent,
   ReasoningTrigger,
 } from './ai-elements/reasoning';
 import { Response } from './ai-elements/response';
-import { Message, MessageContent } from './ai-elements/message';
+import { Message as MessageComponent, MessageContent } from './ai-elements/message';
 import { Conversation, ConversationContent } from './ai-elements/conversation';
 import { Loader } from './ai-elements/loader';
 import { Suggestions, Suggestion } from './ai-elements/suggestion';
@@ -28,10 +27,10 @@ const SpinnerIcon = () => (
 
 // Default suggestions for new users
 const defaultSuggestions = [
-  "What's the Bible reading for today?",
-  "How can I find peace in difficult times?",
-  "What does Jesus say about forgiveness?",
-  "Help me understand God's plan for my life",
+  "What's something encouraging in the Bible?",
+  "How do I make prayer feel more meaningful?",
+  "Prayers for peace and trust",
+  "Help me understand God's love for me",
 ];
 
 export default function ChatInterface() {
@@ -42,14 +41,17 @@ export default function ChatInterface() {
   const [input, setInput] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [personalizedSuggestions, setPersonalizedSuggestions] = useState(defaultSuggestions);
-  const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({
-      api: `${PUBLIC_WORKER_API_URL}/api/chat`,
-      headers: () => ({
-        'Authorization': `Bearer ${localStorage.getItem('session_token')}`
-      }),
-    }),
-  });
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [status, setStatus] = useState<'idle' | 'submitted' | 'streaming' | 'ready'>('idle');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   // Fetch personalized suggestions on mount and after messages change
   useEffect(() => {
@@ -74,26 +76,112 @@ export default function ChatInterface() {
         }
       } catch (error) {
         console.error('Failed to fetch personalized suggestions:', error);
-        // Keep default suggestions on error
       }
     };
 
-    // Fetch suggestions when component mounts or after user sends a message
     if (messages.length > 0) {
       fetchPersonalizedSuggestions();
     }
   }, [messages.length, PUBLIC_WORKER_API_URL]);
 
-  const handleSubmit = useCallback((e) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim()) {
-      sendMessage({ text: input });
-      setInput('');
-      setShowSuggestions(false);
-    }
-  }, [input, sendMessage]);
+    if (!input.trim() || status === 'streaming') return;
 
-  const handleSuggestionClick = useCallback((suggestion) => {
+    const userMessage = input.trim();
+    setInput('');
+    setShowSuggestions(false);
+    setStatus('submitted');
+
+    // Add user message to the list
+    const userMsg: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: '',
+      parts: [{ type: 'text' as const, text: userMessage }],
+    };
+
+    setMessages(prev => [...prev, userMsg]);
+
+    try {
+      const token = localStorage.getItem('session_token');
+      if (!token) {
+        console.error('No session token found');
+        return;
+      }
+
+      // Prepare messages in the format expected by the backend
+      const messagesPayload = messages.concat([userMsg]).map(msg => ({
+        role: msg.role,
+        content: msg.parts?.[0]?.text || msg.content || '',
+        parts: msg.parts,
+      }));
+
+      const response = await fetch(`${PUBLIC_WORKER_API_URL}/api/chat`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          messages: messagesPayload,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      setStatus('streaming');
+
+      // Create AI message placeholder
+      const aiMsgId = (Date.now() + 1).toString();
+      const aiMsg: Message = {
+        id: aiMsgId,
+        role: 'assistant',
+        content: '',
+        parts: [{ type: 'text' as const, text: '' }],
+      };
+
+      setMessages(prev => [...prev, aiMsg]);
+
+      // Read the stream
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('No response body');
+      }
+
+      const decoder = new TextDecoder();
+      let assistantText = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        assistantText += chunk;
+
+        // Update the AI message with the accumulated text
+        setMessages(prev => prev.map(msg => {
+          if (msg.id === aiMsgId) {
+            return {
+              ...msg,
+              content: assistantText,
+              parts: [{ type: 'text' as const, text: assistantText }],
+            };
+          }
+          return msg;
+        }));
+      }
+
+      setStatus('ready');
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setStatus('ready');
+    }
+  }, [input, status, messages, PUBLIC_WORKER_API_URL]);
+
+  const handleSuggestionClick = useCallback((suggestion: string) => {
     setInput(suggestion);
     setShowSuggestions(false);
   }, []);
@@ -107,7 +195,7 @@ export default function ChatInterface() {
       <Conversation className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4 bg-[var(--color-stone-50)]">
         <ConversationContent>
           {messages.map((message) => (
-            <Message key={message.id} from={message.role === 'user' ? 'user' : 'ai'}>
+            <MessageComponent key={message.id} from={message.role === 'user' ? 'user' : 'ai'}>
               <MessageContent>
                 {message.parts?.map((part, index) => {
                   if (part.type === 'text') {
@@ -125,7 +213,7 @@ export default function ChatInterface() {
                         className="mb-2 w-full"
                         isStreaming={isStreaming}
                       >
-                        <ReasoningTrigger title="💭 Spiritual Reasoning" />
+                        <ReasoningTrigger title="✨ Reflecting..." />
                         <ReasoningContent>
                           <div className="whitespace-pre-wrap font-geist text-[var(--color-stone-600)]">{part.text}</div>
                         </ReasoningContent>
@@ -136,9 +224,10 @@ export default function ChatInterface() {
                   return null;
                 })}
               </MessageContent>
-            </Message>
+            </MessageComponent>
           ))}
           {(status === 'submitted' || status === 'streaming') && <Loader />}
+          <div ref={messagesEndRef} />
         </ConversationContent>
       </Conversation>
 
@@ -151,7 +240,7 @@ export default function ChatInterface() {
             className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[var(--color-stone-50)] transition-colors"
           >
             <span className="text-sm text-[var(--color-stone-700)] font-medium tracking-tight font-geist">
-              {messages.length === 0 ? '✨ Suggested questions for you' : '💫 Personalized follow-ups'}
+              {messages.length === 0 ? '✨ Ideas to get started' : '💭 Continue exploring'}
             </span>
             <svg
               className={`w-4 h-4 text-[var(--color-stone-500)] transition-transform duration-200 ${showSuggestions ? 'rotate-180' : ''}`}
@@ -195,7 +284,7 @@ export default function ChatInterface() {
                 handleSubmit(e);
               }
             }}
-            placeholder="Ask Spirit for spiritual guidance..."
+            placeholder="Share what's on your heart..."
             rows={2}
             className="flex-1 w-full resize-none border-2 border-[var(--color-stone-200)] rounded-xl px-4 py-3 focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-light)] transition-colors font-geist text-[var(--color-stone-700)] placeholder:text-[var(--color-stone-400)]"
           />

@@ -37,7 +37,7 @@ const Reasoning = ({ children, isStreaming = false, className, ...props }) => {
   )
 }
 
-const ReasoningTrigger = ({ title = "Thinking...", ...props }) => {
+const ReasoningTrigger = ({ title = "✨ Reflecting...", ...props }) => {
   return (
     <CollapsibleTrigger
       className="flex items-center justify-between w-full font-medium transition-colors hover:underline text-left text-purple-700"
