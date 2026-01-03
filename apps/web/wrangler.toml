@@ -26,10 +26,14 @@ compatibility_flags = ["nodejs_compat"]
 
 # Environment variables
 [env.production.vars]
-PUBLIC_WORKER_API_URL = "https://3in1-worker.ailabs-hq.workers.dev/"
+PUBLIC_BASE_API_URL = "https://3in1-worker.ailabs-hq.workers.dev"
+PUBLIC_BASE_APP_URL = "https://3in1.ai-labs.pro"
+PUBLIC_WORKER_API_URL = "https://3in1-worker.ailabs-hq.workers.dev"
 
 
 [env.preview.vars]
+PUBLIC_BASE_API_URL = "http://localhost:8787"
+PUBLIC_BASE_APP_URL = "http://localhost:4321"
 PUBLIC_WORKER_API_URL = "http://localhost:8788"
 
 # Routing configuration

@@ -21,11 +21,11 @@ export function createSpiritAgent(env: WorkerEnv) {
     envKeys: Object.keys(env),
   });
 
-  // Create the agent using OpenAI directly (more reliable than Vercel AI Gateway)
+  // Create the agent using Vercel AI Gateway
   console.log('Creating Spirit agent...');
   console.log('Environment keys:', Object.keys(env));
   console.log('Has DB:', !!env.DB);
-  console.log('Has OPENAI_API_KEY:', !!env.OPENAI_API_KEY);
+  console.log('Has AI_GATEWAY_API_KEY:', !!env.AI_GATEWAY_API_KEY);
   
   return new Agent({
     id: 'spirit-agent',
@@ -40,7 +40,7 @@ export function createSpiritAgent(env: WorkerEnv) {
     Always address the user by their first name.
     Be supportive and kind.`,
 
-    // Use OpenAI model directly
+    // Use Vercel AI Gateway with OpenAI model
     model: "openai/gpt-4o-mini",
 
     // Add the tools for Spirit to use

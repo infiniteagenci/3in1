@@ -3,7 +3,7 @@
 import Layout from '../layouts/Layout.astro'
 
 // Extract environment variable at build time/server-side
-const { PUBLIC_WORKER_API_URL } = import.meta.env;
+const { PUBLIC_BASE_API_URL } = import.meta.env;
 
 // Client-side functions will be defined in the script tag
 ---
@@ -96,8 +96,10 @@ const { PUBLIC_WORKER_API_URL } = import.meta.env;
       </div>
     </div>
 
-    <script define:vars={{PUBLIC_WORKER_API_URL: import.meta.env.PUBLIC_WORKER_API_URL || 'http://localhost:8787'}}>
-      // DOM elements
+    <script>
+      const PUBLIC_BASE_API_URL = import.meta.env.PUBLIC_BASE_API_URL;
+      // DOM eOn localhost, whenever I click on the login button, it straightaway redirects to the 3in1.ailabs-pro.com. Where does it go there? It should stay on the local when I'm on local, isn't it?
+      // lements
       const loadingEl = document.getElementById('loading');
       const loginCardEl = document.getElementById('login-card');
       const userCardEl = document.getElementById('user-card');
@@ -129,7 +131,7 @@ const { PUBLIC_WORKER_API_URL } = import.meta.env;
             return;
           }
 
-          const response = await fetch(PUBLIC_WORKER_API_URL + '/auth/validate', {
+          const response = await fetch(PUBLIC_BASE_API_URL + '/auth/validate', {
             headers: {
               'Authorization': 'Bearer ' + token
             }
@@ -177,11 +179,11 @@ const { PUBLIC_WORKER_API_URL } = import.meta.env;
       async function initiateGoogleLogin() {
         try {
           console.log('=== Frontend Google OAuth Debug ===');
-          console.log('API URL:', PUBLIC_WORKER_API_URL);
-          console.log('Requesting OAuth URL from:', PUBLIC_WORKER_API_URL + '/auth/google/url');
+          console.log('API URL:', PUBLIC_BASE_API_URL);
+          console.log('Requesting OAuth URL from:', PUBLIC_BASE_API_URL + '/auth/google/url');
           console.log('==================================');
 
-          const response = await fetch(PUBLIC_WORKER_API_URL + '/auth/google/url');
+          const response = await fetch(PUBLIC_BASE_API_URL + '/auth/google/url');
           const { url } = await response.json();
 
           console.log('Received OAuth URL:', url);
@@ -198,7 +200,7 @@ const { PUBLIC_WORKER_API_URL } = import.meta.env;
         try {
           const token = localStorage.getItem('session_token');
           if (token) {
-            await fetch(PUBLIC_WORKER_API_URL + '/auth/logout', {
+            await fetch(PUBLIC_BASE_API_URL + '/auth/logout', {
               method: 'POST',
               headers: {
                 'Authorization': 'Bearer ' + token,
@@ -236,7 +238,7 @@ const { PUBLIC_WORKER_API_URL } = import.meta.env;
           hideElement(userCardEl);
 
           // Send code to our backend to exchange for token
-          fetch(PUBLIC_WORKER_API_URL + '/auth/google/callback', {
+          fetch(PUBLIC_BASE_API_URL + '/auth/google/callback', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

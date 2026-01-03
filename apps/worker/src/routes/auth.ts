@@ -6,6 +6,8 @@ type Bindings = {
   GOOGLE_OAUTH_CLIENT_ID: string;
   GOOGLE_OAUTH_CLIENT_SECRET: string;
   ENVIRONMENT: string;
+  BASE_API_URL: string;
+  BASE_APP_URL: string;
 };
 
 const auth = new Hono<{ Bindings: Bindings }>();
@@ -13,18 +15,15 @@ const auth = new Hono<{ Bindings: Bindings }>();
 // Google OAuth endpoints
 auth.get('/google/url', (c) => {
   const clientId = c.env.GOOGLE_OAUTH_CLIENT_ID;
-  // Redirect to frontend login page which will handle the OAuth callback
-  // Default to 4321 for Astro dev, but check if frontend is on different port
-  const frontendUrl = c.req.url.includes('localhost') ? 'http://localhost:4321' : `${c.req.url.split('/').slice(0, 3).join('/')}`;
-  const redirectUri = c.env.ENVIRONMENT === 'development' ? 'http://localhost:4321/login' : `https://3in1.ai-labs.pro/login`;
-  console.log('redirectUri',redirectUri)
+  const redirectUri = `${c.env.BASE_APP_URL}/login`;
+  console.log('redirectUri', redirectUri);
   const scope = 'openid email profile';
 
   // Debug logging
   console.log('=== Google OAuth Debug ===');
   console.log('Client ID:', clientId);
   console.log('Client Secret:', c.env.GOOGLE_OAUTH_CLIENT_SECRET);
-  console.log('Frontend URL:', frontendUrl);
+  console.log('Base App URL:', c.env.BASE_APP_URL);
   console.log('Redirect URI:', redirectUri);
   console.log('Request URL:', c.req.url);
   console.log('========================');
@@ -49,10 +48,9 @@ auth.post('/google/callback', async (c) => {
 
     const clientId = c.env.GOOGLE_OAUTH_CLIENT_ID;
     const clientSecret = c.env.GOOGLE_OAUTH_CLIENT_SECRET;
-    // Use the same redirect URI that was sent in the OAuth request
-    // const redirectUri = c.req.url.includes('localhost') ? 'http://localhost:4321/login' : `${new URL(c.req.url).origin}/login`;
-    const redirectUri = c.env.ENVIRONMENT === 'development' ? 'http://localhost:4321/login' : `https://3in1.ai-labs.pro/login`;
-    // Debug logging4321
+    const redirectUri = `${c.env.BASE_APP_URL}/login`;
+
+    // Debug logging
     console.log('=== Google OAuth Token Exchange Debug ===');
     console.log('Client ID:', clientId);
     console.log('Client Secret:', clientSecret);

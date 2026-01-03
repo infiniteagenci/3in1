@@ -5,11 +5,15 @@ compatibility_flags = ["nodejs_compat","enable_nodejs_process_v2"]
 
 [env.production.vars]
 GOOGLE_OAUTH_CLIENT_ID="296576517620-sur4nmf89q803b5h83f1e4m930vrp3tc.apps.googleusercontent.com"
+BASE_API_URL="https://3in1-worker.ailabs-hq.workers.dev"
+BASE_APP_URL="https://3in1.ai-labs.pro"
 
 # Production environment configuration
 [env.production]
 name = "3in1-worker"
 GOOGLE_OAUTH_CLIENT_ID="296576517620-sur4nmf89q803b5h83f1e4m930vrp3tc.apps.googleusercontent.com"
+BASE_API_URL="https://3in1-worker.ailabs-hq.workers.dev"
+BASE_APP_URL="https://3in1.ai-labs.pro"
 
 
 [[env.production.d1_databases]]
@@ -25,6 +29,10 @@ database_id = "ea691e25-4a91-4ce2-a192-8b5b03393be4"
 [env.staging]
 name = "3in1-worker-staging"
 
+[env.staging.vars]
+BASE_API_URL="https://3in1-worker-staging.ailabs-hq.workers.dev"
+BASE_APP_URL="https://staging.3in1.ai-labs.pro"
+
 [[env.staging.d1_databases]]
 binding = "DB"
 database_name = "3in1"
@@ -37,7 +45,7 @@ database_id = "ea691e25-4a91-4ce2-a192-8b5b03393be4"
 # Development environment configuration (local)
 [env.development]
 name = "3in1-worker-dev"
-vars = { ENVIRONMENT = "development" }
+vars = { ENVIRONMENT = "development", BASE_API_URL = "http://localhost:8787", BASE_APP_URL = "http://localhost:4321" }
 
 [[env.development.d1_databases]]
 binding = "DB"

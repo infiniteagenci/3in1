@@ -34,8 +34,8 @@ const defaultSuggestions = [
 ];
 
 export default function ChatInterface() {
-  const PUBLIC_WORKER_API_URL = typeof window !== 'undefined'
-    ? window.PUBLIC_WORKER_API_URL || 'http://localhost:8787'
+  const PUBLIC_BASE_API_URL = typeof window !== 'undefined'
+    ? (window as any).PUBLIC_BASE_API_URL || 'http://localhost:8787'
     : 'http://localhost:8787';
 
   const [input, setInput] = useState('');
@@ -60,7 +60,7 @@ export default function ChatInterface() {
         const token = localStorage.getItem('session_token');
         if (!token) return;
 
-        const response = await fetch(`${PUBLIC_WORKER_API_URL}/api/suggestions`, {
+        const response = await fetch(`${PUBLIC_BASE_API_URL}/api/suggestions`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -82,7 +82,7 @@ export default function ChatInterface() {
     if (messages.length > 0) {
       fetchPersonalizedSuggestions();
     }
-  }, [messages.length, PUBLIC_WORKER_API_URL]);
+  }, [messages.length, PUBLIC_BASE_API_URL]);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,7 +117,7 @@ export default function ChatInterface() {
         parts: msg.parts,
       }));
 
-      const response = await fetch(`${PUBLIC_WORKER_API_URL}/api/chat`, {
+      const response = await fetch(`${PUBLIC_BASE_API_URL}/api/chat`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -153,25 +153,43 @@ export default function ChatInterface() {
 
       const decoder = new TextDecoder();
       let assistantText = '';
+      let buffer = '';
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value, { stream: true });
-        assistantText += chunk;
+        buffer += decoder.decode(value, { stream: true });
 
-        // Update the AI message with the accumulated text
-        setMessages(prev => prev.map(msg => {
-          if (msg.id === aiMsgId) {
-            return {
-              ...msg,
-              content: assistantText,
-              parts: [{ type: 'text' as const, text: assistantText }],
-            };
+        // Parse AI SDK data stream format: 0:"text"1:"more text"
+        const lines = buffer.split(/(?=0:|1:|2:)/);
+        buffer = lines.pop() || ''; // Keep incomplete chunk in buffer
+
+        for (const line of lines) {
+          if (!line) continue;
+
+          // Extract the content from the format: 0:"content" or 1:"content"
+          const match = line.match(/^[012]:"(.*)"(?:,"[0-9]+:")?$/s);
+          if (match) {
+            const content = match[1]
+              .replace(/\\"/g, '"')
+              .replace(/\\\\/g, '\\')
+              .replace(/\\n/g, '\n');
+            assistantText += content;
+
+            // Update the AI message with the accumulated text
+            setMessages(prev => prev.map(msg => {
+              if (msg.id === aiMsgId) {
+                return {
+                  ...msg,
+                  content: assistantText,
+                  parts: [{ type: 'text' as const, text: assistantText }],
+                };
+              }
+              return msg;
+            }));
           }
-          return msg;
-        }));
+        }
       }
 
       setStatus('ready');

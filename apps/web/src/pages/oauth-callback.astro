@@ -3,7 +3,7 @@
 import Layout from '../layouts/Layout.astro'
 
 // Extract environment variable at build time/server-side
-const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
+const { PUBLIC_BASE_API_URL = 'http://localhost:8787' } = import.meta.env;
 ---
 
 <Layout title="Processing Login - 3in1 Spiritual App">
@@ -11,7 +11,7 @@ const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
       <p id="status-message">Processing login, please wait...</p>
     </div>
 
-    <script define:vars={{PUBLIC_WORKER_API_URL: import.meta.env.PUBLIC_WORKER_API_URL || 'http://localhost:8787'}}>
+    <script define:vars={{PUBLIC_BASE_API_URL: import.meta.env.PUBLIC_BASE_API_URL || 'http://localhost:8787'}}>
       // Check for OAuth callback in URL
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
@@ -41,7 +41,7 @@ const { PUBLIC_WORKER_API_URL = 'http://localhost:8787' } = import.meta.env;
       statusMessageEl.textContent = 'Exchanging code for token...';
 
       try {
-        fetch(PUBLIC_WORKER_API_URL + '/auth/google/callback', {
+        fetch(PUBLIC_BASE_API_URL + '/auth/google/callback', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
-import { streamText } from 'ai';
-import { createOpenAI } from '@ai-sdk/openai';
+import { streamText, createGateway } from 'ai';
 import type { Bindings, Variables } from './common';
 import { validateSession, createId } from './common';
 
@@ -133,9 +132,9 @@ chat.post('/', validateSession, async (c) => {
     console.log('User message:', userMessage);
     console.log('User first name:', userFirstName);
 
-    // Create OpenAI client
-    const openai = createOpenAI({
-      apiKey: c.env.OPENAI_API_KEY,
+    // Create Vercel AI Gateway client
+    const gateway = createGateway({
+      apiKey: c.env.AI_GATEWAY_API_KEY,
     });
 
     // Build messages for the AI
@@ -144,11 +143,11 @@ chat.post('/', validateSession, async (c) => {
       ...conversationHistory,
     ];
 
-    console.log('Sending request to OpenAI...');
+    console.log('Sending request to Vercel AI Gateway...');
 
-    // Stream the response using AI SDK
+    // Stream the response using AI SDK via Vercel AI Gateway
     const result = await streamText({
-      model: openai('gpt-4o-mini'),
+      model: gateway('openai/gpt-4o-mini'),
       messages: aiMessages,
       onFinish: async ({ text, usage }: { text: string; usage?: any }) => {
         console.log('Stream complete:', { usage, textLength: text?.length });
@@ -163,8 +162,8 @@ chat.post('/', validateSession, async (c) => {
 
     console.log('Returning stream response...');
 
-    // Return the streaming response
-    return result.toTextStreamResponse();
+    // Return the streaming response as data stream (more reliable than text stream)
+    return result.toDataStreamResponse();
 
   } catch (error) {
     console.error('Chat error:', error);
