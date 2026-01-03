@@ -34,11 +34,12 @@ import ChatInterface from '../components/ChatInterface.tsx'
   </div>
 
   <script>
-    // Set API URL based on current environment
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    window.PUBLIC_WORKER_API_URL = isLocalhost
-      ? 'http://localhost:8787'
-      : 'https://3in1-worker.ailabs-hq.workers.dev';
+    // Set API URL based on environment variable
+    window.PUBLIC_BASE_API_URL = typeof PUBLIC_BASE_API_URL !== 'undefined'
+      ? PUBLIC_BASE_API_URL
+      : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8787'
+        : '');
 
     // DOM elements
     const app = document.getElementById('app');
@@ -56,7 +57,7 @@ import ChatInterface from '../components/ChatInterface.tsx'
           return;
         }
 
-        const response = await fetch(PUBLIC_WORKER_API_URL + '/auth/validate', {
+          const response = await fetch(window.PUBLIC_BASE_API_URL + '/auth/validate', {
           headers: {
             'Authorization': 'Bearer ' + token
           }
@@ -84,7 +85,7 @@ import ChatInterface from '../components/ChatInterface.tsx'
       try {
         const token = localStorage.getItem('session_token');
         if (token) {
-          await fetch(PUBLIC_WORKER_API_URL + '/auth/logout', {
+          await fetch(window.PUBLIC_BASE_API_URL + '/auth/logout', {
             method: 'POST',
             headers: {
               'Authorization': 'Bearer ' + token,

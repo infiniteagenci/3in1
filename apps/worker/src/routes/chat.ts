@@ -149,21 +149,41 @@ chat.post('/', validateSession, async (c) => {
     const result = await streamText({
       model: gateway('openai/gpt-4o-mini'),
       messages: aiMessages,
-      onFinish: async ({ text, usage }: { text: string; usage?: any }) => {
-        console.log('Stream complete:', { usage, textLength: text?.length });
-        // Save conversation to database
-        try {
-          await saveConversation(db, user.id, conversationId, messages, text);
-        } catch (error) {
-          console.error('Error saving conversation after stream:', error);
-        }
-      },
     });
 
     console.log('Returning stream response...');
 
-    // Return the streaming response as data stream (more reliable than text stream)
-    return result.toDataStreamResponse();
+    let fullText = '';
+
+    // Return streaming response with AI SDK data stream format
+    const { textStream } = result;
+    const streamBody = new ReadableStream({
+      async start(controller) {
+        const encoder = new TextEncoder();
+        
+        for await (const chunk of textStream) {
+          fullText += chunk;
+          // Write in AI SDK data stream format: 0:"chunk"
+          controller.enqueue(encoder.encode(`0:"${chunk.replace(/"/g, '\\"').replace(/\n/g, '\\n')}"`));
+        }
+        
+        // Save conversation after stream completes
+        try {
+          await saveConversation(db, user.id, conversationId, messages, fullText);
+        } catch (error) {
+          console.error('Error saving conversation after stream:', error);
+        }
+        
+        controller.close();
+      },
+    });
+
+    return new Response(streamBody, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'X-Content-Type-Options': 'nosniff',
+      },
+    });
 
   } catch (error) {
     console.error('Chat error:', error);

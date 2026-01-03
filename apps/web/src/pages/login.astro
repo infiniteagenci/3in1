@@ -1,32 +1,28 @@
 ---
 // src/pages/login.astro
+// Login page with Google OAuth authentication
 import Layout from '../layouts/Layout.astro'
-
-// Extract environment variable at build time/server-side
-const { PUBLIC_BASE_API_URL } = import.meta.env;
-
-// Client-side functions will be defined in the script tag
 ---
 
 <Layout title="Login - 3in1 Catholic Spiritual App">
-    <div class="login-bg">
-      <!-- Background elements -->
-      <div class="login-bg-animation"></div>
-      <div class="floating-elements">
-        <div class="floating-element"></div>
-        <div class="floating-element"></div>
-        <div class="floating-element"></div>
-        <div class="floating-element"></div>
-      </div>
+  <div class="login-bg">
+    <!-- Background elements -->
+    <div class="login-bg-animation"></div>
+    <div class="floating-elements">
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+    </div>
 
-      <!-- Loading state -->
-      <div id="loading" class="loading">
-        <div class="loading-spinner"></div>
-        Checking authentication...
-      </div>
+    <!-- Loading state -->
+    <div id="loading" class="loading hidden">
+      <div class="loading-spinner"></div>
+      Checking authentication...
+    </div>
 
-      <!-- Login container -->
-      <div class="login-container">
+    <!-- Login container -->
+    <div class="login-container">
       <!-- Login form -->
       <div id="login-card" class="login-card hidden">
         <!-- Logo section -->
@@ -93,182 +89,204 @@ const { PUBLIC_BASE_API_URL } = import.meta.env;
           <button id="logout-btn" class="logout-btn">Logout</button>
         </div>
       </div>
-      </div>
     </div>
+  </div>
 
-    <script>
-      const PUBLIC_BASE_API_URL = import.meta.env.PUBLIC_BASE_API_URL;
-      // DOM eOn localhost, whenever I click on the login button, it straightaway redirects to the 3in1.ailabs-pro.com. Where does it go there? It should stay on the local when I'm on local, isn't it?
-      // lements
-      const loadingEl = document.getElementById('loading');
-      const loginCardEl = document.getElementById('login-card');
-      const userCardEl = document.getElementById('user-card');
-      const googleLoginBtn = document.getElementById('google-login-btn');
-      const logoutBtn = document.getElementById('logout-btn');
-      const avatarEl = document.getElementById('avatar');
-      const welcomeTextEl = document.getElementById('welcome-text');
-      const userEmailEl = document.getElementById('user-email');
+  <script>
+    /**
+     * Login page client-side logic
+     * Handles authentication state, login/logout, and OAuth callbacks
+     */
 
-      // Function to hide element
-      function hideElement(el) {
-        el.classList.add('hidden');
-      }
+    // ===== Configuration =====
+    const API_URL = import.meta.env.PUBLIC_BASE_API_URL || 'http://localhost:8787';
+    const SESSION_TOKEN_KEY = 'session_token';
 
-      // Function to show element
-      function showElement(el) {
-        el.classList.remove('hidden');
-      }
+    // ===== DOM Elements =====
+    const elements = {
+      loading: document.getElementById('loading'),
+      loginCard: document.getElementById('login-card'),
+      userCard: document.getElementById('user-card'),
+      googleLoginBtn: document.getElementById('google-login-btn'),
+      logoutBtn: document.getElementById('logout-btn'),
+      avatar: document.getElementById('avatar'),
+      welcomeText: document.getElementById('welcome-text'),
+      userEmail: document.getElementById('user-email'),
+    };
 
-      // Function to check session status
-      async function checkSession() {
+    // ===== UI State Management =====
+    const uiState = {
+      hide(el: HTMLElement | null) {
+        el?.classList.add('hidden');
+      },
+
+      show(el: HTMLElement | null) {
+        el?.classList.remove('hidden');
+      },
+
+      showLoading() {
+        this.show(elements.loading);
+        this.hide(elements.loginCard);
+        this.hide(elements.userCard);
+      },
+
+      showLogin() {
+        this.hide(elements.loading);
+        this.show(elements.loginCard);
+        this.hide(elements.userCard);
+      },
+
+      showUser() {
+        this.hide(elements.loading);
+        this.hide(elements.loginCard);
+        this.show(elements.userCard);
+      },
+
+      updateUser(user: { name: string; email: string; avatar_url?: string }) {
+        if (user.avatar_url) {
+          elements.avatar!.src = user.avatar_url;
+          elements.avatar!.style.display = 'block';
+          (elements.avatar!.parentElement as HTMLElement).textContent = '';
+        } else {
+          elements.avatar!.style.display = 'none';
+          const parentDiv = elements.avatar!.parentElement as HTMLElement;
+          parentDiv.classList.add('avatar');
+          parentDiv.textContent = user.name?.charAt(0).toUpperCase() || 'U';
+        }
+
+        elements.welcomeText!.textContent = `Welcome, ${user.name}!`;
+        elements.userEmail!.textContent = user.email;
+      },
+    };
+
+    // ===== Authentication Functions =====
+    const auth = {
+      getToken(): string | null {
+        return localStorage.getItem(SESSION_TOKEN_KEY);
+      },
+
+      setToken(token: string) {
+        localStorage.setItem(SESSION_TOKEN_KEY, token);
+      },
+
+      removeToken() {
+        localStorage.removeItem(SESSION_TOKEN_KEY);
+      },
+
+      async validateSession(): Promise<{ name: string; email: string; avatar_url?: string } | null> {
+        const token = this.getToken();
+        if (!token) return null;
+
         try {
-          const token = localStorage.getItem('session_token');
-          if (!token) {
-            // Show login card
-            hideElement(loadingEl);
-            showElement(loginCardEl);
-            hideElement(userCardEl);
-            return;
-          }
-
-          const response = await fetch(PUBLIC_BASE_API_URL + '/auth/validate', {
-            headers: {
-              'Authorization': 'Bearer ' + token
-            }
+          const response = await fetch(`${API_URL}/auth/validate`, {
+            headers: { 'Authorization': `Bearer ${token}` }
           });
 
-          if (response.ok) {
-            const { user } = await response.json();
-
-            // Update user info in UI
-            if (user.avatar_url) {
-              avatarEl.src = user.avatar_url;
-            } else {
-              // Show initials if no avatar
-              avatarEl.style.display = 'none';
-              const parentDiv = avatarEl.parentElement;
-              parentDiv.classList.add('avatar');
-              parentDiv.textContent = user.name?.charAt(0).toUpperCase() || 'U';
-            }
-
-            welcomeTextEl.textContent = `Welcome, ${user.name}!`;
-            userEmailEl.textContent = user.email;
-
-            // Show user card
-            hideElement(loadingEl);
-            hideElement(loginCardEl);
-            showElement(userCardEl);
-          } else {
-            // Session invalid, clear token and show login
-            localStorage.removeItem('session_token');
-            hideElement(loadingEl);
-            showElement(loginCardEl);
-            hideElement(userCardEl);
+          if (!response.ok) {
+            this.removeToken();
+            return null;
           }
+
+          const data = await response.json();
+          return data.user;
         } catch (error) {
-          console.error('Error checking session:', error);
-          // On error, show login screen
-          localStorage.removeItem('session_token');
-          hideElement(loadingEl);
-          showElement(loginCardEl);
-          hideElement(userCardEl);
+          console.error('Error validating session:', error);
+          this.removeToken();
+          return null;
         }
-      }
+      },
 
-      // Function to initiate Google login
-      async function initiateGoogleLogin() {
+      async initiateLogin() {
         try {
-          console.log('=== Frontend Google OAuth Debug ===');
-          console.log('API URL:', PUBLIC_BASE_API_URL);
-          console.log('Requesting OAuth URL from:', PUBLIC_BASE_API_URL + '/auth/google/url');
-          console.log('==================================');
-
-          const response = await fetch(PUBLIC_BASE_API_URL + '/auth/google/url');
+          const response = await fetch(`${API_URL}/auth/google/url`);
           const { url } = await response.json();
-
-          console.log('Received OAuth URL:', url);
-
-          // Redirect to Google OAuth URL
           window.location.href = url;
         } catch (error) {
           console.error('Error initiating Google login:', error);
         }
-      }
+      },
 
-      // Function to handle logout
-      async function logout() {
+      async handleCallback(code: string): Promise<boolean> {
         try {
-          const token = localStorage.getItem('session_token');
-          if (token) {
-            await fetch(PUBLIC_BASE_API_URL + '/auth/logout', {
-              method: 'POST',
-              headers: {
-                'Authorization': 'Bearer ' + token,
-                'Content-Type': 'application/json'
-              }
-            });
+          const response = await fetch(`${API_URL}/auth/google/callback`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code }),
+          });
+
+          const data = await response.json();
+
+          if (data.session_token) {
+            this.setToken(data.session_token);
+            window.location.href = '/chat';
+            return true;
           }
 
-          localStorage.removeItem('session_token');
-          // Show login card after logout
-          hideElement(loadingEl);
-          showElement(loginCardEl);
-          hideElement(userCardEl);
+          return false;
         } catch (error) {
-          console.error('Error logging out:', error);
+          console.error('Error exchanging code for token:', error);
+          return false;
         }
-      }
+      },
 
-      // Add event listeners
-      googleLoginBtn.addEventListener('click', initiateGoogleLogin);
-      logoutBtn.addEventListener('click', logout);
+      async logout() {
+        const token = this.getToken();
 
-      // Check session on page load
-      checkSession();
+        if (token) {
+          try {
+            await fetch(`${API_URL}/auth/logout`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+            });
+          } catch (error) {
+            console.error('Error during logout:', error);
+          }
+        }
 
+        this.removeToken();
+        uiState.showLogin();
+      },
+    };
+
+    // ===== Initialization =====
+    async function init() {
       // Check for OAuth callback in URL
-      if (window.location.search.includes('code=')) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
 
-        if (code) {
-          // Show loading while processing
-          showElement(loadingEl);
-          hideElement(loginCardEl);
-          hideElement(userCardEl);
+      if (code) {
+        uiState.showLoading();
 
-          // Send code to our backend to exchange for token
-          fetch(PUBLIC_BASE_API_URL + '/auth/google/callback', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ code })
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.session_token) {
-              // Store the session token
-              localStorage.setItem('session_token', data.session_token);
+        // Clean URL
+        const cleanUrl = window.location.pathname;
+        window.history.replaceState({}, '', cleanUrl);
 
-              // Redirect to chat page
-              window.location.href = '/chat';
-            } else {
-              console.error('No session token received');
-              // Show login screen again
-              hideElement(loadingEl);
-              showElement(loginCardEl);
-              hideElement(userCardEl);
-            }
-          })
-          .catch(error => {
-            console.error('Error exchanging code:', error);
-            // Show login screen again
-            hideElement(loadingEl);
-            showElement(loginCardEl);
-            hideElement(userCardEl);
-          });
+        const success = await auth.handleCallback(code);
+        if (!success) {
+          uiState.showLogin();
         }
+        return;
       }
-    </script>
+
+      // Check existing session
+      const user = await auth.validateSession();
+
+      if (user) {
+        uiState.updateUser(user);
+        uiState.showUser();
+      } else {
+        uiState.showLogin();
+      }
+    }
+
+    // ===== Event Listeners =====
+    elements.googleLoginBtn?.addEventListener('click', () => auth.initiateLogin());
+    elements.logoutBtn?.addEventListener('click', () => auth.logout());
+
+    // ===== Start =====
+    init();
+  </script>
 </Layout>

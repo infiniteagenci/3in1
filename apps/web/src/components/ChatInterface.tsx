@@ -197,7 +197,7 @@ export default function ChatInterface() {
       console.error('Error sending message:', error);
       setStatus('ready');
     }
-  }, [input, status, messages, PUBLIC_WORKER_API_URL]);
+  }, [input, status, messages, PUBLIC_BASE_API_URL]);
 
   const handleSuggestionClick = useCallback((suggestion: string) => {
     setInput(suggestion);
