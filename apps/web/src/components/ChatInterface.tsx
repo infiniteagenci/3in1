@@ -10,6 +10,7 @@ import { Message as MessageComponent, MessageContent } from './ai-elements/messa
 import { Conversation, ConversationContent } from './ai-elements/conversation';
 import { Loader } from './ai-elements/loader';
 import { Suggestions, Suggestion } from './ai-elements/suggestion';
+import CatholicMenu from './CatholicMenu';
 
 // Icons
 const SendIcon = () => (
@@ -22,6 +23,48 @@ const SpinnerIcon = () => (
   <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+  </svg>
+);
+
+const MicIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+    <line x1="12" y1="19" x2="12" y2="23" />
+    <line x1="8" y1="23" x2="16" y2="23" />
+  </svg>
+);
+
+const MicOffIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="1" y1="1" x2="23" y2="23" />
+    <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" />
+    <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23" />
+    <line x1="12" y1="19" x2="12" y2="23" />
+    <line x1="8" y1="23" x2="16" y2="23" />
+  </svg>
+);
+
+const SpeakerIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+  </svg>
+);
+
+const SpeakerOffIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+    <line x1="23" y1="9" x2="17" y2="15" />
+    <line x1="17" y1="9" x2="23" y2="15" />
+  </svg>
+);
+
+const MenuIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="12" x2="21" y2="12" />
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <line x1="3" y1="18" x2="21" y2="18" />
   </svg>
 );
 
@@ -57,7 +100,13 @@ export default function ChatInterface() {
   const [status, setStatus] = useState<'idle' | 'submitted' | 'streaming' | 'ready'>('idle');
   const [showAgePrompt, setShowAgePrompt] = useState(false);
   const [hasCollectedAge, setHasCollectedAge] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [showCatholicMenu, setShowCatholicMenu] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
+  const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -119,9 +168,142 @@ export default function ChatInterface() {
     }
   }, [messages.length, PUBLIC_BASE_API_URL]);
 
+  // Initialize speech recognition and load voices
+  useEffect(() => {
+    // Load voices for speech synthesis
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      // Load voices - some browsers need this
+      const loadVoices = () => {
+        window.speechSynthesis.getVoices();
+      };
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'en-GB';
+
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = Array.from(event.results)
+          .map((result: any) => result[0])
+          .map((result) => result.transcript)
+          .join('');
+
+        setInput(transcript);
+      };
+
+      recognitionRef.current.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        setIsRecording(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsRecording(false);
+      };
+    }
+  }, []);
+
+  // Text-to-speech function
+  const speakText = useCallback((text: string) => {
+    if (!voiceEnabled || typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      return;
+    }
+
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    // Classy and friendly: slightly slower rate (more refined) and slightly higher pitch (warmer)
+    utterance.rate = 0.85;
+    utterance.pitch = 1.1;
+    utterance.volume = 1;
+
+    // Try to get a high-quality British English voice
+    const voices = window.speechSynthesis.getVoices();
+
+    // Prioritize premium/elegant British voices
+    const preferredVoice = voices.find(voice =>
+      voice.lang === 'en-GB' && (
+        voice.name.includes('Premium') ||
+        voice.name.includes('Enhanced') ||
+        voice.name.includes('Neural') ||
+        voice.name.includes('Natural') ||
+        voice.name.includes('Google') ||
+        voice.name.includes('Daniel') ||
+        voice.name.includes('Serena') ||
+        voice.name.includes('Karen')
+      )
+    ) || voices.find(voice =>
+      voice.lang === 'en-GB' || voice.lang === 'en_GB'
+    ) || voices.find(voice =>
+      voice.lang.startsWith('en-GB') || voice.lang.startsWith('en_GB')
+    ) || voices.find(voice =>
+      voice.name.toLowerCase().includes('british') ||
+      voice.name.toLowerCase().includes('uk')
+    ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
+
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+      utterance.lang = 'en-GB';
+    }
+
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+
+    speechSynthesisRef.current = utterance;
+    window.speechSynthesis.speak(utterance);
+  }, [voiceEnabled]);
+
+  // Stop speaking
+  const stopSpeaking = useCallback(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
+  }, []);
+
+  // Toggle recording
+  const toggleRecording = useCallback(() => {
+    if (!recognitionRef.current) {
+      alert('Speech recognition is not supported in your browser. Please use Chrome or Edge.');
+      return;
+    }
+
+    if (isRecording) {
+      recognitionRef.current.stop();
+      setIsRecording(false);
+    } else {
+      stopSpeaking();
+      recognitionRef.current.start();
+      setIsRecording(true);
+    }
+  }, [isRecording, stopSpeaking]);
+
+  // Speak the last assistant message when messages change
+  useEffect(() => {
+    if (messages.length > 0 && voiceEnabled) {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.role === 'assistant' && lastMessage.parts?.[0]?.text) {
+        const text = lastMessage.parts[0].text;
+        // Speak only if it's a new message (not on page load)
+        if (status === 'ready') {
+          speakText(text);
+        }
+      }
+    }
+  }, [messages, status, voiceEnabled, speakText]);
+
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || status === 'streaming') return;
+
+    // Stop any ongoing speech when sending a new message
+    stopSpeaking();
 
     const userMessage = input.trim();
     setInput('');
@@ -232,7 +414,7 @@ export default function ChatInterface() {
       console.error('Error sending message:', error);
       setStatus('ready');
     }
-  }, [input, status, messages, PUBLIC_BASE_API_URL]);
+  }, [input, status, messages, PUBLIC_BASE_API_URL, stopSpeaking]);
 
   const handleSuggestionClick = useCallback((suggestion: string) => {
     setInput(suggestion);
@@ -282,8 +464,159 @@ export default function ChatInterface() {
     setShowSuggestions(prev => !prev);
   }, []);
 
+  const handleCatholicMenuItemSelection = useCallback((category: string, item: any) => {
+    // Stop any ongoing speech
+    stopSpeaking();
+
+    // Create a query about the selected item
+    const query = `Tell me about ${item.title}${item.description ? ` - ${item.description}` : ''}`;
+
+    // If there are prayers, add them to the content
+    let fullContent = query;
+    if (item.prayers && item.prayers.length > 0) {
+      fullContent = `${query}\n\nPrayers:\n${item.prayers.join('\n\n')}`;
+    }
+
+    // Add user message directly and trigger the API call
+    const userMsg: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: '',
+      parts: [{ type: 'text' as const, text: fullContent }],
+    };
+
+    setMessages(prev => [...prev, userMsg]);
+    setShowSuggestions(false);
+    setStatus('submitted');
+
+    // Trigger the API call
+    (async () => {
+      try {
+        const token = localStorage.getItem('session_token');
+        if (!token) {
+          console.error('No session token found');
+          setStatus('ready');
+          return;
+        }
+
+        // Prepare messages in the format expected by the backend
+        const messagesPayload = messages.concat([userMsg]).map(msg => ({
+          role: msg.role,
+          content: msg.parts?.map((p: any) => p.type === 'text' ? p.text : '').join(' ') || msg.content || ''
+        }));
+
+        const response = await fetch(`${PUBLIC_BASE_API_URL}/api/chat`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            messages: messagesPayload,
+            conversationId: null
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to send message');
+        }
+
+        // Read the stream
+        const reader = response.body?.getReader();
+        if (!reader) {
+          throw new Error('No response body');
+        }
+
+        const decoder = new TextDecoder();
+        let assistantText = '';
+        let buffer = '';
+
+        setStatus('streaming');
+
+        // Create assistant message
+        const assistantMsg: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: '',
+          parts: [{ type: 'text' as const, text: '' }]
+        };
+
+        setMessages(prev => [...prev, assistantMsg]);
+
+        while (true) {
+          const { done, value } = await reader.read();
+
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+
+          for (const line of lines) {
+            if (line.startsWith('0:')) {
+              try {
+                const jsonStr = line.substring(2);
+                const chunk = jsonStr.replace(/\\"/g, '"').replace(/\\n/g, '\n');
+                assistantText += chunk;
+
+                setMessages(prev => prev.map(msg => {
+                  if (msg.id === assistantMsg.id) {
+                    return {
+                      ...msg,
+                      content: assistantText,
+                      parts: [{ type: 'text' as const, text: assistantText }],
+                    };
+                  }
+                  return msg;
+                }));
+              } catch (e) {
+                // Skip invalid JSON
+              }
+            }
+          }
+        }
+
+        setStatus('ready');
+      } catch (error) {
+        console.error('Error sending message:', error);
+        setStatus('ready');
+      }
+    })();
+  }, [messages, PUBLIC_BASE_API_URL, stopSpeaking]);
+
   return (
     <div id='chatbox' className="flex flex-col h-full min-h-0 max-w-5xl mx-auto bg-[var(--color-bg-white)] rounded-[var(--radius-xl)] shadow-sm overflow-hidden border-[var(--color-border)] border border-white opacity-70">
+      {/* Catholic Resources Header */}
+      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-3 shadow-lg">
+        <button
+          onClick={() => setShowCatholicMenu(true)}
+          className="w-full flex items-center justify-between group hover:from-purple-700 hover:to-blue-700 transition-all"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
+              <MenuIcon />
+            </div>
+            <div className="text-left">
+              <h1 className="text-lg font-bold font-geist flex items-center gap-2">
+                <span>✝️</span> Sacred Library
+              </h1>
+              <p className="text-xs text-white text-opacity-90 font-geist">Prayers • Sacraments • Saints • Catechism</p>
+            </div>
+          </div>
+          <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Catholic Menu Modal */}
+      {showCatholicMenu && (
+        <CatholicMenu
+          onSelectItem={handleCatholicMenuItemSelection}
+          onClose={() => setShowCatholicMenu(false)}
+        />
+      )}
+
       <Conversation className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4 bg-[var(--color-stone-50)]">
         <ConversationContent>
           {messages.map((message) => (
@@ -408,16 +741,54 @@ export default function ChatInterface() {
             rows={2}
             className="flex-1 w-full resize-none border-2 border-[var(--color-stone-200)] rounded-xl px-4 py-3 focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-light)] transition-colors font-geist text-[var(--color-stone-700)] placeholder:text-[var(--color-stone-400)]"
           />
-          <button
-            type="submit"
-            disabled={status === 'streaming' || !input?.trim()}
-            className="flex items-center justify-center w-12 h-12 rounded-full text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-lg shrink-0"
-            style={{
-              background: 'linear-gradient(to bottom right, var(--color-accent-purple), var(--color-accent-blue))'
-            }}
-          >
-            {status === 'streaming' ? <SpinnerIcon /> : <SendIcon />}
-          </button>
+
+          {/* Voice Controls */}
+          <div className="flex items-center gap-1 shrink-0">
+            {/* Microphone Button */}
+            <button
+              type="button"
+              onClick={toggleRecording}
+              disabled={status === 'streaming'}
+              className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 shadow-sm hover:shadow-lg shrink-0 ${
+                isRecording
+                  ? 'bg-red-500 text-white animate-pulse'
+                  : 'bg-white text-[var(--color-stone-600)] border-2 border-[var(--color-stone-200)] hover:border-[var(--color-primary)]'
+              } disabled:opacity-50 disabled:cursor-not-allowed`}
+              title={isRecording ? 'Stop recording' : 'Start voice input'}
+            >
+              {isRecording ? <MicIcon /> : <MicIcon />}
+            </button>
+
+            {/* Speaker Toggle Button */}
+            <button
+              type="button"
+              onClick={() => {
+                setVoiceEnabled(!voiceEnabled);
+                if (isSpeaking) stopSpeaking();
+              }}
+              disabled={status === 'streaming'}
+              className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 shadow-sm hover:shadow-lg shrink-0 ${
+                voiceEnabled
+                  ? 'bg-[var(--color-accent-purple)] text-white'
+                  : 'bg-white text-[var(--color-stone-400)] border-2 border-[var(--color-stone-200)]'
+              } disabled:opacity-50 disabled:cursor-not-allowed`}
+              title={voiceEnabled ? 'Voice responses on' : 'Voice responses off'}
+            >
+              {isSpeaking ? <SpeakerIcon /> : voiceEnabled ? <SpeakerIcon /> : <SpeakerOffIcon />}
+            </button>
+
+            {/* Send Button */}
+            <button
+              type="submit"
+              disabled={status === 'streaming' || !input?.trim()}
+              className="flex items-center justify-center w-12 h-12 rounded-full text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-lg shrink-0"
+              style={{
+                background: 'linear-gradient(to bottom right, var(--color-accent-purple), var(--color-accent-blue))'
+              }}
+            >
+              {status === 'streaming' ? <SpinnerIcon /> : <SendIcon />}
+            </button>
+          </div>
         </form>
       </div>
     </div>

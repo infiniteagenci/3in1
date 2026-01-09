@@ -158,4 +158,44 @@ auth.post('/logout', async (c) => {
   return c.json({ message: 'Logged out successfully' });
 });
 
+// Dev login endpoint (only works in development)
+auth.post('/dev-login', async (c) => {
+  // Only allow in development
+  if (c.env.ENVIRONMENT !== 'development') {
+    return c.json({ error: 'Dev login only available in development' }, 403);
+  }
+
+  try {
+    const { user } = await c.req.json();
+
+    if (!user || !user.id || !user.email || !user.name) {
+      return c.json({ error: 'User object is required with id, email, and name' }, 400);
+    }
+
+    // Create or update dev user in database
+    const dbUser = await createOrUpdateUser(c.env.DB, {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      picture: user.avatar_url,
+    });
+
+    // Create session
+    const session = await createSession(c.env.DB, dbUser.id);
+
+    return c.json({
+      user: {
+        id: dbUser.id,
+        email: dbUser.email,
+        name: dbUser.name,
+        avatar_url: dbUser.avatar_url,
+      },
+      session_token: session.token,
+    });
+  } catch (error) {
+    console.error('Dev login error:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
+
 export default auth;

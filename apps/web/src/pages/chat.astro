@@ -23,9 +23,27 @@ import ChatInterface from '../components/ChatInterface.tsx'
             <p class="text-xs text-[var(--color-stone-500)] font-geist">Your friendly faith companion</p>
           </div>
         </div>
+
+        <!-- Dev Mode User Switcher (only shows in local development) -->
+        <div id="dev-user-switcher" class="hidden flex items-center gap-2">
+          <span class="text-xs px-2 py-0.5 rounded bg-purple-100 text-purple-700 font-geist">DEV MODE</span>
+          <select id="dev-user-select" class="px-3 py-1.5 rounded-[var(--radius-md)] text-sm border border-[var(--color-stone-300)] bg-white font-geist tracking-tight cursor-pointer">
+            <option value="">Switch User...</option>
+            <option value="dev-user-1">👤 Alex (Teen)</option>
+            <option value="dev-user-2">👤 Maria (Adult)</option>
+            <option value="dev-user-3">👤 Jake (Child)</option>
+            <option value="dev-user-4">👤 Eleanor (Senior)</option>
+          </select>
+        </div>
+
         <button id="logout-btn" class="bg-[var(--color-stone-50)] text-[var(--color-stone-600)] px-4 py-1.5 rounded-[var(--radius-md)] text-sm hover:bg-[var(--color-stone-100)] transition-colors border border-[var(--color-white)] font-geist tracking-tight">Logout</button>
       </div>
     </header>
+
+    <!-- Age Banner -->
+    <div id="age-banner" class="hidden">
+      <!-- Banner content will be set dynamically -->
+    </div>
 
     <!-- AI Chat Interface -->
     <div class="flex-1 w-full min-h-0 pb-2">
@@ -34,19 +52,52 @@ import ChatInterface from '../components/ChatInterface.tsx'
   </div>
 
   <script>
-    // Set API URL based on environment variable
-    window.PUBLIC_BASE_API_URL = typeof PUBLIC_BASE_API_URL !== 'undefined'
-      ? PUBLIC_BASE_API_URL
-      : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:8787'
-        : '');
+    // Set API URL based on environment
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    window.PUBLIC_BASE_API_URL = isLocalhost
+      ? 'http://localhost:8788'
+      : 'https://3in1-worker.ailabs-hq.workers.dev';
 
     // DOM elements
     const app = document.getElementById('app');
     const chatContainer = document.getElementById('chat-container');
     const logoutBtn = document.getElementById('logout-btn');
+    const devUserSwitcher = document.getElementById('dev-user-switcher');
+    const devUserSelect = document.getElementById('dev-user-select');
 
     let currentUser = null;
+
+    // Dev mode test users
+    const devTestUsers = {
+      'dev-user-1': {
+        id: 'dev-user-1',
+        name: 'Alex Thompson',
+        email: 'alex teen@example.com',
+        ageGroup: 'teen',
+        avatar_url: undefined
+      },
+      'dev-user-2': {
+        id: 'dev-user-2',
+        name: 'Maria Garcia',
+        email: 'maria adult@example.com',
+        ageGroup: 'adult',
+        avatar_url: undefined
+      },
+      'dev-user-3': {
+        id: 'dev-user-3',
+        name: 'Jake Smith',
+        email: 'jake child@example.com',
+        ageGroup: 'child',
+        avatar_url: undefined
+      },
+      'dev-user-4': {
+        id: 'dev-user-4',
+        name: 'Eleanor Davis',
+        email: 'eleanor senior@example.com',
+        ageGroup: 'senior',
+        avatar_url: undefined
+      }
+    };
 
     // Initialize app
     async function init() {
@@ -70,6 +121,17 @@ import ChatInterface from '../components/ChatInterface.tsx'
           // Hide loading, show chat
           app.classList.add('hidden');
           chatContainer.classList.remove('hidden');
+
+          // Show dev user switcher in localhost
+          if (isLocalhost) {
+            console.log('Localhost detected, showing dev user switcher');
+            devUserSwitcher.classList.remove('hidden');
+          } else {
+            console.log('Not localhost, hiding dev user switcher');
+          }
+
+          // Show age banner
+          showAgeBanner();
         } else {
           localStorage.removeItem('session_token');
           window.location.href = '/login';
@@ -79,6 +141,92 @@ import ChatInterface from '../components/ChatInterface.tsx'
         window.location.href = '/login';
       }
     }
+
+    // Show age banner
+    function showAgeBanner() {
+      const ageGroup = localStorage.getItem('user_age_group');
+      const ageBanner = document.getElementById('age-banner');
+
+      console.log('🎨 showAgeBanner called - ageGroup:', ageGroup, 'ageBanner element:', !!ageBanner);
+
+      if (!ageGroup || !ageBanner) {
+        console.log('⚠️ Age banner not showing - ageGroup:', ageGroup, 'has ageBanner:', !!ageBanner);
+        return;
+      }
+
+      const ageMessages = {
+        'child': {
+          emoji: '👶',
+          title: 'Young Explorer of Faith',
+          message: 'Discovering the wonders of Scripture together',
+          gradient: 'from-yellow-100 to-orange-100',
+          icon: '⭐'
+        },
+        'teen': {
+          emoji: '🌟',
+          title: 'Growing in Faith',
+          message: 'Exploring what it means to follow Jesus',
+          gradient: 'from-blue-100 to-indigo-100',
+          icon: '🙏'
+        },
+        'young-adult': {
+          emoji: '🎓',
+          title: 'Journeying Through Scripture',
+          message: 'Finding wisdom and purpose in God\'s Word',
+          gradient: 'from-purple-100 to-pink-100',
+          icon: '✨'
+        },
+        'adult': {
+          emoji: '🌿',
+          title: 'Walking in Faith',
+          message: 'Applying Scripture to everyday life',
+          gradient: 'from-green-100 to-emerald-100',
+          icon: '📖'
+        },
+        'midlife': {
+          emoji: '🌅',
+          title: 'Deepening Spiritual Roots',
+          message: 'Finding peace and meaning in Scripture',
+          gradient: 'from-amber-100 to-yellow-100',
+          icon: '🕊️'
+        },
+        'senior': {
+          emoji: '🌺',
+          title: 'Wisdom in Faith',
+          message: 'Sharing the richness of a life in Scripture',
+          gradient: 'from-rose-100 to-pink-100',
+          icon: '💒'
+        }
+      };
+
+      const ageInfo = ageMessages[ageGroup];
+      if (!ageInfo) {
+        console.log('⚠️ No ageInfo found for ageGroup:', ageGroup);
+        return;
+      }
+
+      console.log('🎨 Setting age banner:', ageInfo.title, '-', ageInfo.message);
+
+      ageBanner.className = `bg-gradient-to-r ${ageInfo.gradient} border-b border-[var(--color-border)] px-4 py-2`;
+      ageBanner.innerHTML = `
+        <div class="max-w-5xl mx-auto flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">${ageInfo.emoji}</span>
+            <div>
+              <p class="text-sm font-semibold text-[var(--color-stone-800)] font-geist tracking-tight">
+                ${ageInfo.icon} ${ageInfo.title}
+              </p>
+              <p class="text-xs text-[var(--color-stone-600)] font-geist font-light">${ageInfo.message}</p>
+            </div>
+          </div>
+        </div>
+      `;
+      ageBanner.classList.remove('hidden');
+      console.log('✅ Age banner displayed successfully!');
+    }
+
+    // Make showAgeBanner available globally for ChatInterface to call
+    window.updateAgeBanner = showAgeBanner;
 
     // Handle logout
     async function handleLogout() {
@@ -101,8 +249,66 @@ import ChatInterface from '../components/ChatInterface.tsx'
       }
     }
 
+    // Handle dev user switching
+    async function switchToDevUser(userId) {
+      const devUser = devTestUsers[userId];
+      if (!devUser) return;
+
+      console.log('🔄 Switching to dev user:', userId, 'with ageGroup:', devUser.ageGroup);
+
+      try {
+        // Get a dev session token from the backend
+        const response = await fetch(window.PUBLIC_BASE_API_URL + '/auth/dev-login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ user: devUser })
+        });
+
+        if (response.ok) {
+          const { session_token } = await response.json();
+
+          // Store the new session token
+          localStorage.setItem('session_token', session_token);
+
+          // Update age group in localStorage
+          localStorage.setItem('user_age_group', devUser.ageGroup);
+          console.log('✅ Set user_age_group in localStorage:', devUser.ageGroup);
+
+          // Save age group to profile (which also saves to notes for Spirit to read)
+          await fetch(window.PUBLIC_BASE_API_URL + '/api/user/profile', {
+            method: 'POST',
+            headers: {
+              'Authorization': 'Bearer ' + session_token,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ ageGroup: devUser.ageGroup })
+          });
+
+          console.log('✅ Profile saved, reloading page...');
+          // Reload the page to reinitialize with new user
+          window.location.reload();
+        } else {
+          console.error('Failed to switch to dev user');
+        }
+      } catch (error) {
+        console.error('Error switching dev user:', error);
+      }
+    }
+
     // Logout button event listener
     logoutBtn.addEventListener('click', handleLogout);
+
+    // Dev user switcher event listener
+    devUserSelect.addEventListener('change', (e) => {
+      const selectedUserId = e.target.value;
+      if (selectedUserId) {
+        switchToDevUser(selectedUserId);
+        // Reset dropdown
+        e.target.value = '';
+      }
+    });
 
     // Initialize on load
     init();

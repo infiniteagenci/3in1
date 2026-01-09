@@ -88,7 +88,10 @@ import Layout from '../layouts/Layout.astro'
             Prayers for when life feels overwhelming
           </a>
           <a href="/login" class="px-5 py-2 rounded-[var(--radius-full)] bg-[var(--color-stone-100)] text-[var(--color-stone-700)] text-sm hover:bg-[var(--color-stone-200)] transition-colors tracking-tight font-light font-geist">
-            Why does Mary matter in Catholicism?
+            Teach me about the Catechism
+          </a>
+          <a href="/login" class="px-5 py-2 rounded-[var(--radius-full)] bg-[var(--color-stone-100)] text-[var(--color-stone-700)] text-sm hover:bg-[var(--color-stone-200)] transition-colors tracking-tight font-light font-geist">
+            Stories of the Saints
           </a>
         </div>
       </div>
@@ -168,7 +171,7 @@ import Layout from '../layouts/Layout.astro'
     // Set API URL based on current environment
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     const PUBLIC_WORKER_API_URL = isLocalhost
-      ? 'http://localhost:8787'
+      ? 'http://localhost:8788'
       : 'https://3in1-worker.ailabs-hq.workers.dev';
 
     // DOM elements
