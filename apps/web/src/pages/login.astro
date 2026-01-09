@@ -25,14 +25,6 @@ import Layout from '../layouts/Layout.astro'
     <div class="login-container">
       <!-- Login form -->
       <div id="login-card" class="login-card hidden">
-        <!-- Logo section -->
-        <div class="logo-section">
-          <div class="logo">3</div>
-          <h1 class="app-name">3in1</h1>
-          <p class="tagline">Your friendly faith companion</p>
-          <p class="spirit-name">Meet Spirit</p>
-        </div>
-
         <!-- Welcome section -->
         <div class="welcome-section">
           <h2 class="welcome-title">Find Peace & Connection<br>Through Meaningful Conversation</h2>
@@ -99,7 +91,8 @@ import Layout from '../layouts/Layout.astro'
      */
 
     // ===== Configuration =====
-    const API_URL = import.meta.env.PUBLIC_BASE_API_URL || 'http://localhost:8787';
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const API_URL = isLocalhost ? 'http://localhost:8788' : 'https://3in1-worker.ailabs-hq.workers.dev';
     const SESSION_TOKEN_KEY = 'session_token';
 
     // ===== DOM Elements =====
