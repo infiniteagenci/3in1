@@ -29,8 +29,20 @@ const SpinnerIcon = () => (
 const defaultSuggestions = [
   "What's something encouraging in the Bible?",
   "How do I make prayer feel more meaningful?",
+  "Teach me about the Catechism",
+  "Stories of the Saints that inspire me",
   "Prayers for peace and trust",
   "Help me understand God's love for me",
+];
+
+// Age options for the conversation flow
+const ageOptions = [
+  { id: 'child', label: "I'm a kid! 🎈", icon: '👶' },
+  { id: 'teen', label: "Teen years! 🌈", icon: '🧑' },
+  { id: 'young-adult', label: "Young adult ✨", icon: '🎓' },
+  { id: 'adult', label: "Adult life 🌿", icon: '👨' },
+  { id: 'midlife', label: "Midlife journey 🌅", icon: '🌟' },
+  { id: 'senior', label: "Golden years 💫", icon: '👴' },
 ];
 
 export default function ChatInterface() {
@@ -43,6 +55,8 @@ export default function ChatInterface() {
   const [personalizedSuggestions, setPersonalizedSuggestions] = useState(defaultSuggestions);
   const [messages, setMessages] = useState<Message[]>([]);
   const [status, setStatus] = useState<'idle' | 'submitted' | 'streaming' | 'ready'>('idle');
+  const [showAgePrompt, setShowAgePrompt] = useState(false);
+  const [hasCollectedAge, setHasCollectedAge] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -52,6 +66,27 @@ export default function ChatInterface() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Check if we need to collect age
+  useEffect(() => {
+    const checkAgeCollection = () => {
+      const hasCollected = localStorage.getItem('user_age_group');
+      const hasSeenAgePrompt = localStorage.getItem('seen_age_prompt');
+
+      if (!hasCollected && !hasSeenAgePrompt && messages.length === 0) {
+        // Show age prompt after a short delay
+        setTimeout(() => {
+          setShowAgePrompt(true);
+          localStorage.setItem('seen_age_prompt', 'true');
+        }, 500);
+      } else if (hasCollected) {
+        setHasCollectedAge(true);
+        setShowAgePrompt(false);
+      }
+    };
+
+    checkAgeCollection();
+  }, [messages.length]);
 
   // Fetch personalized suggestions on mount and after messages change
   useEffect(() => {
@@ -204,6 +239,45 @@ export default function ChatInterface() {
     setShowSuggestions(false);
   }, []);
 
+  const handleAgeSelection = useCallback(async (ageGroupId: string, label: string) => {
+    // Save to localStorage
+    localStorage.setItem('user_age_group', ageGroupId);
+
+    // Update the age banner at the top of the page
+    if (typeof window !== 'undefined' && (window as any).updateAgeBanner) {
+      (window as any).updateAgeBanner();
+    }
+
+    // Add user's age selection as a message
+    const ageMsg: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: '',
+      parts: [{ type: 'text' as const, text: label }],
+    };
+
+    setMessages(prev => [...prev, ageMsg]);
+    setShowAgePrompt(false);
+    setHasCollectedAge(true);
+
+    // Try to save to backend if token exists
+    try {
+      const token = localStorage.getItem('session_token');
+      if (token) {
+        await fetch(`${PUBLIC_BASE_API_URL}/api/user/profile`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ ageGroup: ageGroupId })
+        });
+      }
+    } catch (error) {
+      console.error('Failed to save age group:', error);
+    }
+  }, [PUBLIC_BASE_API_URL]);
+
   const toggleSuggestions = useCallback(() => {
     setShowSuggestions(prev => !prev);
   }, []);
@@ -244,6 +318,30 @@ export default function ChatInterface() {
               </MessageContent>
             </MessageComponent>
           ))}
+
+          {/* Age Collection Prompt */}
+          {showAgePrompt && (
+            <MessageComponent from="ai">
+              <MessageContent>
+                <Response>
+                  Hey there! 👋 So happy to meet you! I'm Spirit, and I'm super excited to explore faith with you! Quick question - which age group do you fall into? It just helps me chat with you in a way that feels right for you! ✨
+                </Response>
+                <div className="mt-4 grid grid-cols-2 gap-2">
+                  {ageOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => handleAgeSelection(option.id, option.label)}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white border-2 border-[var(--color-stone-200)] hover:border-[var(--color-primary)] hover:bg-[var(--color-stone-50)] transition-all text-left font-geist tracking-tight text-sm"
+                    >
+                      <span className="text-xl">{option.icon}</span>
+                      <span className="text-[var(--color-stone-700)]">{option.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </MessageContent>
+            </MessageComponent>
+          )}
+
           {(status === 'submitted' || status === 'streaming') && <Loader />}
           <div ref={messagesEndRef} />
         </ConversationContent>
@@ -278,7 +376,11 @@ export default function ChatInterface() {
           >
             <div className="px-4 pb-4">
               <Suggestions className="justify-center">
-                {personalizedSuggestions.map((question) => (
+                {(messages.length === 0 ? personalizedSuggestions : [
+                  "Explore the Catechism with me",
+                  "Tell me about inspiring Saints",
+                  ...personalizedSuggestions.slice(0, 4)
+                ]).map((question) => (
                   <Suggestion
                     key={question}
                     suggestion={question}
