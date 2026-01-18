@@ -1453,10 +1453,13 @@ type MenuCategory = keyof typeof catholicContent;
 interface CatholicMenuProps {
   onSelectItem: (category: string, item: any) => void;
   onClose: () => void;
+  initialCategory?: string;
 }
 
-export default function CatholicMenu({ onSelectItem, onClose }: CatholicMenuProps) {
-  const [activeCategory, setActiveCategory] = useState<MenuCategory | null>(null);
+export default function CatholicMenu({ onSelectItem, onClose, initialCategory }: CatholicMenuProps) {
+  const [activeCategory, setActiveCategory] = useState<MenuCategory | null>(
+    initialCategory ? (initialCategory as MenuCategory) : null
+  );
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);

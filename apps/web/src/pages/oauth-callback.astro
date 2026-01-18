@@ -12,7 +12,7 @@ import Layout from '../layouts/Layout.astro'
       (function() {
         // Determine API URL based on environment
         const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const PUBLIC_BASE_API_URL = isLocalhost ? 'http://localhost:8788' : 'https://3in1-worker.ailabs-hq.workers.dev';
+        const PUBLIC_BASE_API_URL = isLocalhost ? 'http://localhost:8787' : 'https://3in1-worker.ailabs-hq.workers.dev';
 
         // Check for OAuth callback in URL
         const urlParams = new URLSearchParams(window.location.search);

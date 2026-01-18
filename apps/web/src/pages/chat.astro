@@ -1,7 +1,7 @@
 ---
 // src/pages/chat.astro
 import Layout from '../layouts/Layout.astro'
-import ChatInterface from '../components/ChatInterface.tsx'
+import MobileLayout from '../components/MobileLayout.tsx'
 ---
 
 <Layout title="Chat with Spirit - 3in1 Catholic Spiritual App">
@@ -11,16 +11,16 @@ import ChatInterface from '../components/ChatInterface.tsx'
 
   <!-- Main Chat Interface -->
   <div id="chat-container" class="chat-container hidden flex flex-col h-screen">
-    <!-- Header with theme design styles -->
-    <header class="border-[var(--color-border)] border-b backdrop-blur shadow-sm">
-      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between rounded-[var(--radius-2xl)]">
-        <div class="flex items-center  ">
-          <div class="w-10 h-10 rounded-[var(--radius-md)] bg-gradient-to-br from-[var(--color-accent-purple)] to-[var(--color-accent-blue)] flex items-center justify-center mr-3 shadow-sm">
-            <span class="text-white font-bold font-geist">S</span>
+    <!-- Header with vibrant design -->
+    <header class="border-b border-gray-100 backdrop-blur-md bg-white/95 shadow-sm">
+      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg ring-2 ring-amber-100">
+            <span class="text-white font-bold font-geist text-lg">S</span>
           </div>
           <div>
-            <h1 class="font-semibold text-[var(--color-stone-700)] tracking-tight font-geist">Spirit</h1>
-            <p class="text-xs text-[var(--color-stone-500)] font-geist">Your friendly faith companion</p>
+            <h1 class="font-semibold text-gray-800 tracking-tight font-geist">Spirit</h1>
+            <p class="text-xs text-amber-600 font-geist">Your faith companion ✨</p>
           </div>
         </div>
 
@@ -36,7 +36,7 @@ import ChatInterface from '../components/ChatInterface.tsx'
           </select>
         </div>
 
-        <button id="logout-btn" class="bg-[var(--color-stone-50)] text-[var(--color-stone-600)] px-4 py-1.5 rounded-[var(--radius-md)] text-sm hover:bg-[var(--color-stone-100)] transition-colors border border-[var(--color-white)] font-geist tracking-tight">Logout</button>
+        <button id="logout-btn" class="bg-gradient-to-r from-amber-50 to-orange-50 text-amber-700 px-4 py-2 rounded-xl text-sm hover:from-amber-100 hover:to-orange-100 transition-all duration-200 border border-amber-200 font-geist tracking-tight font-medium hover:shadow-md">Logout</button>
       </div>
     </header>
 
@@ -45,9 +45,9 @@ import ChatInterface from '../components/ChatInterface.tsx'
       <!-- Banner content will be set dynamically -->
     </div>
 
-    <!-- AI Chat Interface -->
-    <div class="flex-1 w-full min-h-0 pb-2">
-      <ChatInterface client:load />
+    <!-- Mobile Layout with Bottom Tabs -->
+    <div class="flex-1 w-full min-h-0">
+      <MobileLayout client:load />
     </div>
   </div>
 
@@ -55,7 +55,7 @@ import ChatInterface from '../components/ChatInterface.tsx'
     // Set API URL based on environment
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     window.PUBLIC_BASE_API_URL = isLocalhost
-      ? 'http://localhost:8788'
+      ? 'http://localhost:8787'
       : 'https://3in1-worker.ailabs-hq.workers.dev';
 
     // DOM elements
@@ -324,6 +324,11 @@ import ChatInterface from '../components/ChatInterface.tsx'
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       font-family: 'Inter', sans-serif;
+    }
+
+    /* Safe area support for mobile devices with notches/home indicators */
+    .safe-area-bottom {
+      padding-bottom: env(safe-area-inset-bottom);
     }
   </style>
 </Layout>

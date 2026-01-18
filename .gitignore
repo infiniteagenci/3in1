@@ -53,3 +53,7 @@ bun.lockb
 out/
 
 theme-design
+
+# Secret files
+apps/worker/.dev.vars
+nptes.md
