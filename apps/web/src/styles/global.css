@@ -6,13 +6,20 @@
    DESIGN TOKENS (CSS Variables)
    ======================================== */
 :root {
-  /* Primary Colors */
-  --color-primary: rgb(234, 88, 12);
-  --color-primary-hover: rgb(194, 65, 12);
-  --color-primary-light: rgb(254, 215, 170);
-  --color-primary-bg: rgba(234, 88, 12, 0.15);
+  /* AI Labs Color Scheme */
+  /* Primary Colors - Magenta to Purple Gradient */
+  --color-primary: #B31F8C;
+  --color-primary-hover: #C2185B;
+  --color-primary-light: #E91E63;
+  --color-primary-purple: #6A1B9A;
+  --color-primary-bg: rgba(179, 31, 140, 0.15);
 
-  /* Accent Colors */
+  /* Secondary Colors - Orange to Violet Gradient */
+  --color-secondary-orange: #FF9800;
+  --color-secondary-violet: #673AB7;
+
+  /* Accent Color - Yellow */
+  --color-accent: #FFC107;
   --color-accent-purple: #9333ea;
   --color-accent-blue: #2563eb;
 
@@ -29,9 +36,15 @@
   --color-stone-900: #1c1917;
 
   /* Background Colors */
+  --color-bg-dark: #0A0A0A;
   --color-bg-slate: #f8fafc;
   --color-bg-white: rgba(255, 255, 255, 0.8);
   --color-bg-glass: rgba(255, 255, 255, 0.3);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #B31F8C 0%, #6A1B9A 50%, #C2185B 100%);
+  --gradient-secondary: linear-gradient(135deg, #FF9800 0%, #673AB7 100%);
+  --gradient-hero: linear-gradient(135deg, #B31F8C 0%, #6A1B9A 100%);
 
   /* Border Colors */
   --color-border: rgba(231, 229, 228, 0.6);
@@ -168,7 +181,7 @@ body {
 }
 
 .login-bg {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -184,9 +197,9 @@ body {
   height: 200%;
   top: -50%;
   left: -50%;
-  background: radial-gradient(circle at 20% 80%, rgba(147, 51, 234, 0.3) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
-              radial-gradient(circle at 40% 40%, rgba(236, 72, 153, 0.2) 0%, transparent 50%);
+  background: radial-gradient(circle at 20% 80%, rgba(103, 27, 154, 0.4) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255, 152, 0, 0.3) 0%, transparent 50%),
+              radial-gradient(circle at 40% 40%, rgba(179, 31, 140, 0.3) 0%, transparent 50%);
   animation: float 20s ease-in-out infinite;
   z-index: 0;
   pointer-events: none;
@@ -299,7 +312,7 @@ body {
   width: 80px;
   height: 80px;
   margin: 0 auto 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   border-radius: 1.5rem;
   display: flex;
   align-items: center;
@@ -307,7 +320,7 @@ body {
   font-size: 2rem;
   font-weight: bold;
   color: white;
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 10px 25px rgba(179, 31, 140, 0.4);
 }
 
 .app-name {
@@ -435,14 +448,14 @@ body {
   align-items: center;
   gap: 0.625rem;
   padding: 0.4rem;
-  background: rgba(147, 51, 234, 0.05);
+  background: rgba(179, 31, 140, 0.08);
   border-radius: 0.5rem;
 }
 
 .feature-icon {
   width: 20px;
   height: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -466,7 +479,7 @@ body {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -474,7 +487,7 @@ body {
   color: white;
   font-size: 2rem;
   font-weight: bold;
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 10px 25px rgba(179, 31, 140, 0.4);
 }
 
 .avatar img {
@@ -498,7 +511,7 @@ body {
 }
 
 .chat-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   color: white;
   border: none;
   padding: 1rem 2rem;
@@ -514,7 +527,7 @@ body {
 
 .chat-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 10px 25px rgba(179, 31, 140, 0.4);
 }
 
 .logout-btn {
@@ -541,7 +554,7 @@ body {
   min-height: 100vh;
   color: white;
   font-size: 1.125rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
 }
 
 .loading-spinner {
@@ -568,7 +581,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   color: white;
   font-size: 1.125rem;
 }
@@ -577,7 +590,7 @@ body {
 .hero-section {
   padding: 4rem 1rem;
   text-align: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   color: white;
   position: relative;
   overflow: hidden;
@@ -590,8 +603,8 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 20% 80%, rgba(147, 51, 234, 0.3) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%);
+  background: radial-gradient(circle at 20% 80%, rgba(103, 27, 154, 0.4) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255, 152, 0, 0.3) 0%, transparent 50%);
   z-index: -1;
 }
 
@@ -665,7 +678,7 @@ body {
 .feature-icon-large {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -770,7 +783,7 @@ body {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -809,7 +822,7 @@ body {
 }
 
 .message.user .message-bubble {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   color: white;
   border-bottom-right-radius: 0.25rem;
 }
@@ -909,13 +922,13 @@ body {
 }
 
 .message-input:focus {
-  border-color: #667eea;
+  border-color: var(--color-primary);
 }
 
 .send-btn {
   width: 44px;
   height: 44px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   border: none;
   border-radius: 50%;
   color: white;
@@ -929,7 +942,7 @@ body {
 
 .send-btn:hover:not(:disabled) {
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(179, 31, 140, 0.4);
 }
 
 .send-btn:disabled {
