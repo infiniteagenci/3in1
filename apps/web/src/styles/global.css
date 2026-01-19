@@ -6,22 +6,22 @@
    DESIGN TOKENS (CSS Variables)
    ======================================== */
 :root {
-  /* AI Labs Color Scheme */
+  /* AI Labs Color Scheme - Softer tones */
   /* Primary Colors - Magenta to Purple Gradient */
-  --color-primary: #B31F8C;
-  --color-primary-hover: #C2185B;
-  --color-primary-light: #E91E63;
-  --color-primary-purple: #6A1B9A;
-  --color-primary-bg: rgba(179, 31, 140, 0.15);
+  --color-primary: #C84B9F;
+  --color-primary-hover: #B31F8C;
+  --color-primary-light: #D870B7;
+  --color-primary-purple: #8B5FCF;
+  --color-primary-bg: rgba(200, 75, 159, 0.12);
 
   /* Secondary Colors - Orange to Violet Gradient */
-  --color-secondary-orange: #FF9800;
-  --color-secondary-violet: #673AB7;
+  --color-secondary-orange: #FFB347;
+  --color-secondary-violet: #9B7ED8;
 
   /* Accent Color - Yellow */
-  --color-accent: #FFC107;
-  --color-accent-purple: #9333ea;
-  --color-accent-blue: #2563eb;
+  --color-accent: #FFD54F;
+  --color-accent-purple: #BA68C8;
+  --color-accent-blue: #64B5F6;
 
   /* Neutral Colors */
   --color-stone-50: #fafaf9;
@@ -41,10 +41,10 @@
   --color-bg-white: rgba(255, 255, 255, 0.8);
   --color-bg-glass: rgba(255, 255, 255, 0.3);
 
-  /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #B31F8C 0%, #6A1B9A 50%, #C2185B 100%);
-  --gradient-secondary: linear-gradient(135deg, #FF9800 0%, #673AB7 100%);
-  --gradient-hero: linear-gradient(135deg, #B31F8C 0%, #6A1B9A 100%);
+  /* Gradients - Softer tones */
+  --gradient-primary: linear-gradient(135deg, #C84B9F 0%, #8B5FCF 50%, #D870B7 100%);
+  --gradient-secondary: linear-gradient(135deg, #FFB347 0%, #9B7ED8 100%);
+  --gradient-hero: linear-gradient(135deg, #C84B9F 0%, #8B5FCF 100%);
 
   /* Border Colors */
   --color-border: rgba(231, 229, 228, 0.6);
@@ -197,9 +197,9 @@ body {
   height: 200%;
   top: -50%;
   left: -50%;
-  background: radial-gradient(circle at 20% 80%, rgba(103, 27, 154, 0.4) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(255, 152, 0, 0.3) 0%, transparent 50%),
-              radial-gradient(circle at 40% 40%, rgba(179, 31, 140, 0.3) 0%, transparent 50%);
+  background: radial-gradient(circle at 20% 80%, rgba(139, 95, 207, 0.35) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255, 179, 71, 0.25) 0%, transparent 50%),
+              radial-gradient(circle at 40% 40%, rgba(200, 75, 159, 0.25) 0%, transparent 50%);
   animation: float 20s ease-in-out infinite;
   z-index: 0;
   pointer-events: none;
@@ -320,7 +320,7 @@ body {
   font-size: 2rem;
   font-weight: bold;
   color: white;
-  box-shadow: 0 10px 25px rgba(179, 31, 140, 0.4);
+  box-shadow: 0 10px 25px rgba(200, 75, 159, 0.3);
 }
 
 .app-name {
@@ -448,7 +448,7 @@ body {
   align-items: center;
   gap: 0.625rem;
   padding: 0.4rem;
-  background: rgba(179, 31, 140, 0.08);
+  background: rgba(200, 75, 159, 0.06);
   border-radius: 0.5rem;
 }
 
@@ -487,7 +487,7 @@ body {
   color: white;
   font-size: 2rem;
   font-weight: bold;
-  box-shadow: 0 10px 25px rgba(179, 31, 140, 0.4);
+  box-shadow: 0 10px 25px rgba(200, 75, 159, 0.3);
 }
 
 .avatar img {
@@ -527,7 +527,7 @@ body {
 
 .chat-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(179, 31, 140, 0.4);
+  box-shadow: 0 10px 25px rgba(200, 75, 159, 0.3);
 }
 
 .logout-btn {
@@ -603,8 +603,8 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 20% 80%, rgba(103, 27, 154, 0.4) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(255, 152, 0, 0.3) 0%, transparent 50%);
+  background: radial-gradient(circle at 20% 80%, rgba(139, 95, 207, 0.35) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255, 179, 71, 0.25) 0%, transparent 50%);
   z-index: -1;
 }
 
@@ -942,7 +942,7 @@ body {
 
 .send-btn:hover:not(:disabled) {
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(179, 31, 140, 0.4);
+  box-shadow: 0 4px 12px rgba(200, 75, 159, 0.3);
 }
 
 .send-btn:disabled {
