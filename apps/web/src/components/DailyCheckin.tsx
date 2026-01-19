@@ -24,13 +24,12 @@ interface DailyCheckinProps {
     prayerFocus?: string;
     gratitudeNotes?: string;
   }) => void;
+  onDismiss?: () => void;
+  compact?: boolean;
 }
 
-export default function DailyCheckin({ onComplete }: DailyCheckinProps) {
+export default function DailyCheckin({ onComplete, onDismiss, compact = false }: DailyCheckinProps) {
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
-  const [energyLevel, setEnergyLevel] = useState<number>(3);
-  const [prayerFocus, setPrayerFocus] = useState('');
-  const [gratitude, setGratitude] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
@@ -40,31 +39,104 @@ export default function DailyCheckin({ onComplete }: DailyCheckinProps) {
 
     const data = {
       mood: selectedMood,
-      energyLevel,
-      prayerFocus: prayerFocus || undefined,
-      gratitudeNotes: gratitude || undefined,
+      energyLevel: 3,
+      prayerFocus: undefined,
+      gratitudeNotes: undefined,
     };
 
     onComplete(data);
 
-    // Reset form after submission
     setTimeout(() => {
       setSelectedMood(null);
-      setEnergyLevel(3);
-      setPrayerFocus('');
-      setGratitude('');
       setIsSubmitting(false);
     }, 500);
   };
 
-  const canSubmit = selectedMood !== null;
+  const handleQuickSubmit = (moodId: string) => {
+    setSelectedMood(moodId);
+    setIsSubmitting(true);
+
+    const data = {
+      mood: moodId,
+      energyLevel: 3,
+      prayerFocus: undefined,
+      gratitudeNotes: undefined,
+    };
+
+    onComplete(data);
+
+    setTimeout(() => {
+      setSelectedMood(null);
+      setIsSubmitting(false);
+    }, 500);
+  };
+
+  if (compact) {
+    return (
+      <div className="bg-white/95 backdrop-blur-sm rounded-xl p-3 mb-2 border border-purple-200 shadow-lg">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">✨</span>
+            <span className="text-sm font-semibold text-purple-900">How are you feeling?</span>
+          </div>
+          {onDismiss && (
+            <button
+              onClick={onDismiss}
+              className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors"
+              aria-label="Dismiss"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          )}
+        </div>
+
+        <div className="flex gap-1.5 flex-wrap">
+          {moods.map((mood) => (
+            <button
+              key={mood.id}
+              onClick={() => handleQuickSubmit(mood.id)}
+              disabled={isSubmitting}
+              className={`px-2 py-1.5 rounded-lg transition-all text-xs font-medium ${
+                mood.color
+              } hover:scale-105 active:scale-95 ${
+                isSubmitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+              }`}
+              aria-label={`Feeling ${mood.label}`}
+              title={mood.label}
+            >
+              {mood.emoji}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 rounded-xl p-4 mb-3 border border-purple-200">
-      <h3 className="text-base font-semibold text-purple-900 mb-1 flex items-center gap-2">
-        <span>✨</span> How are you feeling today?
-      </h3>
-      <p className="text-xs text-purple-700 mb-3">Take a moment to check in with yourself and God.</p>
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <h3 className="text-base font-semibold text-purple-900 flex items-center gap-2">
+            <span>✨</span> How are you feeling today?
+          </h3>
+          <p className="text-xs text-purple-700 mt-1">Take a moment to check in with yourself and God.</p>
+        </div>
+        {onDismiss && (
+          <button
+            onClick={onDismiss}
+            className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors"
+            aria-label="Dismiss"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        )}
+      </div>
 
       {/* Mood Selection */}
       <div className="grid grid-cols-4 gap-2 mb-3">
@@ -98,58 +170,26 @@ export default function DailyCheckin({ onComplete }: DailyCheckinProps) {
               {[1, 2, 3, 4, 5].map((level) => (
                 <button
                   key={level}
-                  onClick={() => setEnergyLevel(level)}
+                  onClick={() => {}}
                   disabled={isSubmitting}
-                  className={`flex-1 h-8 rounded text-xs font-medium transition-all ${
-                    energyLevel === level
-                      ? 'bg-purple-500 text-white shadow-md'
-                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                  } ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                  className={`flex-1 h-8 rounded text-xs font-medium transition-all bg-purple-500 text-white shadow-md ${
+                    isSubmitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                  }`}
                   aria-label={`Energy level ${level}`}
                 >
-                  {level}
+                  {3}
                 </button>
               ))}
               <span className="text-xs text-gray-500">High</span>
             </div>
           </div>
 
-          {/* Prayer Focus */}
-          <div>
-            <label className="text-xs text-gray-700 mb-1 block font-medium">
-              What would you like to pray about?
-            </label>
-            <textarea
-              value={prayerFocus}
-              onChange={(e) => setPrayerFocus(e.target.value)}
-              disabled={isSubmitting}
-              placeholder="What's on your heart..."
-              className="w-full p-2 rounded-lg border border-gray-200 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all resize-none text-sm"
-              rows={2}
-            />
-          </div>
-
-          {/* Gratitude */}
-          <div>
-            <label className="text-xs text-gray-700 mb-1 block font-medium">
-              What are you grateful for?
-            </label>
-            <textarea
-              value={gratitude}
-              onChange={(e) => setGratitude(e.target.value)}
-              disabled={isSubmitting}
-              placeholder="Count your blessings..."
-              className="w-full p-2 rounded-lg border border-gray-200 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all resize-none text-sm"
-              rows={2}
-            />
-          </div>
-
           {/* Submit Button */}
           <button
             onClick={handleSubmit}
-            disabled={!canSubmit || isSubmitting}
+            disabled={!selectedMood || isSubmitting}
             className={`w-full py-2.5 px-4 rounded-lg font-semibold transition-all shadow-md ${
-              canSubmit && !isSubmitting
+              selectedMood && !isSubmitting
                 ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}

@@ -111,20 +111,19 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
     checkAgeCollection();
   }, [messages.length]);
 
-  // Check for daily check-in
+  // Check for daily check-in - show every time on app load when no messages
   useEffect(() => {
     const checkDailyCheckin = () => {
-      const lastCheckin = localStorage.getItem('last_checkin_date');
-      const today = new Date().toISOString().split('T')[0];
-
-      // Show check-in if it's a new day and there are no messages yet
-      if (lastCheckin !== today && messages.length === 0) {
-        setShowDailyCheckin(true);
+      // Show compact check-in every time when there are no messages
+      if (messages.length === 0) {
+        setTimeout(() => {
+          setShowDailyCheckin(true);
+        }, 300);
       }
     };
 
     checkDailyCheckin();
-  }, [messages.length]);
+  }, []);
 
   // Fetch personalized suggestions on mount and after messages change
   useEffect(() => {
@@ -476,6 +475,11 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
     })();
   }, [messages, PUBLIC_BASE_API_URL]);
 
+  // Handle daily check-in dismiss
+  const handleCheckinDismiss = useCallback(() => {
+    setShowDailyCheckin(false);
+  }, []);
+
   // Handle daily check-in completion
   const handleCheckinComplete = useCallback((data: any) => {
     const checkinMsg = `Daily check-in: ${JSON.stringify(data)}`;
@@ -614,6 +618,15 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
     <div id='chatbox' className="flex flex-col h-full bg-gradient-to-br from-amber-50/50 to-orange-50/50">
       <Conversation className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4 pb-20">
         <ConversationContent>
+          {/* Daily Check-in - shown at the top when no messages */}
+          {messages.length === 0 && showDailyCheckin && (
+            <DailyCheckin
+              onComplete={handleCheckinComplete}
+              onDismiss={handleCheckinDismiss}
+              compact={true}
+            />
+          )}
+
           {/* Daily Verse - shown when no messages */}
           {messages.length === 0 && !showAgePrompt && !showDailyCheckin && (
             <div className="mb-6">
