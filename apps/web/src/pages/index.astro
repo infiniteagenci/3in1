@@ -42,13 +42,13 @@ import Layout from '../layouts/Layout.astro'
     .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; opacity: 0; }
   </style>
 
-  <!-- Hero Section with Soft Purple Gradient Background -->
-  <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-purple-50/80 via-violet-50/80 to-fuchsia-50/80">
+  <!-- Hero Section with Vibrant Purple Gradient Background (matching login) -->
+  <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden" style="background: linear-gradient(135deg, #C84B9F 0%, #8B5FCF 50%, #D870B7 100%);">
     <!-- Animated Background Elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-purple-200/30 to-violet-200/30 rounded-full blur-3xl animate-pulse-slow"></div>
-      <div class="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-fuchsia-200/30 to-pink-200/30 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-purple-100/20 to-violet-100/20 rounded-full blur-3xl animate-float"></div>
+      <div class="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-purple-300/40 to-violet-300/40 rounded-full blur-3xl animate-pulse-slow"></div>
+      <div class="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-fuchsia-300/40 to-pink-300/40 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-purple-200/30 to-violet-200/30 rounded-full blur-3xl animate-float"></div>
     </div>
 
     <!-- Navigation -->
@@ -56,20 +56,20 @@ import Layout from '../layouts/Layout.astro'
       <div class="max-w-6xl mx-auto flex items-center justify-between">
         <!-- Logo -->
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-400 to-violet-500 flex items-center justify-center shadow-lg">
+          <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg border border-white/30">
             <span class="text-white font-bold text-xl font-geist">3</span>
           </div>
-          <span class="font-playfair text-2xl font-semibold text-gray-800">3in1</span>
+          <span class="font-playfair text-2xl font-semibold text-white">3in1</span>
         </div>
 
         <!-- Auth Buttons -->
         <div id="nav-logged-out" class="flex items-center gap-4">
-          <a href="/login" class="px-5 py-2.5 text-gray-700 hover:text-purple-600 transition-colors font-geist font-medium">Login</a>
-          <a href="/login" class="px-6 py-2.5 bg-gradient-to-r from-purple-400 to-violet-500 text-white rounded-full font-geist font-medium hover:shadow-lg hover:scale-105 transition-all duration-200">Join Community</a>
+          <a href="/login" class="px-5 py-2.5 text-white/90 hover:text-white transition-colors font-geist font-medium">Login</a>
+          <a href="/login" class="px-6 py-2.5 bg-white text-purple-600 rounded-full font-geist font-medium hover:shadow-lg hover:scale-105 transition-all duration-200">Join Community</a>
         </div>
         <div id="nav-logged-in" class="hidden flex items-center gap-4">
-          <a href="/chat" class="px-6 py-2.5 bg-gradient-to-r from-purple-400 to-violet-500 text-white rounded-full font-geist font-medium hover:shadow-lg hover:scale-105 transition-all duration-200">Continue Your Journey</a>
-          <button id="nav-logout-link" class="px-5 py-2.5 text-gray-700 hover:text-purple-600 transition-colors font-geist font-medium">Logout</button>
+          <a href="/chat" class="px-6 py-2.5 bg-white text-purple-600 rounded-full font-geist font-medium hover:shadow-lg hover:scale-105 transition-all duration-200">Continue Your Journey</a>
+          <button id="nav-logout-link" class="px-5 py-2.5 text-white/90 hover:text-white transition-colors font-geist font-medium">Logout</button>
         </div>
       </div>
     </nav>
@@ -77,35 +77,35 @@ import Layout from '../layouts/Layout.astro'
     <!-- Hero Content -->
     <div class="relative z-10 max-w-5xl mx-auto px-6 text-center pt-20">
       <!-- Welcome Badge -->
-      <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full mb-8 shadow-sm animate-fade-in-up">
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full mb-8 shadow-sm animate-fade-in-up">
         <span class="text-lg">✨</span>
-        <span class="text-sm font-geist text-gray-700">Your faith community, always with you</span>
+        <span class="text-sm font-geist text-white">Your faith community, always with you</span>
       </div>
 
       <!-- Main Heading -->
-      <h1 class="font-playfair text-5xl sm:text-6xl lg:text-7xl font-semibold text-gray-900 leading-tight mb-6 animate-fade-in-up" style="animation-delay: 0.1s;">
-        Find <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-violet-600 italic font-crimson">Peace</span> in <span class="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 to-pink-600 italic font-crimson">Community</span>
+      <h1 class="font-playfair text-5xl sm:text-6xl lg:text-7xl font-semibold text-white leading-tight mb-6 animate-fade-in-up" style="animation-delay: 0.1s;">
+        Find <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-purple-100 italic font-crimson">Peace</span> in <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-100 to-pink-100 italic font-crimson">Community</span>
       </h1>
 
       <!-- Subheading -->
-      <p class="font-geist text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up" style="animation-delay: 0.2s;">
+      <p class="font-geist text-lg sm:text-xl text-white/90 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up" style="animation-delay: 0.2s;">
         Connect with Spirit for guidance, explore sacred texts, pray with others, and grow in faith alongside a warm, supportive community.
       </p>
 
       <!-- Logged Out CTA -->
       <div id="logged-out-content" class="animate-fade-in-up" style="animation-delay: 0.3s;">
-        <a href="/login" class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-400 to-violet-500 text-white rounded-full font-geist font-semibold text-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+        <a href="/login" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-purple-600 rounded-full font-geist font-semibold text-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
           <span>Start Your Journey</span>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
           </svg>
         </a>
-        <p class="mt-4 text-sm text-gray-500 font-geist">Free to join • No credit card required</p>
+        <p class="mt-4 text-sm text-white/70 font-geist">Free to join • No credit card required</p>
       </div>
 
       <!-- Logged In CTA -->
       <div id="logged-in-content" class="hidden animate-fade-in-up" style="animation-delay: 0.3s;">
-        <a href="/chat" class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-400 to-violet-500 text-white rounded-full font-geist font-semibold text-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+        <a href="/chat" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-purple-600 rounded-full font-geist font-semibold text-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
           <span>Continue Your Journey</span>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -116,7 +116,7 @@ import Layout from '../layouts/Layout.astro'
 
     <!-- Scroll Indicator -->
     <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
       </svg>
     </div>
