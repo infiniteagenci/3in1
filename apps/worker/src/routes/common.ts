@@ -36,7 +36,7 @@ export async function validateSession(c: any, next: any) {
   try {
     // Validate session token
     const session = await c.env.DB.prepare(
-      'SELECT s.*, u.id as user_id, u.name, u.email FROM sessions s JOIN users u ON s.user_id = u.id WHERE s.token = ? AND s.expires_at > datetime("now")'
+      "SELECT s.*, u.id as user_id, u.name, u.email FROM sessions s JOIN users u ON s.user_id = u.id WHERE s.token = ? AND s.expires_at > CURRENT_TIMESTAMP"
     ).bind(token).first();
 
     if (!session) {

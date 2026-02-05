@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { GoogleUser, createOrUpdateUser, createSession, validateSession, deleteSession } from '../auth';
+import { GoogleUser, createOrUpdateUser, createSession, validateSession, deleteSession, hashPassword, verifyPassword } from '../auth';
 
 type Bindings = {
   DB: D1Database;
@@ -11,6 +11,156 @@ type Bindings = {
 };
 
 const auth = new Hono<{ Bindings: Bindings }>();
+
+// Email/password login endpoint
+auth.post('/login', async (c) => {
+  try {
+    const { email, password } = await c.req.json();
+
+    if (!email || !password) {
+      return c.json({ error: 'Email and password are required' }, 400);
+    }
+
+    // Find user by email
+    const result = await c.env.DB.prepare('SELECT * FROM users WHERE email = ?')
+      .bind(email.toLowerCase())
+      .first();
+
+    if (!result) {
+      return c.json({ error: 'Invalid email or password' }, 401);
+    }
+
+    const user = result as any;
+
+    // Check if user has password (might be Google OAuth only user)
+    if (!user.password_hash) {
+      return c.json({ error: 'Please sign in with Google or set a password' }, 401);
+    }
+
+    // Verify password
+    const isValid = await verifyPassword(password, user.password_hash);
+    if (!isValid) {
+      return c.json({ error: 'Invalid email or password' }, 401);
+    }
+
+    // Create session
+    const session = await createSession(c.env.DB, user.id);
+
+    return c.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        avatar_url: user.avatar_url,
+      },
+      session_token: session.token,
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
+
+// Email/password signup endpoint
+auth.post('/signup', async (c) => {
+  try {
+    const { name, email, password } = await c.req.json();
+
+    if (!name || !email || !password) {
+      return c.json({ error: 'Name, email, and password are required' }, 400);
+    }
+
+    if (password.length < 8) {
+      return c.json({ error: 'Password must be at least 8 characters' }, 400);
+    }
+
+    // Check if user already exists
+    const existingUser = await c.env.DB.prepare('SELECT id FROM users WHERE email = ?')
+      .bind(email.toLowerCase())
+      .first();
+
+    if (existingUser) {
+      return c.json({ error: 'An account with this email already exists' }, 409);
+    }
+
+    // Hash password
+    const passwordHash = await hashPassword(password);
+
+    // Create new user
+    const userId = crypto.randomUUID();
+    const result = await c.env.DB.prepare(
+      'INSERT INTO users (id, email, name, password_hash, google_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    )
+      .bind(
+        userId,
+        email.toLowerCase(),
+        name,
+        passwordHash,
+        `email_${userId}`, // Use email-based google_id for email users
+        new Date().toISOString(),
+        new Date().toISOString()
+      )
+      .run();
+
+    if (!result.success) {
+      return c.json({ error: 'Failed to create account' }, 500);
+    }
+
+    // Fetch the created user
+    const newUser = await c.env.DB.prepare('SELECT * FROM users WHERE id = ?')
+      .bind(userId)
+      .first() as any;
+
+    // Create session
+    const session = await createSession(c.env.DB, userId);
+
+    return c.json({
+      user: {
+        id: newUser.id,
+        email: newUser.email,
+        name: newUser.name,
+        avatar_url: newUser.avatar_url,
+      },
+      session_token: session.token,
+    });
+  } catch (error) {
+    console.error('Signup error:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
+
+// Forgot password endpoint
+auth.post('/forgot-password', async (c) => {
+  try {
+    const { email } = await c.req.json();
+
+    if (!email) {
+      return c.json({ error: 'Email is required' }, 400);
+    }
+
+    // Check if user exists
+    const user = await c.env.DB.prepare('SELECT id, email FROM users WHERE email = ?')
+      .bind(email.toLowerCase())
+      .first();
+
+    if (!user) {
+      // Don't reveal if email exists or not
+      return c.json({ message: 'If an account exists with this email, a password reset link will be sent' });
+    }
+
+    // In a real implementation, you would:
+    // 1. Generate a reset token
+    // 2. Store it in the database with expiration
+    // 3. Send an email with the reset link
+
+    // For now, return success (we'll implement email sending later)
+    console.log('Password reset requested for:', email);
+    return c.json({ message: 'If an account exists with this email, a password reset link will be sent' });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
 
 // Google OAuth endpoints
 auth.get('/google/url', (c) => {

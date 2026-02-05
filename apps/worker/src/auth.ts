@@ -11,6 +11,7 @@ export interface User {
   name: string;
   avatar_url?: string;
   google_id: string;
+  password_hash?: string;
   created_at: string;
   updated_at: string;
 }
@@ -23,11 +24,100 @@ export interface Session {
   created_at: string;
 }
 
+// Password hashing using Web Crypto API (PBKDF2)
+export async function hashPassword(password: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+
+  // Generate a random salt
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+
+  // Import the password as a key
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    data,
+    'PBKDF2',
+    false,
+    ['deriveBits']
+  );
+
+  // Derive the hash
+  const hash = await crypto.subtle.deriveBits(
+    {
+      name: 'PBKDF2',
+      salt: salt,
+      iterations: 100000,
+      hash: 'SHA-256',
+    },
+    keyMaterial,
+    256
+  );
+
+  // Combine salt and hash
+  const combined = new Uint8Array(salt.length + hash.byteLength);
+  combined.set(salt);
+  combined.set(new Uint8Array(hash), salt.length);
+
+  // Convert to base64
+  return btoa(String.fromCharCode(...combined));
+}
+
+// Verify password against stored hash
+export async function verifyPassword(password: string, storedHash: string): Promise<boolean> {
+  try {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+
+    // Decode the stored hash
+    const combined = Uint8Array.from(atob(storedHash), c => c.charCodeAt(0));
+    const salt = combined.slice(0, 16);
+    const hash = combined.slice(16);
+
+    // Import the password as a key
+    const keyMaterial = await crypto.subtle.importKey(
+      'raw',
+      data,
+      'PBKDF2',
+      false,
+      ['deriveBits']
+    );
+
+    // Derive the hash
+    const derivedHash = await crypto.subtle.deriveBits(
+      {
+        name: 'PBKDF2',
+        salt: salt,
+        iterations: 100000,
+        hash: 'SHA-256',
+      },
+      keyMaterial,
+      256
+    );
+
+    // Compare hashes
+    const derivedArray = new Uint8Array(derivedHash);
+    if (derivedArray.length !== hash.length) {
+      return false;
+    }
+
+    for (let i = 0; i < derivedArray.length; i++) {
+      if (derivedArray[i] !== hash[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Password verification error:', error);
+    return false;
+  }
+}
+
 export async function createOrUpdateUser(
   db: D1Database,
   googleUser: GoogleUser
 ): Promise<User> {
-  // Check if user exists
+  // Check if user exists by google_id
   const existingUser = await db
     .prepare('SELECT * FROM users WHERE google_id = ?')
     .bind(googleUser.id)
@@ -41,6 +131,22 @@ export async function createOrUpdateUser(
       .run();
 
     return { ...existingUser, email: googleUser.email, name: googleUser.name, avatar_url: googleUser.picture };
+  }
+
+  // Check if user exists by email (for linking Google account to existing email account)
+  const existingByEmail = await db
+    .prepare('SELECT * FROM users WHERE email = ?')
+    .bind(googleUser.email)
+    .first<User>();
+
+  if (existingByEmail) {
+    // Link Google account to existing user
+    await db
+      .prepare('UPDATE users SET google_id = ?, avatar_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+      .bind(googleUser.id, googleUser.picture, existingByEmail.id)
+      .run();
+
+    return { ...existingByEmail, google_id: googleUser.id, avatar_url: googleUser.picture };
   }
 
   // Create new user

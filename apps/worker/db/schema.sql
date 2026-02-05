@@ -1,10 +1,11 @@
--- Users table for Google OAuth integration
+-- Users table for Google OAuth integration and email/password authentication
 CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   name TEXT NOT NULL,
   avatar_url TEXT,
-  google_id TEXT UNIQUE NOT NULL,
+  google_id TEXT UNIQUE,
+  password_hash TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
