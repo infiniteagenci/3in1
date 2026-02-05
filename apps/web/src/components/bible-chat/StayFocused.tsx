@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface StayFocusedProps {
   className?: string;
@@ -11,6 +11,16 @@ interface FocusSession {
   duration: number;
   completed: boolean;
   notes?: string;
+  selectedMusic?: string;
+}
+
+interface WorshipMusic {
+  id: string;
+  title: string;
+  artist: string;
+  url: string;
+  duration: string;
+  category: 'ambient' | 'hymns' | 'instrumental' | 'praise';
 }
 
 interface Achievement {
@@ -33,6 +43,73 @@ const achievements: Achievement[] = [
   { id: 'consistent', title: 'Consistent Soul', description: '7 day streak of focus sessions', icon: '💎', requirement: 7, current: 0, unlocked: false }
 ];
 
+const worshipMusic: WorshipMusic[] = [
+  {
+    id: 'peaceful-ambient',
+    title: 'Peaceful Ambient',
+    artist: 'Worship Sounds',
+    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    duration: '6:12',
+    category: 'ambient'
+  },
+  {
+    id: 'amazing-grace',
+    title: 'Amazing Grace',
+    artist: 'Traditional Hymn',
+    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+    duration: '5:30',
+    category: 'hymns'
+  },
+  {
+    id: 'instrumental-worship',
+    title: 'Instrumental Worship',
+    artist: 'Piano Worship',
+    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+    duration: '4:45',
+    category: 'instrumental'
+  },
+  {
+    id: 'holy-spirit',
+    title: 'Holy Spirit',
+    artist: 'Praise & Worship',
+    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
+    duration: '5:15',
+    category: 'praise'
+  },
+  {
+    id: 'prayer-meditation',
+    title: 'Prayer Meditation',
+    artist: 'Ambient Worship',
+    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
+    duration: '7:20',
+    category: 'ambient'
+  },
+  {
+    id: 'come-as-you-are',
+    title: 'Come As You Are',
+    artist: 'Contemporary Worship',
+    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3',
+    duration: '4:30',
+    category: 'praise'
+  },
+  {
+    id: 'be-still',
+    title: 'Be Still and Know',
+    artist: 'Instrumental Hymn',
+    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3',
+    duration: '5:45',
+    category: 'instrumental'
+  },
+  {
+    id: 'adoration',
+    title: 'Adoration',
+    artist: 'Worship Music',
+    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3',
+    duration: '6:00',
+    category: 'praise'
+  }
+];
+
 export default function StayFocused({ className = '' }: StayFocusedProps) {
   const [sessions, setSessions] = useState<FocusSession[]>([]);
   const [activeSession, setActiveSession] = useState<FocusSession | null>(null);
@@ -42,6 +119,11 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
   const [sessionNotes, setSessionNotes] = useState('');
   const [userAchievements, setUserAchievements] = useState<Achievement[]>(achievements);
   const [showAchievements, setShowAchievements] = useState(false);
+  const [selectedMusic, setSelectedMusic] = useState<string>('');
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentMusicUrl, setCurrentMusicUrl] = useState<string>('');
+  const [showMusicSelector, setShowMusicSelector] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     loadSessions();
@@ -136,12 +218,57 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
       id: Date.now().toString(),
       startTime: new Date().toISOString(),
       duration: sessionDuration * 60,
-      completed: false
+      completed: false,
+      selectedMusic: selectedMusic
     };
 
     setActiveSession(session);
     localStorage.setItem('active_focus_session', JSON.stringify(session));
+
+    // Start playing music if selected
+    if (selectedMusic) {
+      const music = worshipMusic.find(m => m.id === selectedMusic);
+      if (music) {
+        setCurrentMusicUrl(music.url);
+        setIsPlaying(true);
+      }
+    }
+
     setShowNewSession(false);
+  };
+
+  const toggleMusic = () => {
+    if (!audioRef.current) return;
+
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const selectMusic = (musicId: string) => {
+    setSelectedMusic(musicId);
+    const music = worshipMusic.find(m => m.id === musicId);
+    if (music && activeSession) {
+      setCurrentMusicUrl(music.url);
+      setIsPlaying(true);
+      // Update active session with music selection
+      const updatedSession = { ...activeSession, selectedMusic: musicId };
+      setActiveSession(updatedSession);
+      localStorage.setItem('active_focus_session', JSON.stringify(updatedSession));
+    }
+  };
+
+  const stopMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    setIsPlaying(false);
+    setCurrentMusicUrl('');
   };
 
   const completeSession = (notes?: string) => {
@@ -246,6 +373,95 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
             <p className="text-sm text-gray-600 mt-2 font-geist">
               {Math.round(progressPercent)}% complete
             </p>
+          </div>
+
+          {/* Worship Music Player */}
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-4 mb-6 border border-purple-100">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">🎵</span>
+                <span className="font-semibold text-purple-800 font-geist">Worship Music</span>
+              </div>
+              <button
+                onClick={() => setShowMusicSelector(!showMusicSelector)}
+                className="text-sm text-purple-600 hover:text-purple-800 font-medium"
+              >
+                {showMusicSelector ? 'Close' : 'Change'}
+              </button>
+            </div>
+
+            {showMusicSelector ? (
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {worshipMusic.map((music) => (
+                  <button
+                    key={music.id}
+                    onClick={() => selectMusic(music.id)}
+                    className={`w-full text-left p-3 rounded-lg border-2 transition-all ${
+                      activeSession?.selectedMusic === music.id
+                        ? 'bg-purple-100 border-purple-400'
+                        : 'bg-white border-gray-200 hover:border-purple-300'
+                    }`}
+                  >
+                    <div className="font-medium text-sm text-gray-900">{music.title}</div>
+                    <div className="text-xs text-gray-500">{music.artist} • {music.duration}</div>
+                  </button>
+                ))}
+                <button
+                  onClick={stopMusic}
+                  className="w-full text-center p-2 text-red-600 hover:bg-red-50 rounded-lg text-sm font-medium"
+                >
+                  Stop Music
+                </button>
+              </div>
+            ) : (
+              <>
+                {activeSession?.selectedMusic ? (
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="font-medium text-sm text-gray-900">
+                        {worshipMusic.find(m => m.id === activeSession.selectedMusic)?.title}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {worshipMusic.find(m => m.id === activeSession.selectedMusic)?.artist}
+                      </div>
+                    </div>
+                    <button
+                      onClick={toggleMusic}
+                      className="ml-3 w-10 h-10 flex items-center justify-center bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors"
+                    >
+                      {isPlaying ? (
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                        </svg>
+                      ) : (
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setShowMusicSelector(true)}
+                    className="w-full py-3 bg-purple-100 text-purple-700 rounded-lg font-medium hover:bg-purple-200 transition-colors text-sm"
+                  >
+                    🎵 Select Worship Music
+                  </button>
+                )}
+              </>
+            )}
+
+            {/* Hidden audio element */}
+            {currentMusicUrl && (
+              <audio
+                ref={audioRef}
+                src={currentMusicUrl}
+                autoPlay={isPlaying}
+                loop
+                onEnded={() => setIsPlaying(false)}
+                className="hidden"
+              />
+            )}
           </div>
 
           {/* Guidance */}
@@ -402,6 +618,70 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
                   <div className="text-xs">minutes</div>
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Worship Music Selection */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-3 font-geist">
+              🎵 Worship Music (Optional)
+            </label>
+            <div className="space-y-2">
+              {!selectedMusic ? (
+                <button
+                  onClick={() => setShowMusicSelector(!showMusicSelector)}
+                  className="w-full p-4 bg-purple-50 border-2 border-purple-200 rounded-xl text-center hover:bg-purple-100 transition-colors"
+                >
+                  <div className="text-purple-700 font-medium">
+                    {showMusicSelector ? 'Hide Music Options' : 'Select Worship Music'}
+                  </div>
+                  <div className="text-xs text-purple-500 mt-1">
+                    Add peaceful music to your focus time
+                  </div>
+                </button>
+              ) : (
+                <div className="bg-purple-50 border-2 border-purple-200 rounded-xl p-3 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">🎵</span>
+                    <div>
+                      <div className="font-medium text-purple-900 text-sm">
+                        {worshipMusic.find(m => m.id === selectedMusic)?.title}
+                      </div>
+                      <div className="text-xs text-purple-600">
+                        {worshipMusic.find(m => m.id === selectedMusic)?.artist}
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setSelectedMusic('')}
+                    className="text-red-500 hover:text-red-700 text-sm font-medium"
+                  >
+                    Change
+                  </button>
+                </div>
+              )}
+              {showMusicSelector && (
+                <div className="grid grid-cols-1 gap-2 max-h-64 overflow-y-auto">
+                  {worshipMusic.map((music) => (
+                    <button
+                      key={music.id}
+                      onClick={() => {
+                        setSelectedMusic(music.id);
+                        setShowMusicSelector(false);
+                      }}
+                      className={`p-3 rounded-lg border-2 transition-all text-left ${
+                        selectedMusic === music.id
+                          ? 'bg-purple-100 border-purple-500'
+                          : 'bg-white border-gray-200 hover:border-purple-300'
+                      }`}
+                    >
+                      <div className="font-medium text-sm text-gray-900">{music.title}</div>
+                      <div className="text-xs text-gray-500">{music.artist} • {music.duration}</div>
+                      <div className="text-xs text-purple-600 mt-1 capitalize">{music.category}</div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
