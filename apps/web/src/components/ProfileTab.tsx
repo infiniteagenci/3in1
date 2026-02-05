@@ -91,7 +91,16 @@ export default function ProfileTab() {
   // Apply theme to document
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      document.documentElement.classList.toggle('dark', theme === 'dark');
+      const html = document.documentElement;
+      const body = document.body;
+
+      if (theme === 'dark') {
+        html.classList.add('dark');
+        body.classList.add('dark');
+      } else {
+        html.classList.remove('dark');
+        body.classList.remove('dark');
+      }
       localStorage.setItem('theme', theme);
     }
   }, [theme]);

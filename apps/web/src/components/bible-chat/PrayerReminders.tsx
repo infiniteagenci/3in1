@@ -32,7 +32,6 @@ export default function PrayerReminders({ onClose }: PrayerRemindersProps) {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTime[]>(defaultPrayerTimes);
   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default');
   const [selectedIntents, setSelectedIntents] = useState<string[]>([]);
-  const [notificationTestResult, setNotificationTestResult] = useState<string>('');
 
   useEffect(() => {
     // Load saved settings
@@ -42,7 +41,9 @@ export default function PrayerReminders({ onClose }: PrayerRemindersProps) {
     if (savedIntents) setSelectedIntents(JSON.parse(savedIntents));
 
     // Check notification permission on mount
-    checkNotificationPermission();
+    if ('Notification' in window) {
+      setNotificationPermission(Notification.permission);
+    }
 
     // Set up notification checks
     const checkNotifications = setInterval(() => {
@@ -51,44 +52,6 @@ export default function PrayerReminders({ onClose }: PrayerRemindersProps) {
 
     return () => clearInterval(checkNotifications);
   }, []);
-
-  const checkNotificationPermission = () => {
-    if ('Notification' in window) {
-      setNotificationPermission(Notification.permission);
-    } else {
-      setNotificationPermission('denied');
-    }
-  };
-
-  const requestNotificationPermission = async () => {
-    setNotificationTestResult('');
-    if ('Notification' in window) {
-      try {
-        const permission = await Notification.requestPermission();
-        setNotificationPermission(permission);
-        if (permission === 'granted') {
-          setNotificationTestResult('✓ Permission granted!');
-          // Show a test notification
-          setTimeout(() => {
-            new Notification('🙏 Prayer Reminders Enabled', {
-              body: 'You will receive notifications for your scheduled prayer times. Keep this app open for reminders.',
-              icon: '/icon-192x192.svg',
-              requireInteraction: false,
-            });
-          }, 500);
-        } else if (permission === 'denied') {
-          setNotificationTestResult('✗ Permission denied. Please enable notifications in your browser settings.');
-        } else {
-          setNotificationTestResult('Permission request dismissed. Please try again.');
-        }
-      } catch (error) {
-        setNotificationTestResult('✗ Error requesting notification permission.');
-        console.error('Notification permission error:', error);
-      }
-    } else {
-      setNotificationTestResult('✗ Notifications are not supported in this browser.');
-    }
-  };
 
   const checkAndSendNotifications = () => {
     // Only check if permission is granted
@@ -135,7 +98,16 @@ export default function PrayerReminders({ onClose }: PrayerRemindersProps) {
     }
   };
 
-  const togglePrayerTime = (id: string) => {
+  const togglePrayerTime = async (id: string) => {
+    const prayer = prayerTimes.find(p => p.id === id);
+    const isEnabling = !prayer?.enabled;
+
+    // Request notification permission when enabling a prayer time
+    if (isEnabling && 'Notification' in window && Notification.permission === 'default') {
+      await Notification.requestPermission();
+      setNotificationPermission(Notification.permission);
+    }
+
     const updated = prayerTimes.map(p =>
       p.id === id ? { ...p, enabled: !p.enabled } : p
     );
@@ -157,33 +129,6 @@ export default function PrayerReminders({ onClose }: PrayerRemindersProps) {
       : [...selectedIntents, intentId];
     setSelectedIntents(updated);
     localStorage.setItem('prayer_intents', JSON.stringify(updated));
-  };
-
-  const testNotification = () => {
-    setNotificationTestResult('');
-    if ('Notification' in window) {
-      if (Notification.permission === 'granted') {
-        try {
-          const notification = new Notification('🔔 Test Notification', {
-            body: 'Your prayer reminders are working! You will receive reminders at your scheduled times.',
-            icon: '/icon-192x192.svg',
-            requireInteraction: false,
-            tag: 'test-notification',
-          });
-          setNotificationTestResult('✓ Test notification sent successfully!');
-          setTimeout(() => setNotificationTestResult(''), 3000);
-        } catch (error) {
-          setNotificationTestResult('✗ Error sending test notification.');
-          console.error('Test notification error:', error);
-        }
-      } else {
-        setNotificationTestResult('✗ Please enable notifications first.');
-        setTimeout(() => setNotificationTestResult(''), 3000);
-      }
-    } else {
-      setNotificationTestResult('✗ Notifications are not supported in this browser.');
-      setTimeout(() => setNotificationTestResult(''), 3000);
-    }
   };
 
   const enabledCount = prayerTimes.filter(p => p.enabled).length;
@@ -209,60 +154,19 @@ export default function PrayerReminders({ onClose }: PrayerRemindersProps) {
 
         {/* Status Bar */}
         <div className="bg-white/20 rounded-lg p-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">🔔</span>
-              <div>
-                <p className="text-sm font-medium">{enabledCount} Active Reminders</p>
-                <p className="text-xs text-white/80">
-                  {notificationPermission === 'granted' ? 'Notifications enabled' : 'Enable notifications'}
-                </p>
-              </div>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🔔</span>
+            <div>
+              <p className="text-sm font-medium">{enabledCount} Active Reminders</p>
+              <p className="text-xs text-white/80">
+                {notificationPermission === 'granted' ? 'Notifications enabled' : 'Enable notifications'}
+              </p>
             </div>
-            <button
-              onClick={testNotification}
-              className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
-            >
-              Test
-            </button>
           </div>
-          {notificationTestResult && (
-            <p className={`text-xs mt-2 ${notificationTestResult.startsWith('✓') ? 'text-green-200' : 'text-red-200'}`}>
-              {notificationTestResult}
-            </p>
-          )}
         </div>
       </div>
 
-      <div className="p-4 space-y-4 pb-20">
-        {/* Notification Permission */}
-        {notificationPermission !== 'granted' && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-            <div className="flex items-start gap-3">
-              <span className="text-2xl">⚠️</span>
-              <div className="flex-1">
-                <h3 className="font-semibold text-yellow-900 mb-1">Enable Notifications</h3>
-                <p className="text-sm text-yellow-700 mb-2">
-                  Allow notifications to receive prayer reminders at your scheduled times.
-                </p>
-                <p className="text-xs text-yellow-600 mb-3">
-                  Note: Keep this app open in your browser to receive reminders.
-                </p>
-                <button
-                  onClick={requestNotificationPermission}
-                  className="px-4 py-2 bg-yellow-600 text-white rounded-lg text-sm font-medium hover:bg-yellow-700 transition-colors"
-                >
-                  Enable Notifications
-                </button>
-                {notificationTestResult && (
-                  <p className={`text-xs mt-2 ${notificationTestResult.startsWith('✓') ? 'text-green-700' : 'text-red-700'}`}>
-                    {notificationTestResult}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
+      <div className="p-4 space-y-4 pb-24">
 
         {/* Prayer Times */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -349,21 +253,6 @@ export default function PrayerReminders({ onClose }: PrayerRemindersProps) {
             </div>
           </div>
         </div>
-
-        {/* Permission Info */}
-        {notificationPermission === 'granted' && (
-          <div className="bg-green-50 rounded-xl p-4 border border-green-100">
-            <div className="flex items-start gap-3">
-              <span className="text-xl">✅</span>
-              <div>
-                <h3 className="font-semibold text-green-900 text-sm mb-1">Notifications Enabled</h3>
-                <p className="text-xs text-green-700">
-                  Prayer reminders will appear at your scheduled times. Make sure to keep this tab open and don't put your browser to sleep.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

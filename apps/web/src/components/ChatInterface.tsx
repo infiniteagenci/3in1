@@ -167,10 +167,9 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
         const query = `Tell me about ${title}`;
         setInput(query);
       } else if (prayerId.startsWith('checkin:')) {
-        // Handle check-in completion
-        const data = prayerId.replace('checkin:', '');
-        const query = `Daily check-in completed: ${data}`;
-        setInput(query);
+        // Handle check-in completion - just dismiss, don't auto-send
+        // The user will send their message manually
+        setShowDailyCheckin(false);
       } else {
         // Handle prayer selection
         const prompts: Record<string, string> = {
@@ -324,15 +323,8 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
       (window as any).updateAgeBanner();
     }
 
-    // Add user's age selection as a message
-    const ageMsg: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: '',
-      parts: [{ type: 'text' as const, text: label }],
-    };
-
-    setMessages(prev => [...prev, ageMsg]);
+    // Set the input for user to review and send
+    setInput(label);
     setShowAgePrompt(false);
     setHasCollectedAge(true);
 
@@ -368,112 +360,10 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
       fullContent = `${query}\n\nPrayers:\n${item.prayers.join('\n\n')}`;
     }
 
-    // Add user message directly and trigger the API call
-    const userMsg: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: '',
-      parts: [{ type: 'text' as const, text: fullContent }],
-    };
-
-    setMessages(prev => [...prev, userMsg]);
+    // Set the input for user to review and send
+    setInput(fullContent);
     setShowSuggestions(false);
-    setStatus('submitted');
-
-    // Trigger the API call
-    (async () => {
-      try {
-        const token = localStorage.getItem('session_token');
-        if (!token) {
-          console.error('No session token found');
-          setStatus('ready');
-          return;
-        }
-
-        // Prepare messages in the format expected by the backend
-        const messagesPayload = messages.concat([userMsg]).map(msg => ({
-          role: msg.role,
-          content: msg.parts?.map((p: any) => p.type === 'text' ? p.text : '').join(' ') || msg.content || ''
-        }));
-
-        const response = await fetch(`${PUBLIC_BASE_API_URL}/api/chat`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            messages: messagesPayload,
-            conversationId: null
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to send message');
-        }
-
-        // Read the stream
-        const reader = response.body?.getReader();
-        if (!reader) {
-          throw new Error('No response body');
-        }
-
-        const decoder = new TextDecoder();
-        let assistantText = '';
-        let buffer = '';
-
-        setStatus('streaming');
-
-        // Create assistant message
-        const assistantMsg: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: '',
-          parts: [{ type: 'text' as const, text: '' }]
-        };
-
-        setMessages(prev => [...prev, assistantMsg]);
-
-        while (true) {
-          const { done, value } = await reader.read();
-
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop() || '';
-
-          for (const line of lines) {
-            if (line.startsWith('0:')) {
-              try {
-                const jsonStr = line.substring(2);
-                const chunk = jsonStr.replace(/\\"/g, '"').replace(/\\n/g, '\n');
-                assistantText += chunk;
-
-                setMessages(prev => prev.map(msg => {
-                  if (msg.id === assistantMsg.id) {
-                    return {
-                      ...msg,
-                      content: assistantText,
-                      parts: [{ type: 'text' as const, text: assistantText }],
-                    };
-                  }
-                  return msg;
-                }));
-              } catch (e) {
-                // Skip invalid JSON
-              }
-            }
-          }
-        }
-
-        setStatus('ready');
-      } catch (error) {
-        console.error('Error sending message:', error);
-        setStatus('ready');
-      }
-    })();
-  }, [messages, PUBLIC_BASE_API_URL]);
+  }, []);
 
   // Handle daily check-in dismiss
   const handleCheckinDismiss = useCallback(() => {
@@ -482,115 +372,16 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
 
   // Handle daily check-in completion
   const handleCheckinComplete = useCallback((data: any) => {
-    const checkinMsg = `Daily check-in: ${JSON.stringify(data)}`;
+    const checkinMsg = `Daily check-in completed: ${data.mood ? `Mood: ${data.mood}` : ''}${data.notes ? ` | Notes: ${data.notes}` : ''}`;
 
-    // Add user message directly
-    const userMsg: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: '',
-      parts: [{ type: 'text' as const, text: checkinMsg }],
-    };
-
-    setMessages(prev => [...prev, userMsg]);
+    // Set the input for user to review and send
+    setInput(checkinMsg);
     setShowDailyCheckin(false);
     setShowSuggestions(false);
-    setStatus('submitted');
 
     // Save check-in date to localStorage
     localStorage.setItem('last_checkin_date', new Date().toISOString().split('T')[0]);
-
-    // Trigger the API call
-    (async () => {
-      try {
-        const token = localStorage.getItem('session_token');
-        if (!token) {
-          console.error('No session token found');
-          setStatus('ready');
-          return;
-        }
-
-        const messagesPayload = messages.concat([userMsg]).map(msg => ({
-          role: msg.role,
-          content: msg.parts?.map((p: any) => p.type === 'text' ? p.text : '').join(' ') || msg.content || ''
-        }));
-
-        const response = await fetch(`${PUBLIC_BASE_API_URL}/api/chat`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            messages: messagesPayload,
-            conversationId: null
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to send message');
-        }
-
-        // Read the stream
-        const reader = response.body?.getReader();
-        if (!reader) {
-          throw new Error('No response body');
-        }
-
-        const decoder = new TextDecoder();
-        let assistantText = '';
-        let buffer = '';
-
-        setStatus('streaming');
-
-        const assistantMsg: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: '',
-          parts: [{ type: 'text' as const, text: '' }]
-        };
-
-        setMessages(prev => [...prev, assistantMsg]);
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop() || '';
-
-          for (const line of lines) {
-            if (line.startsWith('0:')) {
-              try {
-                const jsonStr = line.substring(2);
-                const chunk = jsonStr.replace(/\\"/g, '"').replace(/\\n/g, '\n');
-                assistantText += chunk;
-
-                setMessages(prev => prev.map(msg => {
-                  if (msg.id === assistantMsg.id) {
-                    return {
-                      ...msg,
-                      content: assistantText,
-                      parts: [{ type: 'text' as const, text: assistantText }],
-                    };
-                  }
-                  return msg;
-                }));
-              } catch (e) {
-                // Skip invalid JSON
-              }
-            }
-          }
-        }
-
-        setStatus('ready');
-      } catch (error) {
-        console.error('Error sending check-in:', error);
-        setStatus('ready');
-      }
-    })();
-  }, [messages, PUBLIC_BASE_API_URL]);
+  }, []);
 
   // Handle quick prayer selection
   const handleQuickPrayer = useCallback((prayerId: string) => {
