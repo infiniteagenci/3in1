@@ -45,68 +45,100 @@ const achievements: Achievement[] = [
 
 const worshipMusic: WorshipMusic[] = [
   {
-    id: 'peaceful-ambient',
-    title: 'Peaceful Ambient',
-    artist: 'Worship Sounds',
-    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-    duration: '6:12',
-    category: 'ambient'
-  },
-  {
     id: 'amazing-grace',
     title: 'Amazing Grace',
-    artist: 'Traditional Hymn',
-    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+    artist: 'Traditional Catholic Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Amazing-Grace-Instrumental.mp3',
+    duration: '4:30',
+    category: 'hymns'
+  },
+  {
+    id: 'adoro-te-devote',
+    title: 'Adoro Te Devote',
+    artist: 'St. Thomas Aquinas Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Adoro-Te-Devote-Instrumental.mp3',
+    duration: '3:45',
+    category: 'hymns'
+  },
+  {
+    id: 'ave-maria',
+    title: 'Ave Maria',
+    artist: 'Traditional Marian Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Ave-Maria-Instrumental.mp3',
+    duration: '4:15',
+    category: 'hymns'
+  },
+  {
+    id: 'tantum-ergo',
+    title: 'Tantum Ergo',
+    artist: 'St. Thomas Aquinas',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Tantum-Ergo-Instrumental.mp3',
+    duration: '3:30',
+    category: 'hymns'
+  },
+  {
+    id: 'panis-angelicus',
+    title: 'Panis Angelicus',
+    artist: 'Traditional Eucharistic Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Panis-Angelicus-Instrumental.mp3',
+    duration: '4:00',
+    category: 'hymns'
+  },
+  {
+    id: 'o-sacrum-convivium',
+    title: 'O Sacrum Convivium',
+    artist: 'Traditional Latin Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/O-Sacrum-Convivium-Instrumental.mp3',
+    duration: '5:15',
+    category: 'hymns'
+  },
+  {
+    id: 'jesu-dulcis-memoria',
+    title: 'Jesu Dulcis Memoria',
+    artist: 'Traditional Catholic Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Jesu-Dulcis-Memoria-Instrumental.mp3',
+    duration: '4:45',
+    category: 'hymns'
+  },
+  {
+    id: 'prayer-st-patrick',
+    title: 'Prayer of St. Patrick',
+    artist: 'Traditional Irish Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/St-Patrick-Breastplate-Instrumental.mp3',
     duration: '5:30',
     category: 'hymns'
   },
   {
-    id: 'instrumental-worship',
-    title: 'Instrumental Worship',
-    artist: 'Piano Worship',
-    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
-    duration: '4:45',
-    category: 'instrumental'
-  },
-  {
-    id: 'holy-spirit',
-    title: 'Holy Spirit',
-    artist: 'Praise & Worship',
-    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
-    duration: '5:15',
-    category: 'praise'
-  },
-  {
-    id: 'prayer-meditation',
-    title: 'Prayer Meditation',
-    artist: 'Ambient Worship',
-    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
-    duration: '7:20',
+    id: 'quiet-prayer',
+    title: 'Quiet Prayer Music',
+    artist: 'Instrumental Worship',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Quiet-Prayer-Music.mp3',
+    duration: '6:00',
     category: 'ambient'
   },
   {
-    id: 'come-as-you-are',
-    title: 'Come As You Are',
-    artist: 'Contemporary Worship',
-    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3',
-    duration: '4:30',
-    category: 'praise'
-  },
-  {
-    id: 'be-still',
-    title: 'Be Still and Know',
-    artist: 'Instrumental Hymn',
-    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3',
-    duration: '5:45',
+    id: 'eucharistic-adortion',
+    title: 'Eucharistic Adoration',
+    artist: 'Piano Worship',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Eucharistic-Adoration-Music.mp3',
+    duration: '7:30',
     category: 'instrumental'
   },
   {
-    id: 'adoration',
-    title: 'Adoration',
-    artist: 'Worship Music',
-    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3',
-    duration: '6:00',
-    category: 'praise'
+    id: 'immaculate-mary',
+    title: 'Immaculate Mary',
+    artist: 'Traditional Marian Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Immaculate-Mary-Instrumental.mp3',
+    duration: '3:50',
+    category: 'hymns'
+  },
+  {
+    id: 'holy-holy-holy',
+    title: 'Holy Holy Holy',
+    artist: 'Traditional Catholic Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Holy-Holy-Holy-Instrumental.mp3',
+    duration: '4:20',
+    category: 'hymns'
   }
 ];
 

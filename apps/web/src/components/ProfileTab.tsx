@@ -12,6 +12,12 @@ export default function ProfileTab() {
   const [showJournal, setShowJournal] = useState(false);
   const [showReminders, setShowReminders] = useState(false);
   const [showAccountSettings, setShowAccountSettings] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('theme') as 'light' | 'dark') || 'light';
+    }
+    return 'light';
+  });
 
   // Account settings form states
   const [editUsername, setEditUsername] = useState('');
@@ -81,6 +87,14 @@ export default function ProfileTab() {
 
     loadUserData();
   }, []);
+
+  // Apply theme to document
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+      localStorage.setItem('theme', theme);
+    }
+  }, [theme]);
 
   const getAgeGroupLabel = (group: string) => {
     const labels: Record<string, string> = {
@@ -736,20 +750,24 @@ export default function ProfileTab() {
 
           <button
             onClick={() => {
-              const currentTheme = localStorage.getItem('theme') || 'light';
-              const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-              localStorage.setItem('theme', newTheme);
-              alert(`Theme changed to ${newTheme}. Refresh the page to see changes.`);
+              const newTheme = theme === 'light' ? 'dark' : 'light';
+              setTheme(newTheme);
             }}
             className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100"
           >
             <div className="flex items-center gap-3">
-              <span className="text-xl">🎨</span>
-              <span className="text-sm text-gray-700">Appearance</span>
+              <span className="text-xl">{theme === 'light' ? '🌙' : '☀️'}</span>
+              <div>
+                <span className="text-sm text-gray-700">Appearance</span>
+                <p className="text-xs text-gray-500">{theme === 'light' ? 'Light Mode' : 'Dark Mode'}</p>
+              </div>
             </div>
-            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500">{theme === 'light' ? 'Switch to Dark' : 'Switch to Light'}</span>
+              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
           </button>
 
           <button
