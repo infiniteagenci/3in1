@@ -3,6 +3,7 @@ import { type Message } from '@ai-sdk/react';
 import BottomTabBar from './BottomTabBar';
 import ChatInterface from './ChatInterface';
 import SacredLibraryTab from './SacredLibraryTab';
+import LiturgicalCalendarTab from './LiturgicalCalendarTab';
 import PrayersTab from './PrayersTab';
 import ProfileTab from './ProfileTab';
 
@@ -45,6 +46,8 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
         );
       case 'library':
         return <SacredLibraryTab key={activeTab} onSelectItem={handleLibraryItemSelect} />;
+      case 'calendar':
+        return <LiturgicalCalendarTab key={activeTab} />;
       case 'prayers':
         return <PrayersTab key={activeTab} onPrayerSelect={handlePrayerSelect} onCheckinComplete={handleCheckinComplete} />;
       case 'profile':

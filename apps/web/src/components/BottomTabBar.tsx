@@ -10,6 +10,7 @@ interface TabItem {
 const tabs: TabItem[] = [
   { id: 'chat', icon: '💬', label: 'Chat' },
   { id: 'library', icon: '✝️', label: 'Sacred Library' },
+  { id: 'calendar', icon: '📅', label: 'Calendar' },
   { id: 'prayers', icon: '🙏', label: 'Prayers' },
   { id: 'profile', icon: '👤', label: 'Profile' },
 ];
