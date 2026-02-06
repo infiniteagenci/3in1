@@ -558,11 +558,18 @@ import Layout from '../layouts/Layout.astro'
     let translating = false;
 
     function translateToLanguage(langCode) {
+      console.log('translateToLanguage called with:', langCode, 'hasTranslated:', hasTranslated, 'translating:', translating);
+
       // Prevent concurrent translations
-      if (translating) return;
+      if (translating) {
+        console.log('Already translating, skipping');
+        return;
+      }
+
       if (langCode === 'en') {
         // Remove translation by reloading
         localStorage.removeItem('translation_applied');
+        sessionStorage.removeItem('page_translated');
         const url = new URL(window.location.href);
         url.searchParams.delete('lang');
         window.location.href = url.toString();
@@ -572,13 +579,16 @@ import Layout from '../layouts/Layout.astro'
       // Check if already translated to this language
       const lastTranslation = localStorage.getItem('translation_applied');
       if (lastTranslation === langCode && hasTranslated) {
+        console.log('Already translated to this language, skipping');
         return;
       }
 
       translating = true;
+      console.log('Starting translation to:', langCode);
 
-      // Initialize Google Translate if not ready
-      if (!googleTranslateReady) {
+      // Initialize Google Translate immediately
+      if (!window.google || !window.google.translate) {
+        console.log('Loading Google Translate...');
         initGoogleTranslate();
       }
 
@@ -588,18 +598,29 @@ import Layout from '../layouts/Layout.astro'
       window.history.replaceState({}, '', url.toString());
       localStorage.setItem('translation_applied', langCode);
 
-      // Wait for Google Translate to be ready, then trigger translation (once)
-      setTimeout(function() {
+      // Try multiple times to find and use the select element
+      let attempts = 0;
+      const maxAttempts = 20;
+
+      const tryTranslate = setInterval(function() {
+        attempts++;
+        console.log('Translation attempt', attempts);
+
         const selectElement = document.querySelector('.goog-te-combo');
         if (selectElement) {
+          clearInterval(tryTranslate);
+          console.log('Found select element, setting to:', langCode);
           selectElement.value = langCode;
           selectElement.dispatchEvent(new Event('change'));
           hasTranslated = true;
           translating = false;
-        } else {
+          console.log('Translation complete');
+        } else if (attempts >= maxAttempts) {
+          clearInterval(tryTranslate);
+          console.log('Translation timeout - element not found');
           translating = false;
         }
-      }, 2000);
+      }, 500);
     }
 
     // Check for language in URL on page load (translate only once)
