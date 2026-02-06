@@ -678,50 +678,67 @@ import Layout from '../layouts/Layout.astro'
       document.head.appendChild(script);
     }
 
+    // Track if translation has been applied
+    let hasTranslated = false;
+    let translating = false;
+
     function translateToLanguage(langCode) {
+      // Prevent concurrent translations
+      if (translating) return;
       if (langCode === 'en') {
         // Remove translation by reloading
+        localStorage.removeItem('translation_applied');
+        sessionStorage.removeItem('page_translated');
         const url = new URL(window.location.href);
         url.searchParams.delete('lang');
         window.location.href = url.toString();
         return;
       }
 
+      // Check if already translated to this language
+      const lastTranslation = localStorage.getItem('translation_applied');
+      if (lastTranslation === langCode && hasTranslated) {
+        return;
+      }
+
+      translating = true;
+
       // Initialize Google Translate if not ready
       if (!googleTranslateReady) {
         initGoogleTranslate();
       }
 
-      // Store URL parameter for persistence first
+      // Store URL parameter for persistence
       const url = new URL(window.location.href);
       url.searchParams.set('lang', langCode);
       window.history.replaceState({}, '', url.toString());
+      localStorage.setItem('translation_applied', langCode);
 
-      // Wait for Google Translate to be ready, then trigger translation
-      const checkAndTranslate = setInterval(function() {
+      // Wait for Google Translate to be ready, then trigger translation (once)
+      setTimeout(function() {
         const selectElement = document.querySelector('.goog-te-combo');
         if (selectElement) {
-          clearInterval(checkAndTranslate);
-          // Use setTimeout to prevent flickering
-          setTimeout(function() {
-            selectElement.value = langCode;
-            selectElement.dispatchEvent(new Event('change'));
-          }, 100);
+          selectElement.value = langCode;
+          selectElement.dispatchEvent(new Event('change'));
+          hasTranslated = true;
+          translating = false;
+        } else {
+          translating = false;
         }
-      }, 500);
-
-      // Timeout after 10 seconds
-      setTimeout(function() {
-        clearInterval(checkAndTranslate);
-      }, 10000);
+      }, 2000);
     }
 
-    // Check for language in URL on page load
+    // Check for language in URL on page load (translate only once)
     const urlParams = new URLSearchParams(window.location.search);
     const urlLang = urlParams.get('lang');
-    if (urlLang && urlLang !== 'en') {
+    const alreadyTranslated = sessionStorage.getItem('page_translated');
+
+    if (urlLang && urlLang !== 'en' && !alreadyTranslated) {
+      sessionStorage.setItem('page_translated', 'true');
       initGoogleTranslate();
-      setTimeout(() => translateToLanguage(urlLang), 1000);
+      setTimeout(() => {
+        translateToLanguage(urlLang);
+      }, 1000);
     }
 
     // Language selector elements
@@ -739,7 +756,7 @@ import Layout from '../layouts/Layout.astro'
     }
 
     // Update language display
-    function updateLanguageDisplay() {
+    function updateLanguageDisplay(skipTranslation = false) {
       const lang = languages.find(l => l.code === currentLanguage) || languages[0];
       if (currentLangDisplay) {
         currentLangDisplay.textContent = lang.nativeName;
@@ -751,15 +768,17 @@ import Layout from '../layouts/Layout.astro'
       // Store in localStorage
       localStorage.setItem('app_language', currentLanguage);
 
-      // Apply translation
-      translateToLanguage(currentLanguage);
+      // Only translate when explicitly requested (user changes language)
+      if (!skipTranslation) {
+        translateToLanguage(currentLanguage);
+      }
 
       // Trigger custom event for other components
       window.dispatchEvent(new CustomEvent('languageChange', { detail: { language: currentLanguage } }));
     }
 
     // Initialize language display
-    updateLanguageDisplay();
+    updateLanguageDisplay(true); // Skip translation on init
 
     // Populate language options
     function populateLanguageOptions() {
@@ -781,7 +800,7 @@ import Layout from '../layouts/Layout.astro'
           const langCode = this.getAttribute('data-lang');
           if (langCode) {
             currentLanguage = langCode;
-            updateLanguageDisplay();
+            updateLanguageDisplay(false); // Enable translation when user selects
             populateLanguageOptions(); // Refresh to update selection
             toggleLanguageDropdown();
           }
