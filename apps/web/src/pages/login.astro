@@ -34,6 +34,20 @@ import Layout from '../layouts/Layout.astro'
           <p class="auth-subtitle">Your spiritual journey begins here</p>
         </div>
 
+        <!-- Language Selector -->
+        <div class="auth-language-selector">
+          <button id="login-language-btn" class="language-btn">
+            <span class="language-icon">🌐</span>
+            <span id="login-current-lang">English</span>
+            <svg class="language-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div id="login-language-dropdown" class="language-dropdown hidden">
+            <div id="login-language-options" class="language-options"></div>
+          </div>
+        </div>
+
         <!-- Tabs -->
         <div class="auth-tabs">
           <button id="tab-login" class="auth-tab active" data-tab="login">Login</button>
@@ -605,6 +619,113 @@ import Layout from '../layouts/Layout.astro'
 
     // ===== Start =====
     init();
+
+    // ====================
+    // Language Selector
+    // ====================
+    const languages = [
+      { code: 'en', name: 'English', nativeName: 'English' },
+      { code: 'es', name: 'Spanish', nativeName: 'Español' },
+      { code: 'fr', name: 'French', nativeName: 'Français' },
+      { code: 'de', name: 'German', nativeName: 'Deutsch' },
+      { code: 'it', name: 'Italian', nativeName: 'Italiano' },
+      { code: 'pt', name: 'Portuguese', nativeName: 'Português' },
+      { code: 'pl', name: 'Polish', nativeName: 'Polski' },
+      { code: 'tl', name: 'Filipino', nativeName: 'Filipino' },
+      { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt' },
+      { code: 'ko', name: 'Korean', nativeName: '한국어' },
+      { code: 'zh', name: 'Chinese', nativeName: '中文' },
+      { code: 'ja', name: 'Japanese', nativeName: '日本語' },
+      { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
+      { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी' },
+      { code: 'la', name: 'Latin', nativeName: 'Latina' },
+    ];
+
+    // Language selector elements
+    const languageBtn = document.getElementById('login-language-btn');
+    const languageDropdown = document.getElementById('login-language-dropdown');
+    const languageOptions = document.getElementById('login-language-options');
+    const currentLangDisplay = document.getElementById('login-current-lang');
+
+    // Get current language from localStorage or default to English
+    let currentLanguage = localStorage.getItem('app_language') || 'en';
+
+    // Update language display
+    function updateLanguageDisplay() {
+      const lang = languages.find(l => l.code === currentLanguage) || languages[0];
+      if (currentLangDisplay) {
+        currentLangDisplay.textContent = lang.nativeName;
+      }
+
+      // Set lang attribute on html
+      document.documentElement.lang = currentLanguage;
+
+      // Store in localStorage
+      localStorage.setItem('app_language', currentLanguage);
+
+      // Trigger custom event for other components
+      window.dispatchEvent(new CustomEvent('languageChange', { detail: { language: currentLanguage } }));
+    }
+
+    // Initialize language display
+    updateLanguageDisplay();
+
+    // Populate language options
+    function populateLanguageOptions() {
+      if (!languageOptions) return;
+
+      languageOptions.innerHTML = languages.map(lang => `
+        <button
+          data-lang="${lang.code}"
+          class="language-option ${currentLanguage === lang.code ? 'active' : ''}"
+        >
+          <span>${lang.nativeName}</span>
+          <span class="language-option-sub">(${lang.name})</span>
+        </button>
+      `).join('');
+
+      // Add event listeners to language options
+      languageOptions.querySelectorAll('.language-option').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const langCode = this.getAttribute('data-lang');
+          if (langCode) {
+            currentLanguage = langCode;
+            updateLanguageDisplay();
+            populateLanguageOptions(); // Refresh to update selection
+            toggleLanguageDropdown();
+          }
+        });
+      });
+    }
+
+    // Toggle language dropdown
+    function toggleLanguageDropdown() {
+      if (!languageDropdown) return;
+      languageDropdown.classList.toggle('hidden');
+      const arrow = languageBtn?.querySelector('.language-arrow') as HTMLElement;
+      if (arrow) {
+        arrow.classList.toggle('rotated');
+      }
+    }
+
+    // Initialize language options
+    populateLanguageOptions();
+
+    // Add event listener to language button
+    if (languageBtn) {
+      languageBtn.addEventListener('click', toggleLanguageDropdown);
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (languageBtn && !languageBtn.contains(e.target) && languageDropdown && !languageDropdown.contains(e.target)) {
+        languageDropdown.classList.add('hidden');
+        const arrow = languageBtn?.querySelector('.language-arrow') as HTMLElement;
+        if (arrow) {
+          arrow.classList.remove('rotated');
+        }
+      }
+    });
   </script>
 
   <style>
@@ -635,6 +756,97 @@ import Layout from '../layouts/Layout.astro'
       font-size: 14px;
       color: #666;
       margin-top: 8px;
+    }
+
+    /* Language Selector Styles */
+    .auth-language-selector {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .language-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #374151;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .language-btn:hover {
+      border-color: #9333ea;
+      background: #faf5ff;
+    }
+
+    .language-icon {
+      font-size: 16px;
+    }
+
+    .language-arrow {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.2s;
+    }
+
+    .language-arrow.rotated {
+      transform: rotate(180deg);
+    }
+
+    .language-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin-top: 4px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .language-options {
+      padding: 8px;
+    }
+
+    .language-option {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #374151;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+
+    .language-option:hover {
+      background: #f3f4f6;
+    }
+
+    .language-option.active {
+      background: #faf5ff;
+      color: #9333ea;
+      font-weight: 500;
+    }
+
+    .language-option-sub {
+      font-size: 12px;
+      color: #9ca3af;
     }
 
     .auth-tabs {

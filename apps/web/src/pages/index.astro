@@ -62,6 +62,28 @@ import Layout from '../layouts/Layout.astro'
           <span class="font-playfair text-2xl font-semibold text-white">3in1</span>
         </div>
 
+        <!-- Language Selector -->
+        <div class="relative" id="language-selector-container">
+          <button
+            id="language-button"
+            class="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full transition-all text-white"
+          >
+            <span class="text-lg">🌐</span>
+            <span class="text-sm font-medium" id="current-language-name">English</span>
+            <svg class="w-4 h-4 transition-transform" id="language-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div
+            id="language-dropdown"
+            class="hidden absolute top-full right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-200 z-50 max-h-80 overflow-y-auto"
+          >
+            <div class="p-2 space-y-1" id="language-options">
+              <!-- Language options will be populated by JavaScript -->
+            </div>
+          </div>
+        </div>
+
         <!-- Auth Buttons -->
         <div id="nav-logged-out" class="flex items-center gap-4">
           <a href="/login" class="px-5 py-2.5 text-white/90 hover:text-white transition-colors font-geist font-medium">Login</a>
@@ -446,5 +468,113 @@ import Layout from '../layouts/Layout.astro'
 
     // Check session on page load
     checkSession();
+
+    // ====================
+    // Language Selector
+    // ====================
+    const languages = [
+      { code: 'en', name: 'English', nativeName: 'English' },
+      { code: 'es', name: 'Spanish', nativeName: 'Español' },
+      { code: 'fr', name: 'French', nativeName: 'Français' },
+      { code: 'de', name: 'German', nativeName: 'Deutsch' },
+      { code: 'it', name: 'Italian', nativeName: 'Italiano' },
+      { code: 'pt', name: 'Portuguese', nativeName: 'Português' },
+      { code: 'pl', name: 'Polish', nativeName: 'Polski' },
+      { code: 'tl', name: 'Filipino', nativeName: 'Filipino' },
+      { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt' },
+      { code: 'ko', name: 'Korean', nativeName: '한국어' },
+      { code: 'zh', name: 'Chinese', nativeName: '中文' },
+      { code: 'ja', name: 'Japanese', nativeName: '日本語' },
+      { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
+      { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी' },
+      { code: 'la', name: 'Latin', nativeName: 'Latina' },
+    ];
+
+    // Language selector elements
+    const languageButton = document.getElementById('language-button');
+    const languageDropdown = document.getElementById('language-dropdown');
+    const languageOptions = document.getElementById('language-options');
+    const currentLanguageName = document.getElementById('current-language-name');
+    const languageArrow = document.getElementById('language-arrow');
+
+    // Get current language from localStorage or default to English
+    let currentLanguage = localStorage.getItem('app_language') || 'en';
+
+    // Update language display
+    function updateLanguageDisplay() {
+      const lang = languages.find(l => l.code === currentLanguage) || languages[0];
+      if (currentLanguageName) {
+        currentLanguageName.textContent = lang.nativeName;
+      }
+
+      // Set lang attribute on html
+      document.documentElement.lang = currentLanguage;
+
+      // Store in localStorage
+      localStorage.setItem('app_language', currentLanguage);
+
+      // Trigger custom event for other components
+      window.dispatchEvent(new CustomEvent('languageChange', { detail: { language: currentLanguage } }));
+    }
+
+    // Initialize language display
+    updateLanguageDisplay();
+
+    // Populate language options
+    function populateLanguageOptions() {
+      if (!languageOptions) return;
+
+      languageOptions.innerHTML = languages.map(lang => `
+        <button
+          data-lang="${lang.code}"
+          class="w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center justify-between ${
+            currentLanguage === lang.code
+              ? 'bg-purple-50 text-purple-700 font-medium'
+              : 'text-gray-700 hover:bg-gray-50'
+          }"
+        >
+          <span class="text-sm">${lang.nativeName}</span>
+          <span class="text-xs text-gray-500">(${lang.name})</span>
+        </button>
+      `).join('');
+
+      // Add event listeners to language options
+      languageOptions.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const langCode = this.getAttribute('data-lang');
+          if (langCode) {
+            currentLanguage = langCode;
+            updateLanguageDisplay();
+            populateLanguageOptions(); // Refresh to update selection
+            toggleLanguageDropdown();
+          }
+        });
+      });
+    }
+
+    // Toggle language dropdown
+    function toggleLanguageDropdown() {
+      if (!languageDropdown || !languageArrow) return;
+      languageDropdown.classList.toggle('hidden');
+      languageArrow.classList.toggle('rotate-180');
+    }
+
+    // Initialize language options
+    populateLanguageOptions();
+
+    // Add event listener to language button
+    if (languageButton) {
+      languageButton.addEventListener('click', toggleLanguageDropdown);
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (languageButton && !languageButton.contains(e.target) && languageDropdown && !languageDropdown.contains(e.target)) {
+        languageDropdown.classList.add('hidden');
+        if (languageArrow) {
+          languageArrow.classList.remove('rotate-180');
+        }
+      }
+    });
   </script>
 </Layout>

@@ -1,6 +1,7 @@
 import PrayerProgress from './PrayerProgress';
 import SpiritualJournal from './bible-chat/SpiritualJournal';
 import PrayerReminders from './bible-chat/PrayerReminders';
+import LanguageSelector from './LanguageSelector';
 import { useState, useEffect, useRef } from 'react';
 
 export default function ProfileTab() {
@@ -778,6 +779,11 @@ export default function ProfileTab() {
               </svg>
             </div>
           </button>
+
+          {/* Language Selector */}
+          <div className="px-4 py-3 border-b border-gray-100">
+            <LanguageSelector showLabel={false} />
+          </div>
 
           <button
             onClick={() => alert('3in1 Catholic App v1.0\n\nA spiritual companion for your faith journey.\n\nFeatures:\n• Chat with Spirit AI guide\n• Daily Bible verses\n• Spiritual journaling\n• Prayer community\n• Bible study plans\n• Biblical characters\n• And much more!\n\nMade with ❤️ for the Catholic community.')}
