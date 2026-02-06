@@ -10,6 +10,20 @@ import Layout from '../layouts/Layout.astro'
 
   <!-- Allow scrolling on index page -->
   <style>
+    /* Hide Google Translate widget */
+    .goog-te-banner-frame, .goog-te-gadget {
+      display: none !important;
+    }
+    .goog-te-combo {
+      display: none !important;
+    }
+    body {
+      top: 0 !important;
+    }
+    #google_translate_element {
+      display: none;
+    }
+
     html, body {
       overflow: auto !important;
       height: auto !important;
@@ -483,16 +497,97 @@ import Layout from '../layouts/Layout.astro'
       { code: 'tl', name: 'Filipino', nativeName: 'Filipino' },
       { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt' },
       { code: 'ko', name: 'Korean', nativeName: '한국어' },
-      { code: 'zh', name: 'Chinese', nativeName: '中文' },
+      { code: 'zh-CN', name: 'Chinese', nativeName: '中文' },
       { code: 'ja', name: 'Japanese', nativeName: '日本語' },
       { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
       { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी' },
       { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்' },
       { code: 'te', name: 'Telugu', nativeName: 'తెలుగు' },
       { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ' },
-      { code: 'ks', name: 'Kashmiri', nativeName: 'کٲشُر' },
+      { code: 'ur', name: 'Kashmiri', nativeName: 'کٲشُر' },
       { code: 'la', name: 'Latin', nativeName: 'Latina' },
     ];
+
+    // Google Translate integration
+    let googleTranslateReady = false;
+
+    function initGoogleTranslate() {
+      if (googleTranslateReady || window.google?.translate) {
+        googleTranslateReady = true;
+        return;
+      }
+
+      // Create hidden google translate element
+      const gtElement = document.createElement('div');
+      gtElement.id = 'google_translate_element';
+      gtElement.style.display = 'none';
+      document.body.appendChild(gtElement);
+
+      // Load Google Translate script
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.charset = 'UTF-8';
+      script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+
+      window.googleTranslateElementInit = function() {
+        new google.translate.TranslateElement({
+          pageLanguage: 'en',
+          layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+          autoDisplay: false
+        }, 'google_translate_element');
+        googleTranslateReady = true;
+      };
+
+      document.head.appendChild(script);
+    }
+
+    function translateToLanguage(langCode) {
+      if (langCode === 'en' || langCode === 'zh') {
+        // For Chinese, use zh-CN
+        if (langCode === 'zh') langCode = 'zh-CN';
+      }
+
+      if (langCode === 'en') {
+        // Remove translation by reloading
+        const url = new URL(window.location.href);
+        url.searchParams.delete('lang');
+        window.location.href = url.toString();
+        return;
+      }
+
+      // Initialize Google Translate if not ready
+      if (!googleTranslateReady) {
+        initGoogleTranslate();
+      }
+
+      // Wait for Google Translate to be ready, then trigger translation
+      const checkAndTranslate = setInterval(function() {
+        const selectElement = document.querySelector('.goog-te-combo');
+        if (selectElement) {
+          clearInterval(checkAndTranslate);
+          selectElement.value = langCode;
+          selectElement.dispatchEvent(new Event('change'));
+
+          // Store URL parameter for persistence
+          const url = new URL(window.location.href);
+          url.searchParams.set('lang', langCode);
+          window.history.replaceState({}, '', url.toString());
+        }
+      }, 500);
+
+      // Timeout after 10 seconds
+      setTimeout(function() {
+        clearInterval(checkAndTranslate);
+      }, 10000);
+    }
+
+    // Check for language in URL on page load
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlLang = urlParams.get('lang');
+    if (urlLang && urlLang !== 'en') {
+      initGoogleTranslate();
+      setTimeout(() => translateToLanguage(urlLang), 1000);
+    }
 
     // Language selector elements
     const languageButton = document.getElementById('language-button');
@@ -503,6 +598,11 @@ import Layout from '../layouts/Layout.astro'
 
     // Get current language from localStorage or default to English
     let currentLanguage = localStorage.getItem('app_language') || 'en';
+    // Handle legacy 'zh' code
+    if (currentLanguage === 'zh') {
+      currentLanguage = 'zh-CN';
+      localStorage.setItem('app_language', 'zh-CN');
+    }
 
     // Update language display
     function updateLanguageDisplay() {
@@ -516,6 +616,9 @@ import Layout from '../layouts/Layout.astro'
 
       // Store in localStorage
       localStorage.setItem('app_language', currentLanguage);
+
+      // Apply translation
+      translateToLanguage(currentLanguage);
 
       // Trigger custom event for other components
       window.dispatchEvent(new CustomEvent('languageChange', { detail: { language: currentLanguage } }));
@@ -532,7 +635,7 @@ import Layout from '../layouts/Layout.astro'
         <button
           data-lang="${lang.code}"
           class="w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center justify-between ${
-            currentLanguage === lang.code
+            currentLanguage === lang.code || (currentLanguage === 'zh-CN' && lang.code === 'zh-CN')
               ? 'bg-purple-50 text-purple-700 font-medium'
               : 'text-gray-700 hover:bg-gray-50'
           }"
