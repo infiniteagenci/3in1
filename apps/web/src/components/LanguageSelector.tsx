@@ -1,28 +1,5 @@
 import { useState, useEffect } from 'react';
 
-// Google Translate language codes mapping
-const googleTranslateLangCodes: Record<string, string> = {
-  'en': 'en',
-  'es': 'es',
-  'pt': 'pt',
-  'fr': 'fr',
-  'de': 'de',
-  'it': 'it',
-  'pl': 'pl',
-  'tl': 'tl',
-  'vi': 'vi',
-  'ko': 'ko',
-  'zh': 'zh-CN',
-  'ja': 'ja',
-  'ar': 'ar',
-  'hi': 'hi',
-  'ta': 'ta',
-  'te': 'te',
-  'kn': 'kn',
-  'ks': 'ur', // Kashmiri uses Urdu code for Google Translate
-  'la': 'la',
-};
-
 export const languages = [
   { code: 'en', name: 'English', nativeName: 'English' },
   { code: 'es', name: 'Spanish', nativeName: 'Español' },
@@ -44,82 +21,6 @@ export const languages = [
   { code: 'ks', name: 'Kashmiri', nativeName: 'کٲشُر' },
   { code: 'la', name: 'Latin', nativeName: 'Latina' },
 ];
-
-// Load Google Translate script
-let googleTranslateLoaded = false;
-let googleTranslateLoadPromise: Promise<void> | null = null;
-
-function loadGoogleTranslate(): Promise<void> {
-  if (googleTranslateLoaded) return Promise.resolve();
-  if (googleTranslateLoadPromise) return googleTranslateLoadPromise;
-
-  googleTranslateLoadPromise = new Promise((resolve) => {
-    if (typeof window === 'undefined') {
-      resolve();
-      return;
-    }
-
-    // Check if script is already loaded
-    if ((window as any).google && (window as any).google.translate) {
-      googleTranslateLoaded = true;
-      resolve();
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.async = true;
-    script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-
-    (window as any).googleTranslateElementInit = () => {
-      googleTranslateLoaded = true;
-      resolve();
-    };
-
-    document.head.appendChild(script);
-  });
-
-  return googleTranslateLoadPromise;
-}
-
-// Translate the page using Google Translate
-function translatePage(languageCode: string) {
-  if (typeof window === 'undefined') return;
-
-  const googleLangCode = googleTranslateLangCodes[languageCode] || languageCode;
-
-  // Use Google Translate widget
-  const translateElement = document.getElementById('google_translate_element');
-  if (translateElement && (window as any).google && (window as any).google.translate) {
-    // Create a new translate element
-    try {
-      // Remove existing translate element if any
-      const existingFrame = translateElement.querySelector('iframe');
-      if (existingFrame) {
-        existingFrame.remove();
-      }
-
-      // Create new translate element
-      new (window as any).google.translate.TranslateElement({
-        pageLanguage: 'en',
-        includedLanguages: googleLangCode,
-        layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-      }, 'google_translate_element');
-
-      // Trigger translation by changing the select
-      setTimeout(() => {
-        const selectElement = document.querySelector('.goog-te-combo');
-        if (selectElement) {
-          (selectElement as HTMLSelectElement).value = googleLangCode;
-          selectElement.dispatchEvent(new Event('change'));
-        }
-      }, 500);
-    } catch (error) {
-      console.error('Translation error:', error);
-    }
-  }
-}
 
 interface LanguageSelectorProps {
   className?: string;
@@ -145,18 +46,12 @@ export default function LanguageSelector({
 
   useEffect(() => {
     // Apply language preference
-    const applyLanguage = async (langCode: string) => {
+    const applyLanguage = (langCode: string) => {
       // Set lang attribute on html
       document.documentElement.lang = langCode;
 
       // Store in localStorage
       localStorage.setItem('app_language', langCode);
-
-      // Load and apply Google Translate
-      if (langCode !== 'en') {
-        await loadGoogleTranslate();
-        translatePage(langCode);
-      }
     };
 
     applyLanguage(currentLanguage);

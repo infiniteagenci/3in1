@@ -44,9 +44,6 @@ import Layout from '../layouts/Layout.astro'
 
   <!-- Hero Section with Vibrant Purple Gradient Background (matching login) -->
   <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden" style="background: linear-gradient(135deg, #C84B9F 0%, #8B5FCF 50%, #D870B7 100%);">
-    <!-- Hidden Google Translate Element -->
-    <div id="google_translate_element" class="hidden"></div>
-
     <!-- Animated Background Elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
       <div class="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-purple-300/40 to-violet-300/40 rounded-full blur-3xl animate-pulse-slow"></div>
@@ -475,29 +472,6 @@ import Layout from '../layouts/Layout.astro'
     // ====================
     // Language Selector
     // ====================
-    // Google Translate language codes mapping
-    const googleTranslateLangCodes = {
-      'en': 'en',
-      'es': 'es',
-      'pt': 'pt',
-      'fr': 'fr',
-      'de': 'de',
-      'it': 'it',
-      'pl': 'pl',
-      'tl': 'tl',
-      'vi': 'vi',
-      'ko': 'ko',
-      'zh': 'zh-CN',
-      'ja': 'ja',
-      'ar': 'ar',
-      'hi': 'hi',
-      'ta': 'ta',
-      'te': 'te',
-      'kn': 'kn',
-      'ks': 'ur', // Kashmiri uses Urdu code for Google Translate
-      'la': 'la',
-    };
-
     const languages = [
       { code: 'en', name: 'English', nativeName: 'English' },
       { code: 'es', name: 'Spanish', nativeName: 'Español' },
@@ -519,75 +493,6 @@ import Layout from '../layouts/Layout.astro'
       { code: 'ks', name: 'Kashmiri', nativeName: 'کٲشُر' },
       { code: 'la', name: 'Latin', nativeName: 'Latina' },
     ];
-
-    // Load Google Translate
-    let googleTranslateLoaded = false;
-
-    function loadGoogleTranslate(callback) {
-      if (googleTranslateLoaded) {
-        callback();
-        return;
-      }
-
-      if (window.google && window.google.translate) {
-        googleTranslateLoaded = true;
-        callback();
-        return;
-      }
-
-      window.googleTranslateElementInit = function() {
-        googleTranslateLoaded = true;
-        callback();
-      };
-
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      document.head.appendChild(script);
-    }
-
-    // Translate page content
-    function translatePage(languageCode) {
-      const googleLangCode = googleTranslateLangCodes[languageCode] || languageCode;
-
-      if (languageCode === 'en') {
-        // Reload page to remove translation
-        location.reload();
-        return;
-      }
-
-      loadGoogleTranslate(function() {
-        const translateElement = document.getElementById('google_translate_element');
-        if (translateElement && window.google && window.google.translate) {
-          try {
-            // Clear existing translation
-            const existingFrame = translateElement.querySelector('iframe');
-            if (existingFrame) {
-              existingFrame.remove();
-            }
-
-            // Create new translate element
-            new google.translate.TranslateElement({
-              pageLanguage: 'en',
-              includedLanguages: googleLangCode,
-              layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-              autoDisplay: false
-            }, 'google_translate_element');
-
-            // Trigger translation
-            setTimeout(function() {
-              const selectElement = document.querySelector('.goog-te-combo');
-              if (selectElement) {
-                selectElement.value = googleLangCode;
-                selectElement.dispatchEvent(new Event('change'));
-              }
-            }, 500);
-          } catch (error) {
-            console.error('Translation error:', error);
-          }
-        }
-      });
-    }
 
     // Language selector elements
     const languageButton = document.getElementById('language-button');
@@ -611,9 +516,6 @@ import Layout from '../layouts/Layout.astro'
 
       // Store in localStorage
       localStorage.setItem('app_language', currentLanguage);
-
-      // Apply translation
-      translatePage(currentLanguage);
 
       // Trigger custom event for other components
       window.dispatchEvent(new CustomEvent('languageChange', { detail: { language: currentLanguage } }));

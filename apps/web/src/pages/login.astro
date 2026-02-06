@@ -21,9 +21,6 @@ import Layout from '../layouts/Layout.astro'
       <span id="loading-text">Checking authentication...</span>
     </div>
 
-    <!-- Hidden Google Translate Element -->
-    <div id="google_translate_element" class="hidden" style="position: absolute; left: -9999px;"></div>
-
     <!-- Login container -->
     <div class="login-container">
       <!-- Auth forms card -->
@@ -626,29 +623,6 @@ import Layout from '../layouts/Layout.astro'
     // ====================
     // Language Selector
     // ====================
-    // Google Translate language codes mapping
-    const googleTranslateLangCodes = {
-      'en': 'en',
-      'es': 'es',
-      'pt': 'pt',
-      'fr': 'fr',
-      'de': 'de',
-      'it': 'it',
-      'pl': 'pl',
-      'tl': 'tl',
-      'vi': 'vi',
-      'ko': 'ko',
-      'zh': 'zh-CN',
-      'ja': 'ja',
-      'ar': 'ar',
-      'hi': 'hi',
-      'ta': 'ta',
-      'te': 'te',
-      'kn': 'kn',
-      'ks': 'ur', // Kashmiri uses Urdu code for Google Translate
-      'la': 'la',
-    };
-
     const languages = [
       { code: 'en', name: 'English', nativeName: 'English' },
       { code: 'es', name: 'Spanish', nativeName: 'Español' },
@@ -671,75 +645,6 @@ import Layout from '../layouts/Layout.astro'
       { code: 'la', name: 'Latin', nativeName: 'Latina' },
     ];
 
-    // Load Google Translate
-    let googleTranslateLoaded = false;
-
-    function loadGoogleTranslate(callback) {
-      if (googleTranslateLoaded) {
-        callback();
-        return;
-      }
-
-      if (window.google && window.google.translate) {
-        googleTranslateLoaded = true;
-        callback();
-        return;
-      }
-
-      window.googleTranslateElementInit = function() {
-        googleTranslateLoaded = true;
-        callback();
-      };
-
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      document.head.appendChild(script);
-    }
-
-    // Translate page content
-    function translatePage(languageCode) {
-      const googleLangCode = googleTranslateLangCodes[languageCode] || languageCode;
-
-      if (languageCode === 'en') {
-        // Reload page to remove translation
-        location.reload();
-        return;
-      }
-
-      loadGoogleTranslate(function() {
-        const translateElement = document.getElementById('google_translate_element');
-        if (translateElement && window.google && window.google.translate) {
-          try {
-            // Clear existing translation
-            const existingFrame = translateElement.querySelector('iframe');
-            if (existingFrame) {
-              existingFrame.remove();
-            }
-
-            // Create new translate element
-            new google.translate.TranslateElement({
-              pageLanguage: 'en',
-              includedLanguages: googleLangCode,
-              layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-              autoDisplay: false
-            }, 'google_translate_element');
-
-            // Trigger translation
-            setTimeout(function() {
-              const selectElement = document.querySelector('.goog-te-combo');
-              if (selectElement) {
-                selectElement.value = googleLangCode;
-                selectElement.dispatchEvent(new Event('change'));
-              }
-            }, 500);
-          } catch (error) {
-            console.error('Translation error:', error);
-          }
-        }
-      });
-    }
-
     // Language selector elements
     const languageBtn = document.getElementById('login-language-btn');
     const languageDropdown = document.getElementById('login-language-dropdown');
@@ -761,9 +666,6 @@ import Layout from '../layouts/Layout.astro'
 
       // Store in localStorage
       localStorage.setItem('app_language', currentLanguage);
-
-      // Apply translation
-      translatePage(currentLanguage);
 
       // Trigger custom event for other components
       window.dispatchEvent(new CustomEvent('languageChange', { detail: { language: currentLanguage } }));
