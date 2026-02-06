@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 export const languages = [
   { code: 'en', name: 'English', nativeName: 'English' },
   { code: 'es', name: 'Spanish', nativeName: 'Español' },
+  { code: 'pt', name: 'Portuguese', nativeName: 'Português' },
   { code: 'fr', name: 'French', nativeName: 'Français' },
   { code: 'de', name: 'German', nativeName: 'Deutsch' },
   { code: 'it', name: 'Italian', nativeName: 'Italiano' },
-  { code: 'pt', name: 'Portuguese', nativeName: 'Português' },
   { code: 'pl', name: 'Polish', nativeName: 'Polski' },
   { code: 'tl', name: 'Filipino', nativeName: 'Filipino' },
   { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt' },
@@ -15,6 +15,10 @@ export const languages = [
   { code: 'ja', name: 'Japanese', nativeName: '日本語' },
   { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
   { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी' },
+  { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்' },
+  { code: 'te', name: 'Telugu', nativeName: 'తెలుగు' },
+  { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ' },
+  { code: 'ks', name: 'Kashmiri', nativeName: 'کٲشُر' },
   { code: 'la', name: 'Latin', nativeName: 'Latina' },
 ];
 
