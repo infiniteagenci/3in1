@@ -10,8 +10,8 @@ import Layout from '../layouts/Layout.astro'
 
   <!-- Allow scrolling on index page -->
   <style>
-    /* Hide Google Translate widget */
-    .goog-te-banner-frame, .goog-te-gadget {
+    /* Hide Google Translate widget completely */
+    .goog-te-banner-frame, .goog-te-gadget, .skiptranslate {
       display: none !important;
     }
     .goog-te-combo {
@@ -19,9 +19,21 @@ import Layout from '../layouts/Layout.astro'
     }
     body {
       top: 0 !important;
+      position: static !important;
     }
     #google_translate_element {
       display: none;
+    }
+    .goog-logo-link {
+      display: none !important;
+    }
+    .goog-te-gadget span {
+      display: none !important;
+    }
+
+    /* Prevent flickering during translation */
+    .translated-ltr {
+      display: block !important;
     }
 
     html, body {
@@ -542,11 +554,6 @@ import Layout from '../layouts/Layout.astro'
     }
 
     function translateToLanguage(langCode) {
-      if (langCode === 'en' || langCode === 'zh') {
-        // For Chinese, use zh-CN
-        if (langCode === 'zh') langCode = 'zh-CN';
-      }
-
       if (langCode === 'en') {
         // Remove translation by reloading
         const url = new URL(window.location.href);
@@ -560,18 +567,21 @@ import Layout from '../layouts/Layout.astro'
         initGoogleTranslate();
       }
 
+      // Store URL parameter for persistence first
+      const url = new URL(window.location.href);
+      url.searchParams.set('lang', langCode);
+      window.history.replaceState({}, '', url.toString());
+
       // Wait for Google Translate to be ready, then trigger translation
       const checkAndTranslate = setInterval(function() {
         const selectElement = document.querySelector('.goog-te-combo');
         if (selectElement) {
           clearInterval(checkAndTranslate);
-          selectElement.value = langCode;
-          selectElement.dispatchEvent(new Event('change'));
-
-          // Store URL parameter for persistence
-          const url = new URL(window.location.href);
-          url.searchParams.set('lang', langCode);
-          window.history.replaceState({}, '', url.toString());
+          // Use setTimeout to prevent flickering
+          setTimeout(function() {
+            selectElement.value = langCode;
+            selectElement.dispatchEvent(new Event('change'));
+          }, 100);
         }
       }, 500);
 
