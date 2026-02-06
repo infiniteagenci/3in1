@@ -523,11 +523,14 @@ import Layout from '../layouts/Layout.astro'
     // Google Translate integration
     let googleTranslateReady = false;
 
-    function initGoogleTranslate() {
-      if (googleTranslateReady || window.google?.translate) {
-        googleTranslateReady = true;
+    // Pre-load Google Translate immediately on page load
+    (function initGoogleTranslate() {
+      if (document.getElementById('google_translate_element')) {
+        console.log('Google Translate element already exists');
         return;
       }
+
+      console.log('Pre-loading Google Translate...');
 
       // Create hidden google translate element
       const gtElement = document.createElement('div');
@@ -535,15 +538,18 @@ import Layout from '../layouts/Layout.astro'
       gtElement.style.display = 'none';
       document.body.appendChild(gtElement);
 
-      // Load Google Translate script
+      // Load Google Translate script with full URL
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.charset = 'UTF-8';
-      script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      script.async = true;
+      script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
 
       window.googleTranslateElementInit = function() {
+        console.log('Google Translate loaded successfully!');
         new google.translate.TranslateElement({
           pageLanguage: 'en',
+          includedLanguages: 'es,pt,fr,de,it,pl,tl,vi,zh-CN,ja,ar,hi,ta,te,kn,ur,la',
           layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
           autoDisplay: false
         }, 'google_translate_element');
@@ -551,7 +557,7 @@ import Layout from '../layouts/Layout.astro'
       };
 
       document.head.appendChild(script);
-    }
+    })();
 
     // Track if translation has been applied
     let hasTranslated = false;
