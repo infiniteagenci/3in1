@@ -9,26 +9,47 @@ import Layout from '../layouts/Layout.astro'
   </slot>
 
   <!-- Allow scrolling on index page -->
-  <style>
-    /* Hide Google Translate widget completely */
-    .goog-te-banner-frame, .goog-te-gadget, .skiptranslate {
+  <style is:global>
+    /* Hide Google Translate widget completely - Global styles */
+    .goog-te-banner-frame, .goog-te-gadget, .skiptranslate, .goog-te-spinner, .goog-te-spinner-pos {
       display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      height: 0 !important;
+      width: 0 !important;
+      position: absolute !important;
+      left: -9999px !important;
+      top: -9999px !important;
     }
+
     .goog-te-combo {
       display: none !important;
     }
+
     body {
       top: 0 !important;
       position: static !important;
     }
+
     #google_translate_element {
-      display: none;
+      display: none !important;
     }
+
     .goog-logo-link {
       display: none !important;
     }
+
     .goog-te-gadget span {
       display: none !important;
+    }
+
+    /* Hide Google Translate iframes */
+    iframe[src*="translate.google.com"],
+    iframe[src*="google.com/translate"] {
+      display: none !important;
+      visibility: hidden !important;
+      position: absolute !important;
+      left: -9999px !important;
     }
 
     /* Prevent flickering during translation */
@@ -39,6 +60,42 @@ import Layout from '../layouts/Layout.astro'
     html, body {
       overflow: auto !important;
       height: auto !important;
+    }
+
+    /* Hide Google Translate links and footer text */
+    a[href*="translate.google.com"] {
+      display: none !important;
+    }
+
+    .goog-te-gadget > span {
+      display: none !important;
+    }
+
+    .goog-te-gadget font {
+      display: none !important;
+    }
+
+    /* Hide any div at the end of body that might be Google Translate */
+    body > div:last-child:not([class]):not([id]) {
+      display: none !important;
+    }
+
+    /* Hide Google Translate banner at top */
+    .goog-te-banner {
+      display: none !important;
+    }
+
+    /* Hide all skiptranslate elements anywhere in the page */
+    .skiptranslate, .skiptranslate *, .goog-te-gadget, .goog-te-gadget * {
+      display: none !important;
+      visibility: hidden !important;
+    }
+
+    /* Hide font elements containing Google text */
+    font:has(-webkit-any(text)),
+    font[size="1"],
+    .goog-te-gadget-simple {
+      display: none !important;
     }
 
     /* Custom Animations */
@@ -592,12 +649,6 @@ import Layout from '../layouts/Layout.astro'
       translating = true;
       console.log('Starting translation to:', langCode);
 
-      // Initialize Google Translate immediately
-      if (!window.google || !window.google.translate) {
-        console.log('Loading Google Translate...');
-        initGoogleTranslate();
-      }
-
       // Store URL parameter for persistence
       const url = new URL(window.location.href);
       url.searchParams.set('lang', langCode);
@@ -636,11 +687,59 @@ import Layout from '../layouts/Layout.astro'
 
     if (urlLang && urlLang !== 'en' && !alreadyTranslated) {
       sessionStorage.setItem('page_translated', 'true');
-      initGoogleTranslate();
       setTimeout(() => {
         translateToLanguage(urlLang);
       }, 1000);
     }
+
+    // Continuously hide Google Translate footer elements (they're added dynamically)
+    function hideGoogleTranslateFooter() {
+      // Hide specific Google Translate classes
+      const gtElements = document.querySelectorAll('.goog-te-gadget, .skiptranslate, .goog-te-banner-frame, .goog-te-spinner, .goog-te-spinner-pos');
+      gtElements.forEach(el => el.style.display = 'none');
+
+      // Hide any elements containing Google Translate attribution text
+      const allElements = document.querySelectorAll('*');
+      allElements.forEach(el => {
+        if (el.nodeType === Node.ELEMENT_NODE) {
+          const text = el.textContent || '';
+          if (text.includes('Original text') || text.includes('Rate this translation') ||
+              text.includes('Your feedback will be used to help improve Google Translate')) {
+            // Check if it's mostly attribution text
+            if (text.length < 200) {
+              el.style.display = 'none';
+              el.remove(); // Remove from DOM completely
+            }
+          }
+        }
+      });
+
+      // Hide all Google Translate iframes
+      const gtIframes = document.querySelectorAll('iframe[src*="translate.google.com"], iframe[src*="google.com"]');
+      gtIframes.forEach(el => el.style.display = 'none');
+    }
+
+    // Run immediately and periodically
+    hideGoogleTranslateFooter();
+    setInterval(hideGoogleTranslateFooter, 500);
+
+    // Use MutationObserver to catch elements as they're added
+    const observer = new MutationObserver(function(mutations) {
+      hideGoogleTranslateFooter();
+    });
+
+    // Start observing the document with the configured parameters
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
+
+    // Also run after translation completes
+    const originalTranslate = translateToLanguage;
+    translateToLanguage = function(langCode) {
+      originalTranslate.call(this, langCode);
+      setTimeout(hideGoogleTranslateFooter, 2000);
+    };
 
     // Language selector elements
     const languageButton = document.getElementById('language-button');
