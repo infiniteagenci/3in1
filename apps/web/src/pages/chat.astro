@@ -55,16 +55,48 @@ import MobileLayout from '../components/MobileLayout.tsx'
       ❤️
     </div>
 
-    <!-- Feeling Picker (hidden by default) -->
-    <div id="feeling-picker" class="hidden fixed bottom-40 right-4 bg-white rounded-2xl shadow-2xl p-3 z-50 border border-pink-100">
-      <div class="flex gap-2 flex-wrap max-w-[200px]">
-        <button class="feeling-btn text-2xl hover:scale-125 transition-transform p-1" data-feeling="joyful" data-emoji="😊">😊</button>
-        <button class="feeling-btn text-2xl hover:scale-125 transition-transform p-1" data-feeling="grateful" data-emoji="🙏">🙏</button>
-        <button class="feeling-btn text-2xl hover:scale-125 transition-transform p-1" data-feeling="peaceful" data-emoji="😌">😌</button>
-        <button class="feeling-btn text-2xl hover:scale-125 transition-transform p-1" data-feeling="anxious" data-emoji="😰">😰</button>
-        <button class="feeling-btn text-2xl hover:scale-125 transition-transform p-1" data-feeling="sad" data-emoji="😢">😢</button>
-        <button class="feeling-btn text-2xl hover:scale-125 transition-transform p-1" data-feeling="struggling" data-emoji="😣">😣</button>
-        <button class="feeling-btn text-2xl hover:scale-125 transition-transform p-1" data-feeling="tired" data-emoji="😴">😴</button>
+    <!-- Feeling Popup Modal (hidden by default) -->
+    <div id="feeling-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl shadow-2xl p-6 max-w-sm w-full animate-scale-in">
+        <div class="text-center mb-4">
+          <div class="text-4xl mb-2">❤️</div>
+          <h3 class="text-xl font-semibold text-gray-800">How are you feeling?</h3>
+          <p class="text-sm text-gray-500 mt-1">Share your heart, and I'll share a verse and prayer for you.</p>
+        </div>
+        <div class="grid grid-cols-4 gap-3 mb-4">
+          <button class="feeling-btn flex flex-col items-center p-3 rounded-xl hover:bg-pink-50 transition-colors" data-feeling="joyful" data-emoji="😊">
+            <span class="text-2xl">😊</span>
+            <span class="text-xs text-gray-600 mt-1">Joyful</span>
+          </button>
+          <button class="feeling-btn flex flex-col items-center p-3 rounded-xl hover:bg-pink-50 transition-colors" data-feeling="grateful" data-emoji="🙏">
+            <span class="text-2xl">🙏</span>
+            <span class="text-xs text-gray-600 mt-1">Grateful</span>
+          </button>
+          <button class="feeling-btn flex flex-col items-center p-3 rounded-xl hover:bg-pink-50 transition-colors" data-feeling="peaceful" data-emoji="😌">
+            <span class="text-2xl">😌</span>
+            <span class="text-xs text-gray-600 mt-1">Peaceful</span>
+          </button>
+          <button class="feeling-btn flex flex-col items-center p-3 rounded-xl hover:bg-pink-50 transition-colors" data-feeling="anxious" data-emoji="😰">
+            <span class="text-2xl">😰</span>
+            <span class="text-xs text-gray-600 mt-1">Anxious</span>
+          </button>
+          <button class="feeling-btn flex flex-col items-center p-3 rounded-xl hover:bg-pink-50 transition-colors" data-feeling="sad" data-emoji="😢">
+            <span class="text-2xl">😢</span>
+            <span class="text-xs text-gray-600 mt-1">Sad</span>
+          </button>
+          <button class="feeling-btn flex flex-col items-center p-3 rounded-xl hover:bg-pink-50 transition-colors" data-feeling="struggling" data-emoji="😣">
+            <span class="text-2xl">😣</span>
+            <span class="text-xs text-gray-600 mt-1">Struggling</span>
+          </button>
+          <button class="feeling-btn flex flex-col items-center p-3 rounded-xl hover:bg-pink-50 transition-colors" data-feeling="tired" data-emoji="😴">
+            <span class="text-2xl">😴</span>
+            <span class="text-xs text-gray-600 mt-1">Tired</span>
+          </button>
+          <button id="close-modal-btn" class="flex flex-col items-center p-3 rounded-xl hover:bg-gray-100 transition-colors">
+            <span class="text-2xl">✕</span>
+            <span class="text-xs text-gray-600 mt-1">Close</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -335,9 +367,10 @@ import MobileLayout from '../components/MobileLayout.tsx'
       }
     });
 
-    // Floating Heart Icon - Draggable and Feeling Picker
+    // Floating Heart Icon - Draggable and Modal
     const floatingHeart = document.getElementById('floating-heart');
-    const feelingPicker = document.getElementById('feeling-picker');
+    const feelingModal = document.getElementById('feeling-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
     let isDragging = false;
     let startX, startY, initialX, initialY;
 
@@ -353,10 +386,10 @@ import MobileLayout from '../components/MobileLayout.tsx'
       document.addEventListener('touchmove', drag, { passive: false });
       document.addEventListener('touchend', dragEnd);
 
-      // Click to toggle feeling picker (only if not dragging)
+      // Click to open modal (only if not dragging)
       floatingHeart.addEventListener('click', (e) => {
         if (!isDragging) {
-          toggleFeelingPicker();
+          openModal();
         }
       });
     }
@@ -400,14 +433,6 @@ import MobileLayout from '../components/MobileLayout.tsx'
         floatingHeart.style.top = newY + 'px';
         floatingHeart.style.right = 'auto';
         floatingHeart.style.bottom = 'auto';
-
-        // Move feeling picker with heart
-        if (feelingPicker && !feelingPicker.classList.contains('hidden')) {
-          feelingPicker.style.left = (newX + 10) + 'px';
-          feelingPicker.style.top = (newY - 80) + 'px';
-          feelingPicker.style.right = 'auto';
-          feelingPicker.style.bottom = 'auto';
-        }
       }
     }
 
@@ -417,21 +442,28 @@ import MobileLayout from '../components/MobileLayout.tsx'
       setTimeout(() => { isDragging = false; }, 100);
     }
 
-    function toggleFeelingPicker() {
-      if (!feelingPicker) return;
+    function openModal() {
+      if (!feelingModal) return;
+      feelingModal.classList.remove('hidden');
+    }
 
-      const isHidden = feelingPicker.classList.contains('hidden');
-      if (isHidden) {
-        feelingPicker.classList.remove('hidden');
-        // Position picker above the heart
-        const heartRect = floatingHeart.getBoundingClientRect();
-        feelingPicker.style.left = (heartRect.left + 10) + 'px';
-        feelingPicker.style.top = (heartRect.top - 80) + 'px';
-        feelingPicker.style.right = 'auto';
-        feelingPicker.style.bottom = 'auto';
-      } else {
-        feelingPicker.classList.add('hidden');
-      }
+    function closeModal() {
+      if (!feelingModal) return;
+      feelingModal.classList.add('hidden');
+    }
+
+    // Close modal button
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener('click', closeModal);
+    }
+
+    // Close modal when clicking outside
+    if (feelingModal) {
+      feelingModal.addEventListener('click', (e) => {
+        if (e.target === feelingModal) {
+          closeModal();
+        }
+      });
     }
 
     // Handle feeling button clicks
@@ -439,22 +471,14 @@ import MobileLayout from '../components/MobileLayout.tsx'
       btn.addEventListener('click', () => {
         const feeling = btn.getAttribute('data-feeling');
         const emoji = btn.getAttribute('data-emoji');
-        // Hide picker
-        feelingPicker.classList.add('hidden');
-        // Dispatch event with feeling data
-        window.dispatchEvent(new CustomEvent('feelingSelected', {
-          detail: { feeling, emoji }
-        }));
+        if (feeling && emoji) {
+          closeModal();
+          // Dispatch event with feeling data
+          window.dispatchEvent(new CustomEvent('feelingSelected', {
+            detail: { feeling, emoji }
+          }));
+        }
       });
-    });
-
-    // Close feeling picker when clicking outside
-    document.addEventListener('click', (e) => {
-      if (floatingHeart && feelingPicker &&
-          !floatingHeart.contains(e.target) &&
-          !feelingPicker.contains(e.target)) {
-        feelingPicker.classList.add('hidden');
-      }
     });
 
     // Initialize on load
@@ -478,20 +502,20 @@ import MobileLayout from '../components/MobileLayout.tsx'
       padding-bottom: env(safe-area-inset-bottom);
     }
 
-    /* Floating heart animation */
-    @keyframes pulse-slow {
-      0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(244, 114, 182, 0.7);
+    /* Modal animation */
+    @keyframes scale-in {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
       }
-      50% {
-        transform: scale(1.05);
-        box-shadow: 0 0 0 10px rgba(244, 114, 182, 0);
+      to {
+        opacity: 1;
+        transform: scale(1);
       }
     }
 
-    .animate-pulse-slow {
-      animation: pulse-slow 2s infinite;
+    .animate-scale-in {
+      animation: scale-in 0.2s ease-out;
     }
   </style>
 </Layout>
