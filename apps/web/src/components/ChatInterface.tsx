@@ -194,24 +194,21 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
     }
   }, [triggerPrayer, onPrayerHandled]);
 
-  // Handle floating heart icon - send Amen
+  // Handle floating heart icon - feeling selection
   useEffect(() => {
-    const handleQuickAmen = async () => {
+    const handleFeelingSelected = async (e: CustomEvent) => {
       if (status === 'streaming') return;
 
-      const amenMessages = [
-        'Amen 🙏',
-        'Thank you, Spirit ❤️',
-        'Amen, thank you 🙏',
-        'Blessed be ❤️',
-      ];
-      const randomMessage = amenMessages[Math.floor(Math.random() * amenMessages.length)];
+      const { feeling, emoji } = e.detail;
+
+      // Create message asking for bible verse and prayer based on feeling
+      const feelingMessage = `I'm feeling ${feeling} ${emoji}. Can you share a bible verse and prayer for me?`;
 
       const userMsg: Message = {
         id: Date.now().toString(),
         role: 'user',
         content: '',
-        parts: [{ type: 'text' as const, text: randomMessage }],
+        parts: [{ type: 'text' as const, text: feelingMessage }],
       };
 
       setMessages(prev => [...prev, userMsg]);
@@ -301,13 +298,14 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
 
         setStatus('idle');
       } catch (error) {
-        console.error('Error sending Amen:', error);
+        console.error('Error sending feeling message:', error);
         setStatus('idle');
       }
     };
 
-    window.addEventListener('sendQuickAmen', handleQuickAmen);
-    return () => window.removeEventListener('sendQuickAmen', handleQuickAmen);
+    // Type cast for CustomEvent
+    window.addEventListener('feelingSelected', handleFeelingSelected as EventListener);
+    return () => window.removeEventListener('feelingSelected', handleFeelingSelected as EventListener);
   }, [messages, status, PUBLIC_BASE_API_URL]);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {

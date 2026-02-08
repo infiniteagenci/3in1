@@ -50,10 +50,23 @@ import MobileLayout from '../components/MobileLayout.tsx'
       <MobileLayout client:load />
     </div>
 
-    <!-- Floating Heart Icon for Quick Amen -->
-    <button id="floating-heart" class="fixed bottom-24 right-4 w-14 h-14 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full shadow-xl flex items-center justify-center text-2xl hover:scale-110 active:scale-95 transition-all duration-200 z-40 hover:shadow-2xl animate-pulse-slow">
+    <!-- Floating Heart Icon for Feeling Check-in -->
+    <div id="floating-heart" class="fixed bottom-24 right-4 w-14 h-14 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full shadow-xl flex items-center justify-center text-2xl cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 z-50 hover:shadow-2xl select-none touch-none">
       ❤️
-    </button>
+    </div>
+
+    <!-- Feeling Picker (hidden by default) -->
+    <div id="feeling-picker" class="hidden fixed bottom-40 right-4 bg-white rounded-2xl shadow-2xl p-3 z-50 border border-pink-100">
+      <div class="flex gap-2 flex-wrap max-w-[200px]">
+        <button class="feeling-btn text-2xl hover:scale-125 transition-transform p-1" data-feeling="joyful" data-emoji="😊">😊</button>
+        <button class="feeling-btn text-2xl hover:scale-125 transition-transform p-1" data-feeling="grateful" data-emoji="🙏">🙏</button>
+        <button class="feeling-btn text-2xl hover:scale-125 transition-transform p-1" data-feeling="peaceful" data-emoji="😌">😌</button>
+        <button class="feeling-btn text-2xl hover:scale-125 transition-transform p-1" data-feeling="anxious" data-emoji="😰">😰</button>
+        <button class="feeling-btn text-2xl hover:scale-125 transition-transform p-1" data-feeling="sad" data-emoji="😢">😢</button>
+        <button class="feeling-btn text-2xl hover:scale-125 transition-transform p-1" data-feeling="struggling" data-emoji="😣">😣</button>
+        <button class="feeling-btn text-2xl hover:scale-125 transition-transform p-1" data-feeling="tired" data-emoji="😴">😴</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -322,14 +335,127 @@ import MobileLayout from '../components/MobileLayout.tsx'
       }
     });
 
-    // Floating Heart Icon - Send Amen/Thank You
+    // Floating Heart Icon - Draggable and Feeling Picker
     const floatingHeart = document.getElementById('floating-heart');
+    const feelingPicker = document.getElementById('feeling-picker');
+    let isDragging = false;
+    let startX, startY, initialX, initialY;
+
+    // Make heart draggable
     if (floatingHeart) {
-      floatingHeart.addEventListener('click', () => {
-        // Dispatch custom event that ChatInterface can listen for
-        window.dispatchEvent(new CustomEvent('sendQuickAmen'));
+      // Mouse events
+      floatingHeart.addEventListener('mousedown', dragStart);
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('mouseup', dragEnd);
+
+      // Touch events
+      floatingHeart.addEventListener('touchstart', dragStart, { passive: false });
+      document.addEventListener('touchmove', drag, { passive: false });
+      document.addEventListener('touchend', dragEnd);
+
+      // Click to toggle feeling picker (only if not dragging)
+      floatingHeart.addEventListener('click', (e) => {
+        if (!isDragging) {
+          toggleFeelingPicker();
+        }
       });
     }
+
+    function dragStart(e) {
+      const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+      const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+
+      startX = clientX;
+      startY = clientY;
+      initialX = floatingHeart.offsetLeft;
+      initialY = floatingHeart.offsetTop;
+      isDragging = false;
+    }
+
+    function drag(e) {
+      if (!startX || !startY) return;
+
+      const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+      const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+
+      const dx = clientX - startX;
+      const dy = clientY - startY;
+
+      // Only consider it dragging if moved more than 5px
+      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+        isDragging = true;
+        if (e.type === 'touchmove') e.preventDefault();
+
+        let newX = initialX + dx;
+        let newY = initialY + dy;
+
+        // Keep within viewport bounds
+        const maxX = window.innerWidth - floatingHeart.offsetWidth;
+        const maxY = window.innerHeight - floatingHeart.offsetHeight;
+
+        newX = Math.max(0, Math.min(newX, maxX));
+        newY = Math.max(0, Math.min(newY, maxY));
+
+        floatingHeart.style.left = newX + 'px';
+        floatingHeart.style.top = newY + 'px';
+        floatingHeart.style.right = 'auto';
+        floatingHeart.style.bottom = 'auto';
+
+        // Move feeling picker with heart
+        if (feelingPicker && !feelingPicker.classList.contains('hidden')) {
+          feelingPicker.style.left = (newX + 10) + 'px';
+          feelingPicker.style.top = (newY - 80) + 'px';
+          feelingPicker.style.right = 'auto';
+          feelingPicker.style.bottom = 'auto';
+        }
+      }
+    }
+
+    function dragEnd() {
+      startX = null;
+      startY = null;
+      setTimeout(() => { isDragging = false; }, 100);
+    }
+
+    function toggleFeelingPicker() {
+      if (!feelingPicker) return;
+
+      const isHidden = feelingPicker.classList.contains('hidden');
+      if (isHidden) {
+        feelingPicker.classList.remove('hidden');
+        // Position picker above the heart
+        const heartRect = floatingHeart.getBoundingClientRect();
+        feelingPicker.style.left = (heartRect.left + 10) + 'px';
+        feelingPicker.style.top = (heartRect.top - 80) + 'px';
+        feelingPicker.style.right = 'auto';
+        feelingPicker.style.bottom = 'auto';
+      } else {
+        feelingPicker.classList.add('hidden');
+      }
+    }
+
+    // Handle feeling button clicks
+    document.querySelectorAll('.feeling-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const feeling = btn.getAttribute('data-feeling');
+        const emoji = btn.getAttribute('data-emoji');
+        // Hide picker
+        feelingPicker.classList.add('hidden');
+        // Dispatch event with feeling data
+        window.dispatchEvent(new CustomEvent('feelingSelected', {
+          detail: { feeling, emoji }
+        }));
+      });
+    });
+
+    // Close feeling picker when clicking outside
+    document.addEventListener('click', (e) => {
+      if (floatingHeart && feelingPicker &&
+          !floatingHeart.contains(e.target) &&
+          !feelingPicker.contains(e.target)) {
+        feelingPicker.classList.add('hidden');
+      }
+    });
 
     // Initialize on load
     init();
