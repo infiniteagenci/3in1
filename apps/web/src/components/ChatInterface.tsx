@@ -112,6 +112,8 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
   }, [messages.length]);
 
   // Check for daily check-in - show every time on app load when no messages
+  // DISABLED - Using floating heart instead
+  /*
   useEffect(() => {
     const checkDailyCheckin = () => {
       // Show compact check-in every time when there are no messages
@@ -124,6 +126,7 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
 
     checkDailyCheckin();
   }, []);
+  */
 
   // Fetch personalized suggestions on mount and after messages change
   useEffect(() => {

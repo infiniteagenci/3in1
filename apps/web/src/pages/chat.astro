@@ -115,7 +115,7 @@ import MobileLayout from '../components/MobileLayout.tsx'
     </div>
   </div>
 
-  <script>
+  <script is:inline>
     // Set API URL based on environment
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     window.PUBLIC_BASE_API_URL = isLocalhost
@@ -522,13 +522,13 @@ import MobileLayout from '../components/MobileLayout.tsx'
             if (!token) {
               // No token - show fallback response
               const fallbackResponses = {
-                joyful: { verse: '"This is the day that the Lord has made; let us rejoice and be glad in it." - Psalm 118:24', prayer: 'Dear Lord, thank you for the joy in my heart. Help me share this joy with others today. Amen.' },
-                grateful: { verse: '"Give thanks to the Lord, for he is good; his love endures forever." - Psalm 107:1', prayer: 'Gracious God, thank You for Your endless blessings. Open my eyes to see Your goodness in every moment. Amen.' },
-                peaceful: { verse: '"Peace I leave with you; my peace I give you. I do not give to you as the world gives. Do not let your hearts be troubled and do not be afraid." - John 14:27', prayer: 'Lord Jesus, thank You for Your peace that passes all understanding. Calm my heart and mind in Your presence. Amen.' },
-                anxious: { verse: '"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God." - Philippians 4:6', prayer: 'Heavenly Father, I lay my anxieties before You. Please replace my worry with Your perfect peace. Guide me through this moment. Amen.' },
-                sad: { verse: '"The Lord is close to the brokenhearted and saves those who are crushed in spirit." - Psalm 34:18', prayer: 'Loving God, thank You for being near me in my sadness. Wrap Your arms around me and bring comfort to my heart. Amen.' },
-                struggling: { verse: '"My grace is sufficient for you, for my power is made perfect in weakness." - 2 Corinthians 12:9', prayer: 'Lord, in my struggle, I lean on Your strength. Help me trust that Your grace is enough for this day. Amen.' },
-                tired: { verse: '"Come to me, all you who are weary and burdened, and I will give you rest." - Matthew 11:28', prayer: 'Jesus, I come to You weary and in need of rest. Refresh my spirit and give me the strength to continue. Amen.' },
+                joyful: { verse: '"This is the day that the Lord has made; let us rejoice and be glad in it." - Psalm 118:24', prayer: 'Thank You, Lord, for the joy I feel today. Help me share this joy with others and let it shine through me.' },
+                grateful: { verse: '"Give thanks to the Lord, for he is good; his love endures forever." - Psalm 107:1', prayer: 'Thank You, God, for all Your blessings. Open my eyes to see Your goodness in every moment today.' },
+                peaceful: { verse: '"Peace I leave with you; my peace I give you. I do not give to you as the world gives. Do not let your hearts be troubled and do not be afraid." - John 14:27', prayer: 'Thank You, Jesus, for Your peace. Calm my heart and mind as I rest in Your presence today.' },
+                anxious: { verse: '"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God." - Philippians 4:6', prayer: 'Lord, I bring You my worries and anxieties. Please give me Your peace and guide me through this moment.' },
+                sad: { verse: '"The Lord is close to the brokenhearted and saves those who are crushed in spirit." - Psalm 34:18', prayer: 'God, I feel sad today. Thank You for being close to me. Comfort my heart and help me feel Your presence.' },
+                struggling: { verse: '"My grace is sufficient for you, for my power is made perfect in weakness." - 2 Corinthians 12:9', prayer: 'Lord, I\'m struggling right now. Help me trust that Your grace is enough for me today and give me Your strength.' },
+                tired: { verse: '"Come to me, all you who are weary and burdened, and I will give you rest." - Matthew 11:28', prayer: 'Jesus, I\'m tired and need Your rest. Please refresh my spirit and give me the strength I need.' },
               };
 
               const response = fallbackResponses[feeling] || fallbackResponses.joyful;
