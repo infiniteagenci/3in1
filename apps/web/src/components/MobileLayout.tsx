@@ -58,9 +58,17 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-amber-50/50 to-orange-50/50">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-amber-50 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-64 h-64 bg-purple-300/20 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute top-40 right-10 w-72 h-72 bg-pink-300/20 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-40 left-20 w-56 h-56 bg-amber-300/20 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-20 right-20 w-48 h-48 bg-rose-300/20 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1.5s' }}></div>
+      </div>
+
       {/* Main Content Area */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden relative z-10">
         {renderTab()}
       </div>
 

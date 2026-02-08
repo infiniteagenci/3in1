@@ -406,7 +406,15 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
   }, []);
 
   return (
-    <div id='chatbox' className="flex flex-col h-full bg-gradient-to-br from-amber-50/50 to-orange-50/50">
+    <div id='chatbox' className="flex flex-col h-full bg-gradient-to-br from-purple-50/60 via-pink-50/50 to-amber-50/60 relative">
+      {/* Animated background sparkle effects */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-10 right-10 w-2 h-2 bg-purple-400/30 rounded-full animate-twinkle"></div>
+        <div className="absolute top-32 left-20 w-1.5 h-1.5 bg-pink-400/30 rounded-full animate-twinkle" style={{ animationDelay: '0.5s' }}></div>
+        <div className="absolute top-60 right-32 w-2 h-2 bg-amber-400/30 rounded-full animate-twinkle" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-40 left-16 w-1.5 h-1.5 bg-rose-400/30 rounded-full animate-twinkle" style={{ animationDelay: '1.5s' }}></div>
+        <div className="absolute bottom-20 right-24 w-2 h-2 bg-purple-400/30 rounded-full animate-twinkle" style={{ animationDelay: '2s' }}></div>
+      </div>
       <Conversation className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4 pb-20">
         <ConversationContent>
           {/* Daily Check-in - shown at the top when no messages */}
