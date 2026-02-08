@@ -194,6 +194,122 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
     }
   }, [triggerPrayer, onPrayerHandled]);
 
+  // Handle floating heart icon - send Amen
+  useEffect(() => {
+    const handleQuickAmen = async () => {
+      if (status === 'streaming') return;
+
+      const amenMessages = [
+        'Amen 🙏',
+        'Thank you, Spirit ❤️',
+        'Amen, thank you 🙏',
+        'Blessed be ❤️',
+      ];
+      const randomMessage = amenMessages[Math.floor(Math.random() * amenMessages.length)];
+
+      const userMsg: Message = {
+        id: Date.now().toString(),
+        role: 'user',
+        content: '',
+        parts: [{ type: 'text' as const, text: randomMessage }],
+      };
+
+      setMessages(prev => [...prev, userMsg]);
+      setStatus('submitted');
+
+      try {
+        const token = localStorage.getItem('session_token');
+        if (!token) {
+          console.error('No session token found');
+          return;
+        }
+
+        // Prepare messages in the format expected by the backend
+        const messagesPayload = messages.concat([userMsg]).map(msg => ({
+          role: msg.role,
+          content: msg.parts?.[0]?.text || msg.content || '',
+          parts: msg.parts,
+        }));
+
+        const response = await fetch(`${PUBLIC_BASE_API_URL}/api/chat`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            messages: messagesPayload,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        setStatus('streaming');
+
+        // Create AI message placeholder
+        const aiMsgId = (Date.now() + 1).toString();
+        const aiMsg: Message = {
+          id: aiMsgId,
+          role: 'assistant',
+          content: '',
+          parts: [{ type: 'text' as const, text: '' }],
+        };
+
+        setMessages(prev => [...prev, aiMsg]);
+
+        // Read the stream
+        const reader = response.body?.getReader();
+        if (!reader) {
+          throw new Error('No response body');
+        }
+
+        const decoder = new TextDecoder();
+        let assistantText = '';
+        let buffer = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+
+          // Parse AI SDK data stream format
+          const lines = buffer.split(/(?=0:|1:|2:)/);
+          buffer = lines.pop() || '';
+
+          for (const line of lines) {
+            if (!line) continue;
+
+            const match = line.match(/^[012]:"(.*)"(?:,"[0-9]+:")?$/s);
+            if (match) {
+              const content = match[1]
+                .replace(/\\"/g, '"')
+                .replace(/\\\\/g, '\\')
+                .replace(/\\n/g, '\n');
+              assistantText += content;
+
+              setMessages(prev => prev.map(msg =>
+                msg.id === aiMsgId
+                  ? { ...msg, content: assistantText, parts: [{ type: 'text' as const, text: assistantText }] }
+                  : msg
+              ));
+            }
+          }
+        }
+
+        setStatus('idle');
+      } catch (error) {
+        console.error('Error sending Amen:', error);
+        setStatus('idle');
+      }
+    };
+
+    window.addEventListener('sendQuickAmen', handleQuickAmen);
+    return () => window.removeEventListener('sendQuickAmen', handleQuickAmen);
+  }, [messages, status, PUBLIC_BASE_API_URL]);
+
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || status === 'streaming') return;
@@ -372,10 +488,7 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
 
   // Handle daily check-in completion
   const handleCheckinComplete = useCallback((data: any) => {
-    const checkinMsg = `Daily check-in completed: ${data.mood ? `Mood: ${data.mood}` : ''}${data.notes ? ` | Notes: ${data.notes}` : ''}`;
-
-    // Set the input for user to review and send
-    setInput(checkinMsg);
+    // Check-in is automatically registered, no message shown in chat
     setShowDailyCheckin(false);
     setShowSuggestions(false);
 

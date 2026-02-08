@@ -20,7 +20,7 @@ import MobileLayout from '../components/MobileLayout.tsx'
           </div>
           <div>
             <h1 class="font-semibold text-gray-800 tracking-tight font-geist">Spirit</h1>
-            <p class="text-xs text-amber-600 font-geist">Your faith companion ✨</p>
+            <p class="text-xs text-amber-600 font-geist" id="welcome-message">Your faith companion ✨</p>
           </div>
         </div>
 
@@ -49,6 +49,11 @@ import MobileLayout from '../components/MobileLayout.tsx'
     <div class="flex-1 w-full min-h-0">
       <MobileLayout client:load />
     </div>
+
+    <!-- Floating Heart Icon for Quick Amen -->
+    <button id="floating-heart" class="fixed bottom-24 right-4 w-14 h-14 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full shadow-xl flex items-center justify-center text-2xl hover:scale-110 active:scale-95 transition-all duration-200 z-40 hover:shadow-2xl animate-pulse-slow">
+      ❤️
+    </button>
   </div>
 
   <script>
@@ -117,6 +122,13 @@ import MobileLayout from '../components/MobileLayout.tsx'
         if (response.ok) {
           const { user } = await response.json();
           currentUser = user;
+
+          // Set welcome message with user's first name
+          const welcomeMessage = document.getElementById('welcome-message');
+          if (user && user.name && welcomeMessage) {
+            const firstName = user.name.split(' ')[0];
+            welcomeMessage.textContent = `Hi, ${firstName}! 🙏`;
+          }
 
           // Hide loading, show chat
           app.classList.add('hidden');
@@ -310,6 +322,15 @@ import MobileLayout from '../components/MobileLayout.tsx'
       }
     });
 
+    // Floating Heart Icon - Send Amen/Thank You
+    const floatingHeart = document.getElementById('floating-heart');
+    if (floatingHeart) {
+      floatingHeart.addEventListener('click', () => {
+        // Dispatch custom event that ChatInterface can listen for
+        window.dispatchEvent(new CustomEvent('sendQuickAmen'));
+      });
+    }
+
     // Initialize on load
     init();
   </script>
@@ -329,6 +350,22 @@ import MobileLayout from '../components/MobileLayout.tsx'
     /* Safe area support for mobile devices with notches/home indicators */
     .safe-area-bottom {
       padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    /* Floating heart animation */
+    @keyframes pulse-slow {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(244, 114, 182, 0.7);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(244, 114, 182, 0);
+      }
+    }
+
+    .animate-pulse-slow {
+      animation: pulse-slow 2s infinite;
     }
   </style>
 </Layout>
