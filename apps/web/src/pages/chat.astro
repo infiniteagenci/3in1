@@ -56,8 +56,8 @@ import MobileLayout from '../components/MobileLayout.tsx'
     </div>
 
     <!-- Feeling Popup Modal (hidden by default) -->
-    <div id="feeling-modal" class="hidden fixed inset-0 bg-gradient-to-br from-purple-900/80 to-pink-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div class="bg-gradient-to-br from-white to-purple-50 rounded-3xl shadow-2xl p-0 max-w-sm w-full animate-scale-in max-h-[80vh] overflow-hidden">
+    <div id="feeling-modal" class="hidden fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl shadow-2xl p-0 max-w-sm w-full animate-scale-in max-h-[80vh] overflow-hidden">
         <!-- Header -->
         <div class="bg-gradient-to-r from-pink-500 to-rose-500 px-6 py-4 text-center">
           <div class="text-4xl mb-1">❤️</div>
@@ -520,21 +520,22 @@ import MobileLayout from '../components/MobileLayout.tsx'
       // Re-fetch verse and prayer text elements
       const vText = document.getElementById('verse-text');
       const pText = document.getElementById('prayer-text');
-      const contentDiv = document.getElementById('feeling-response-content');
 
-      // Make sure structured sections are visible
+      // Reset visibility
       if (vText && vText.parentElement?.parentElement) vText.parentElement.parentElement.style.display = 'block';
       if (pText && pText.parentElement?.parentElement) pText.parentElement.parentElement.style.display = 'block';
-      if (contentDiv) contentDiv.style.display = 'none';
 
-      // Parse content and populate the verse and prayer sections
-      if (content.includes('BIBLE VERSE') && content.includes('PRAYER')) {
+      // Check if content is HTML (contains tags) - this is from API/fallback
+      const isHTML = content.includes('<') && content.includes('>');
+
+      if (isHTML && content.includes('BIBLE VERSE') && content.includes('PRAYER')) {
+        // Parse fallback response with proper structure
         const parts = content.split('PRAYER');
         let verseText = '';
         let prayerText = '';
 
         // Extract verse
-        const verseMatch = parts[0].match(/<p[^>]*>(.*?)<\/p>/s);
+        const verseMatch = parts[0].match(/<p[^>]*>(.*?)<\/p>/s) || parts[0].match(/italic[^>]*>(.*?)</s);
         if (verseMatch) {
           verseText = verseMatch[1].replace(/<[^>]+>/g, '');
         }
@@ -547,15 +548,71 @@ import MobileLayout from '../components/MobileLayout.tsx'
 
         if (vText && verseText) vText.textContent = verseText;
         if (pText && prayerText) pText.textContent = prayerText;
-      } else {
-        // Fallback - show in response content div
-        if (contentDiv) {
-          contentDiv.innerHTML = content;
-          contentDiv.style.display = 'block';
+      } else if (!isHTML) {
+        // Plain text from API - try to parse verse and prayer
+        const lines = content.split('\n').filter(l => l.trim());
+        let verseText = '';
+        let prayerText = '';
+        let currentSection = '';
+
+        for (const line of lines) {
+          const lower = line.toLowerCase();
+          if (lower.includes('verse') || lower.includes('bible')) {
+            currentSection = 'verse';
+            continue;
+          } else if (lower.includes('prayer')) {
+            currentSection = 'prayer';
+            continue;
+          }
+
+          if (currentSection === 'verse') {
+            verseText += line.trim() + ' ';
+          } else if (currentSection === 'prayer') {
+            prayerText += line.trim() + ' ';
+          } else {
+            // No clear section markers, put everything in verse
+            if (!verseText) {
+              verseText = content;
+            }
+          }
         }
-        // Hide the structured sections if content doesn't match format
-        if (vText && vText.parentElement?.parentElement) vText.parentElement.parentElement.style.display = 'none';
-        if (pText && pText.parentElement?.parentElement) pText.parentElement.parentElement.style.display = 'none';
+
+        if (vText && verseText) vText.textContent = verseText.trim();
+        if (pText && prayerText) pText.textContent = prayerText.trim();
+      } else {
+        // HTML with prose class - API streaming response
+        // Try to extract verse and prayer from the response
+        const textContent = content.replace(/<[^>]+>/g, '\n').replace(/\n+/g, '\n').trim();
+        const lines = textContent.split('\n').filter(l => l.trim());
+
+        let verseText = '';
+        let prayerText = '';
+        let foundPrayer = false;
+
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+          const lower = line.toLowerCase();
+
+          // Look for prayer section
+          if (lower.includes('prayer') || lower.includes('let us pray')) {
+            foundPrayer = true;
+            continue;
+          }
+
+          // Skip section headers and markers
+          if (lower.includes('verse') || lower.includes('bible') || lower.includes('📖') || lower.includes('🙏')) {
+            continue;
+          }
+
+          if (foundPrayer) {
+            prayerText += line + ' ';
+          } else {
+            verseText += line + ' ';
+          }
+        }
+
+        if (vText && verseText) vText.textContent = verseText.trim() || textContent;
+        if (pText && prayerText) pText.textContent = prayerText.trim();
       }
     }
 
