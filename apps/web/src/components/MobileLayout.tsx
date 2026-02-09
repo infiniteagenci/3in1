@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { type Message } from '@ai-sdk/react';
 import BottomTabBar from './BottomTabBar';
 import ChatInterface from './ChatInterface';
@@ -15,6 +15,7 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
   const [activeTab, setActiveTab] = useState('chat');
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const [triggerPrayerChat, setTriggerPrayerChat] = useState<{ prayerId: string } | null>(null);
+  const [currentBgIndex, setCurrentBgIndex] = useState(0);
 
   const handleLibraryItemSelect = useCallback((category: string, item: any) => {
     // Library item selected - stay on library tab, just for tracking if needed
@@ -29,6 +30,14 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
   const handleCheckinComplete = useCallback((data: any) => {
     // Check-in completed - stay on prayers tab
     // No longer redirects to chat
+  }, []);
+
+  // Auto-rotate background images every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBgIndex((prev) => (prev + 1) % backgroundImages.length);
+    }, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const renderTab = () => {
@@ -54,55 +63,59 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
     }
   };
 
-  // Aesthetic religious/Catholic-themed background images
-  const religiousImages = [
-    'https://images.unsplash.com/photo-1548407260-da850faa41e3?w=800&q=80', // Cross silhouette
-    'https://images.unsplash.com/photo-1518893494013-481c1d8ed3fd?w=800&q=80', // Church interior
-    'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=800&q=80', // Stained glass
-    'https://images.unsplash.com/photo-1555993539-1732b0258235?w=800&q=80', // Cathedral
-    'https://images.unsplash.com/photo-1548625361-9872e4533e36?w=800&q=80', // Church architecture
-  ];
-
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-amber-50 via-purple-50 to-blue-50 relative overflow-hidden">
-      {/* Religious aesthetic background with overlay */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Background image layers */}
-        <div className="absolute inset-0 opacity-15">
-          <img
-            src={religiousImages[0]}
-            alt="Cross"
-            className="absolute top-0 left-0 w-full h-1/3 object-cover"
-          />
-          <img
-            src={religiousImages[1]}
-            alt="Church"
-            className="absolute top-1/4 right-0 w-1/2 h-1/3 object-cover rounded-full opacity-50"
-          />
-          <img
-            src={religiousImages[2]}
-            alt="Stained Glass"
-            className="absolute bottom-0 left-0 w-1/2 h-1/3 object-cover"
-          />
-          <img
-            src={religiousImages[3]}
-            alt="Cathedral"
-            className="absolute bottom-1/4 right-0 w-2/3 h-1/3 object-cover rounded-full opacity-40"
-          />
+    <div className="flex flex-col h-screen relative overflow-hidden">
+      {/* Full-screen background images */}
+      <div className="absolute inset-0">
+        {backgroundImages.map((bg, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              index === currentBgIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            {/* Background image with parallax effect */}
+            <div
+              className="absolute inset-0 bg-cover bg-center bg-fixed transform scale-105"
+              style={{ backgroundImage: `url(${bg.url})` }}
+            />
+            {/* Dark overlay for readability */}
+            <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
+            {/* Soft vignette effect */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.3)_70%,rgba(0,0,0,0.5)_100%)]" />
+            {/* Soft color tint overlay */}
+            <div className="absolute inset-0 bg-purple-900/10 mix-blend-multiply" />
+          </div>
+        ))}
+
+        {/* Animated light rays effect */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] h-[200%] opacity-20">
+            <div
+              className="absolute inset-0"
+              style={{
+                background: 'conic-gradient(from 0deg at 50% 0%, transparent 0deg, rgba(255,255,255,0.1) 30deg, transparent 60deg, rgba(255,255,255,0.05) 120deg, transparent 150deg, rgba(255,255,255,0.1) 210deg, transparent 240deg)',
+                animation: 'spin 60s linear infinite',
+              }}
+            />
+          </div>
         </div>
 
-        {/* Animated gradient overlays - spiritual theme */}
-        <div className="absolute top-20 left-10 w-64 h-64 bg-amber-300/30 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute top-40 right-10 w-72 h-72 bg-purple-300/30 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-40 left-20 w-56 h-56 bg-blue-300/30 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute bottom-20 right-20 w-48 h-48 bg-rose-300/30 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1.5s' }}></div>
-
-        {/* Floating religious elements */}
-        <div className="absolute top-32 right-1/4 text-4xl opacity-40 animate-float" style={{ animationDuration: '8s' }}>✝️</div>
-        <div className="absolute top-1/3 left-1/4 text-3xl opacity-30 animate-float" style={{ animationDuration: '10s', animationDelay: '2s' }}>🕯️</div>
-        <div className="absolute bottom-1/3 right-1/3 text-3xl opacity-35 animate-float" style={{ animationDuration: '9s', animationDelay: '3s' }}>📿</div>
-        <div className="absolute bottom-1/4 left-1/5 text-4xl opacity-40 animate-float" style={{ animationDuration: '11s', animationDelay: '1s' }}>⛪</div>
-        <div className="absolute top-1/2 right-1/5 text-3xl opacity-30 animate-float" style={{ animationDuration: '12s', animationDelay: '4s' }}>✨</div>
+        {/* Floating particles */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-white/30 rounded-full animate-float"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${5 + Math.random() * 10}s`,
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Main Content Area */}
@@ -115,3 +128,39 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
     </div>
   );
 }
+
+// High-quality aesthetic religious background images
+const backgroundImages = [
+  {
+    url: 'https://images.unsplash.com/photo-1548407260-da850faa41e3?w=1920&q=90',
+    name: 'Cross at sunrise',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1920&q=90',
+    name: 'Church silhouette',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1518173946687-a4c036bc1c9a?w=1920&q=90',
+    name: 'Sunlight through forest',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=1920&q=90',
+    name: 'Stained glass window',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=1920&q=90',
+    name: 'Cathedral interior',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=90',
+    name: 'Peaceful landscape',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=90',
+    name: 'Mountain sunrise',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1518893494013-481c1d8ed3fd?w=1920&q=90',
+    name: 'Church interior',
+  },
+];
