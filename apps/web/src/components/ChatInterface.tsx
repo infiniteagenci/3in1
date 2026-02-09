@@ -78,6 +78,7 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
   const [hasCollectedAge, setHasCollectedAge] = useState(false);
   const [showCatholicMenu, setShowCatholicMenu] = useState(false);
   const [showDailyCheckin, setShowDailyCheckin] = useState(false);
+  const [showDailyVerse, setShowDailyVerse] = useState(true);
   const [showQuickPrayers, setShowQuickPrayers] = useState(false);
   const [prayerProgress, setPrayerProgress] = useState<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -427,9 +428,9 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
           )}
 
           {/* Daily Verse - shown when no messages */}
-          {messages.length === 0 && !showAgePrompt && !showDailyCheckin && (
+          {messages.length === 0 && !showAgePrompt && !showDailyCheckin && showDailyVerse && (
             <div className="mb-6">
-              <DailyVerse />
+              <DailyVerse onClose={() => setShowDailyVerse(false)} />
             </div>
           )}
 

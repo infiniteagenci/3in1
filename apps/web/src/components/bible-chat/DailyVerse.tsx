@@ -3,6 +3,7 @@ import { getDailyVerse, getVersesByTheme, getRandomVerse, type BibleVerse } from
 
 interface DailyVerseProps {
   className?: string;
+  onClose?: () => void;
 }
 
 const PlayIcon = () => (
@@ -55,7 +56,14 @@ const HeartIcon = () => (
   </svg>
 );
 
-export default function DailyVerse({ className = '' }: DailyVerseProps) {
+const CloseIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+);
+
+export default function DailyVerse({ className = '', onClose }: DailyVerseProps) {
   const [currentVerse, setCurrentVerse] = useState<BibleVerse | null>(null);
   const [savedVerses, setSavedVerses] = useState<string[]>([]);
   const [showShareMenu, setShowShareMenu] = useState(false);
@@ -213,8 +221,19 @@ export default function DailyVerse({ className = '' }: DailyVerseProps) {
 
   return (
     <div className={`relative bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-2xl p-6 border border-indigo-100 shadow-sm ${className}`}>
+      {/* Close Button */}
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors z-10"
+          aria-label="Close"
+        >
+          <CloseIcon />
+        </button>
+      )}
+
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 pr-10">
         <div className="flex items-center gap-2">
           <span className="text-2xl">📖</span>
           <div>

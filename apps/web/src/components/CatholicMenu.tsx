@@ -354,6 +354,7 @@ const catholicContent = {
         id: 'mary',
         title: 'Blessed Virgin Mary',
         description: 'Mother of God and Queen of Saints',
+        image: 'https://images.unsplash.com/photo-1548407260-da850faa41e3?w=400&h=400&fit=crop',
         prayers: [
           'Hail Holy Queen: "Hail, holy Queen, Mother of mercy, our life, our sweetness and our hope..."',
           'Memorare: "Remember, O most gracious Virgin Mary..."',
@@ -366,6 +367,7 @@ const catholicContent = {
         id: 'joseph',
         title: 'St. Joseph',
         description: 'Guardian of the Holy Family',
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop',
         prayers: [
           'Prayer to St. Joseph: "O blessed Joseph, faithful guardian of Jesus..."',
           'Litany of St. Joseph: "St. Joseph, renowned offspring of David..."'
@@ -377,6 +379,7 @@ const catholicContent = {
         id: 'peter',
         title: 'St. Peter',
         description: 'First Pope and Prince of Apostles',
+        image: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=400&h=400&fit=crop',
         prayers: ['Prayer for the Pope: "Lord, we pray for Your Holy Father Pope Francis..."'],
         catechism: 'Peter was chosen by Christ to lead His Church as the first Pope.',
         scripture: 'Matthew 16:18-19, Acts 2:14-41'
@@ -385,6 +388,7 @@ const catholicContent = {
         id: 'paul',
         title: 'St. Paul',
         description: 'Apostle to the Gentiles',
+        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
         prayers: ['Prayer for Evangelization: "Lord, like St. Paul, give us zeal to spread Your Gospel..."'],
         catechism: 'Paul\'s letters form much of New Testament teaching on Christian life.',
         scripture: 'Acts 9:1-22, Romans 1:16'
@@ -393,6 +397,7 @@ const catholicContent = {
         id: 'francis',
         title: 'St. Francis of Assisi',
         description: 'Founder of Franciscans, patron of animals',
+        image: 'https://images.unsplash.com/photo-1518173946687-a4c036bc1c9a?w=400&h=400&fit=crop',
         prayers: [
           'Peace Prayer: Lord, make me an instrument of Your peace...',
           'Canticle of the Sun: Most High, all-powerful, good Lord...'
@@ -404,6 +409,7 @@ const catholicContent = {
         id: 'therese',
         title: 'St. Thérèse of Lisieux',
         description: 'Doctor of the Church, Little Way',
+        image: 'https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?w=400&h=400&fit=crop',
         prayers: ['Prayer: St. Thérèse, intercede for us to do small things with great love...'],
         catechism: 'Thérèse taught the "Little Way" of spiritual childhood and doing small things with love.',
         scripture: 'Matthew 18:3-4, Mark 10:15'
@@ -412,6 +418,7 @@ const catholicContent = {
         id: 'thomas-aquinas',
         title: 'St. Thomas Aquinas',
         description: 'Angelic Doctor, theologian',
+        image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400&h=400&fit=crop',
         prayers: ['Prayer for Students: "St. Thomas Aquinas, patron of students and schools..."'],
         catechism: 'Thomas Aquinas authored the Summa Theologica, a comprehensive work of Catholic theology.',
         scripture: '1 Corinthians 1:17-25'
@@ -420,6 +427,7 @@ const catholicContent = {
         id: 'augustine',
         title: 'St. Augustine',
         description: 'Doctor of Grace, bishop of Hippo',
+        image: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=400&fit=crop',
         prayers: ['Prayer: "Late have I loved you, O Beauty ever ancient, ever new..."'],
         catechism: 'Augustine\'s Confessions and City of God are foundational works of Western Christianity.',
         scripture: 'Psalm 90, Romans 8'
@@ -428,6 +436,7 @@ const catholicContent = {
         id: 'anthony',
         title: 'St. Anthony of Padua',
         description: 'Patron of lost things',
+        image: 'https://images.unsplash.com/photo-1518893494013-481c1d8ed3fd?w=400&h=400&fit=crop',
         prayers: ['Prayer: "St. Anthony, please help me find what I have lost..."'],
         catechism: 'Anthony was a powerful preacher and miracle worker, patron of the poor and lost items.',
         scripture: 'Matthew 25:35-40'
@@ -436,6 +445,7 @@ const catholicContent = {
         id: 'jude',
         title: 'St. Jude Thaddeus',
         description: 'Patron of hopeless causes',
+        image: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=400&h=400&fit=crop',
         prayers: ['Prayer: "St. Jude, apostle of Christ, intercede for us..."'],
         catechism: 'St. Jude is the patron saint of hopeless causes and difficult situations.',
         scripture: 'Luke 6:12-16'
@@ -444,6 +454,7 @@ const catholicContent = {
         id: 'rita',
         title: 'St. Rita of Cascia',
         description: 'Patroness of impossible causes',
+        image: 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=400&h=400&fit=crop',
         prayers: ['Prayer: "St. Rita, helper of the hopeless, pray for us..."'],
         catechism: 'St. Rita is known as the patroness of impossible causes and abused wives.',
         scripture: 'Romans 8:28'
@@ -452,6 +463,7 @@ const catholicContent = {
         id: 'monica',
         title: 'St. Monica',
         description: 'Mother of St. Augustine',
+        image: 'https://images.unsplash.com/photo-1548625361-9872e4533e36?w=400&h=400&fit=crop',
         prayers: ['Prayer: "St. Monica, patron saint of mothers, pray for us..."'],
         catechism: 'Monica\'s persistent prayers led to her son Augustine\'s conversion.',
         scripture: 'Luke 18:1-8, 1 Thessalonians 5:17'
@@ -460,6 +472,7 @@ const catholicContent = {
         id: 'patrick',
         title: 'St. Patrick',
         description: 'Apostle of Ireland',
+        image: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&h=400&fit=crop',
         prayers: [
           'St. Patrick\'s Breastplate: "Christ be with me, Christ before me..."',
           'Prayer: "St. Patrick, missionary to Ireland, pray for us..."'
@@ -471,6 +484,7 @@ const catholicContent = {
         id: 'catherine',
         title: 'St. Catherine of Siena',
         description: 'Doctor of the Church, mystic',
+        image: 'https://images.unsplash.com/photo-1518173946687-a4c036bc1c9a?w=400&h=400&fit=crop',
         prayers: ['Prayer: "St. Catherine, who dialogued with Christ, pray for us..."'],
         catechism: 'Catherine was a mystic, theologian, and advisor to popes.',
         scripture: '1 Corinthians 12:31'
@@ -479,6 +493,7 @@ const catholicContent = {
         id: 'benedict',
         title: 'St. Benedict',
         description: 'Father of Western monasticism',
+        image: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=400&h=400&fit=crop',
         prayers: [
           'The Rule of St. Benedict: "Ora et Labora" - Pray and Work',
           'Prayer: St. Benedict, patron of Europe, pray for us'
@@ -490,6 +505,7 @@ const catholicContent = {
         id: 'ignatius',
         title: 'St. Ignatius of Loyola',
         description: 'Founder of Jesuits, Spiritual Exercises',
+        image: 'https://images.unsplash.com/photo-1518893494013-481c1d8ed3fd?w=400&h=400&fit=crop',
         prayers: [
           'Suscipe: "Take, Lord, and receive all my liberty, my memory, my understanding, and my entire will..."',
           'Prayer for Discernment: "Teach me, good Lord, to be generous, to serve you as you deserve..."',
@@ -502,6 +518,7 @@ const catholicContent = {
         id: 'francis-xavier',
         title: 'St. Francis Xavier',
         description: 'Apostle of the Indies, missionary',
+        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
         prayers: [
           'Prayer for missionaries: "St. Francis Xavier, patron of foreign missions..."',
           'Novena to St. Francis Xavier for missionary zeal'
@@ -513,6 +530,7 @@ const catholicContent = {
         id: 'therese-lisieux',
         title: 'St. Thérèse of the Child Jesus',
         description: 'Little Flower, Doctor of the Church',
+        image: 'https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?w=400&h=400&fit=crop',
         prayers: [
           'Prayer: "St. Thérèse, my spiritual mother, help me to do small things with great love..."',
           'Novena to St. Thérèse for obtaining favors through her intercession'
@@ -524,6 +542,7 @@ const catholicContent = {
         id: 'dominic',
         title: 'St. Dominic',
         description: 'Founder of Dominicans, preacher',
+        image: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=400&h=400&fit=crop',
         prayers: [
           'Prayer: "St. Dominic, preacher of the Rosary, pray for us..."',
           'Novena to St. Dominic for preaching and teaching'
@@ -535,6 +554,7 @@ const catholicContent = {
         id: 'anne',
         title: 'St. Anne',
         description: 'Mother of the Blessed Virgin Mary',
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop',
         prayers: [
           'Prayer: "Good St. Anne, mother of she who is our life..."',
           'Novena to St. Anne for finding a spouse and for mothers'
@@ -546,6 +566,7 @@ const catholicContent = {
         id: 'joachim',
         title: 'St. Joachim',
         description: 'Father of the Blessed Virgin Mary',
+        image: 'https://images.unsplash.com/photo-1548407260-da850faa41e3?w=400&h=400&fit=crop',
         prayers: [
           'Prayer: "St. Joachim, father of Mary and grandfather of Jesus..."',
           'Novena to St. Joachim for fathers and grandparents'
@@ -557,6 +578,7 @@ const catholicContent = {
         id: 'john-vianney',
         title: 'St. John Vianney',
         description: 'Cure of Ars, patron of priests',
+        image: 'https://images.unsplash.com/photo-1518893494013-481c1d8ed3fd?w=400&h=400&fit=crop',
         prayers: [
           'Prayer: "St. John Vianney, patron of priests, pray for our priests..."',
           'Novena for vocations and for priests'
@@ -568,6 +590,7 @@ const catholicContent = {
         id: 'pius-x',
         title: 'St. Pius X',
         description: 'Pope who promoted frequent Communion',
+        image: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=400&h=400&fit=crop',
         prayers: [
           'Prayer: "St. Pius X, defender of the Catholic faith, pray for us..."',
           'Encyclical promoting early and frequent Communion'
@@ -579,6 +602,7 @@ const catholicContent = {
         id: 'maximilian',
         title: 'St. Maximilian Kolbe',
         description: 'Martyr of Auschwitz, apostle of Mary',
+        image: 'https://images.unsplash.com/photo-1548407260-da850faa41e3?w=400&h=400&fit=crop',
         prayers: [
           'Prayer: "St. Maximilian Kolbe, who gave his life for another..."',
           'Novena for prisoners and for pro-life intentions'
@@ -1643,7 +1667,15 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                       className="w-full text-left p-4 rounded-xl bg-white hover:bg-purple-50 transition-all border border-gray-200 hover:border-purple-300 shadow-sm hover:shadow-md"
                     >
                       <div className="flex items-start gap-3">
-                        <span className="text-2xl">{item.icon}</span>
+                        {item.image ? (
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+                          />
+                        ) : (
+                          <span className="text-2xl">{item.icon}</span>
+                        )}
                         <div className="flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
                             <h4 className="font-bold text-gray-800 font-geist">{item.title}</h4>
@@ -1712,8 +1744,19 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                     onClick={() => handleSelectItem(activeCategory, item)}
                     className="w-full text-left p-4 rounded-xl bg-gray-50 hover:bg-purple-50 transition-colors border border-gray-200 hover:border-purple-300 group"
                   >
-                    <h4 className="font-semibold text-gray-800 group-hover:text-purple-700 font-geist">{item.title}</h4>
-                    <p className="text-sm text-gray-600 mt-1 font-geist">{item.description}</p>
+                    <div className="flex items-center gap-3">
+                      {item.image && (
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
+                        />
+                      )}
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-gray-800 group-hover:text-purple-700 font-geist">{item.title}</h4>
+                        <p className="text-sm text-gray-600 mt-1 font-geist">{item.description}</p>
+                      </div>
+                    </div>
                   </button>
                 ))}
               </div>
