@@ -51,18 +51,18 @@ import MobileLayout from '../components/MobileLayout.tsx'
     </div>
 
     <!-- Floating Heart Icon for Feeling Check-in -->
-    <div id="floating-heart" class="fixed bottom-24 right-4 w-14 h-14 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full shadow-xl flex items-center justify-center text-2xl cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 z-50 hover:shadow-2xl select-none touch-none">
+    <div id="floating-heart" class="fixed bottom-24 right-4 w-14 h-14 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-full shadow-xl flex items-center justify-center text-2xl cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 z-50 hover:shadow-2xl select-none touch-none">
       ❤️
     </div>
 
     <!-- Feeling Popup Modal (hidden by default) -->
-    <div id="feeling-modal" class="hidden fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div class="bg-white rounded-3xl shadow-2xl p-0 max-w-sm w-full animate-scale-in max-h-[80vh] overflow-hidden">
+    <div id="feeling-modal" class="hidden fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="bg-gradient-to-br from-purple-50 via-blue-50 to-amber-50 rounded-3xl shadow-2xl p-0 max-w-sm w-full max-h-[90vh] overflow-y-auto flex flex-col">
         <!-- Header -->
-        <div class="bg-gradient-to-r from-pink-300 to-rose-300 px-6 py-4 text-center">
+        <div class="bg-gradient-to-r from-purple-200 to-blue-200 px-6 py-4 text-center rounded-t-3xl">
           <div class="text-4xl mb-1">❤️</div>
-          <h3 class="text-xl font-semibold text-pink-800">How are you feeling?</h3>
-          <p class="text-sm text-pink-700 mt-1">Share your heart, and I'll share a verse and prayer for you.</p>
+          <h3 class="text-xl font-semibold text-purple-800">How are you feeling?</h3>
+          <p class="text-sm text-purple-700 mt-1">Share your heart, and I'll share a verse and prayer for you.</p>
         </div>
 
         <!-- Emojis Grid -->
@@ -103,20 +103,20 @@ import MobileLayout from '../components/MobileLayout.tsx'
 
         <!-- Response Section (hidden by default) -->
         <div id="feeling-response" class="hidden">
-          <div class="p-4">
-            <!-- Verse Section -->
-            <div class="mb-3 p-4 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border-l-4 border-amber-400">
-              <p class="text-xs text-amber-600 font-medium mb-2">📖 BIBLE VERSE</p>
+          <div class="p-4 pb-6">
+            <!-- Verse Section - Pastel Purple -->
+            <div class="mb-3 p-4 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-xl border-l-4 border-purple-300 shadow-sm">
+              <p class="text-xs text-purple-700 font-medium mb-2">📖 BIBLE VERSE</p>
               <p id="verse-text" class="text-sm text-gray-700 italic"></p>
             </div>
 
-            <!-- Prayer Section -->
-            <div class="p-4 bg-gradient-to-br from-pink-100 to-rose-100 rounded-xl border-l-4 border-pink-300">
-              <p class="text-xs text-pink-600 font-medium mb-2">🙏 PRAYER</p>
+            <!-- Prayer Section - Pastel Blue -->
+            <div class="p-4 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl border-l-4 border-blue-300 shadow-sm">
+              <p class="text-xs text-blue-700 font-medium mb-2">🙏 PRAYER</p>
               <p id="prayer-text" class="text-sm text-gray-700"></p>
             </div>
 
-            <button id="back-to-emojis" class="mt-4 w-full py-3 px-4 bg-gradient-to-r from-pink-300 to-rose-300 hover:from-pink-400 hover:to-rose-400 text-pink-800 rounded-xl text-sm font-medium transition-all shadow-md hover:shadow-lg">
+            <button id="back-to-emojis" class="mt-4 w-full py-3 px-4 bg-gradient-to-r from-purple-200 to-blue-200 hover:from-purple-300 hover:to-blue-300 text-purple-800 rounded-xl text-sm font-medium transition-all shadow-md hover:shadow-lg">
               ← Choose another feeling
             </button>
           </div>
@@ -513,97 +513,58 @@ import MobileLayout from '../components/MobileLayout.tsx'
     function showResponse(content) {
       const emojis = document.getElementById('feeling-emojis');
       const response = document.getElementById('feeling-response');
-
-      if (emojis) emojis.classList.add('hidden');
-      if (response) response.classList.remove('hidden');
-
-      // Re-fetch verse and prayer text elements
       const vText = document.getElementById('verse-text');
       const pText = document.getElementById('prayer-text');
 
-      // Reset visibility
-      if (vText && vText.parentElement?.parentElement) vText.parentElement.parentElement.style.display = 'block';
-      if (pText && pText.parentElement?.parentElement) pText.parentElement.parentElement.style.display = 'block';
+      // Show response section, hide emojis
+      if (emojis) emojis.classList.add('hidden');
+      if (response) response.classList.remove('hidden');
 
-      // Check if content is HTML (contains tags) - this is from API/fallback
-      const isHTML = content.includes('<') && content.includes('>');
+      // Handle loading spinner
+      if (content.includes('animate-spin')) {
+        if (vText) vText.textContent = 'Loading...';
+        if (pText) pText.textContent = 'Loading...';
+        return;
+      }
 
-      if (isHTML && content.includes('BIBLE VERSE') && content.includes('PRAYER')) {
-        // Parse fallback response with proper structure
+      // Parse content and extract verse and prayer
+      let verseText = '';
+      let prayerText = '';
+
+      // Check if content has BIBLE VERSE and PRAYER markers (fallback format)
+      if (content.includes('BIBLE VERSE') && content.includes('PRAYER')) {
         const parts = content.split('PRAYER');
-        let verseText = '';
-        let prayerText = '';
 
-        // Extract verse
-        const verseMatch = parts[0].match(/<p[^>]*>(.*?)<\/p>/s) || parts[0].match(/italic[^>]*>(.*?)</s);
+        // Extract verse from first part
+        const verseMatch = parts[0].match(/text-gray-700[^>]*>(.*?)</s) || parts[0].match(/italic[^>]*>(.*?)</s) || parts[0].match(/<p[^>]*>(.*?)<\/p>/s);
         if (verseMatch) {
-          verseText = verseMatch[1].replace(/<[^>]+>/g, '');
+          verseText = verseMatch[1].replace(/<[^>]+>/g, '').trim();
         }
 
-        // Extract prayer
-        const prayerMatch = parts[1]?.match(/<p[^>]*>(.*?)<\/p>/s);
+        // Extract prayer from second part
+        const prayerMatch = parts[1]?.match(/text-gray-700[^>]*>(.*?)</s) || parts[1]?.match(/<p[^>]*>(.*?)<\/p>/s);
         if (prayerMatch) {
-          prayerText = prayerMatch[1].replace(/<[^>]+>/g, '');
+          prayerText = prayerMatch[1].replace(/<[^>]+>/g, '').trim();
         }
-
-        if (vText && verseText) vText.textContent = verseText;
-        if (pText && prayerText) pText.textContent = prayerText;
-      } else if (!isHTML) {
-        // Plain text from API - try to parse verse and prayer
-        const lines = content.split('\n').filter(l => l.trim());
-        let verseText = '';
-        let prayerText = '';
-        let currentSection = '';
-
-        for (const line of lines) {
-          const lower = line.toLowerCase();
-          if (lower.includes('verse') || lower.includes('bible')) {
-            currentSection = 'verse';
-            continue;
-          } else if (lower.includes('prayer')) {
-            currentSection = 'prayer';
-            continue;
-          }
-
-          if (currentSection === 'verse') {
-            verseText += line.trim() + ' ';
-          } else if (currentSection === 'prayer') {
-            prayerText += line.trim() + ' ';
-          } else {
-            // No clear section markers, put everything in verse
-            if (!verseText) {
-              verseText = content;
-            }
-          }
-        }
-
-        if (vText && verseText) vText.textContent = verseText.trim();
-        if (pText && prayerText) pText.textContent = prayerText.trim();
       } else {
-        // HTML with prose class - API streaming response
-        // Try to extract verse and prayer from the response
+        // Plain text or API response - try to parse
         const textContent = content.replace(/<[^>]+>/g, '\n').replace(/\n+/g, '\n').trim();
         const lines = textContent.split('\n').filter(l => l.trim());
-
-        let verseText = '';
-        let prayerText = '';
         let foundPrayer = false;
 
-        for (let i = 0; i < lines.length; i++) {
-          const line = lines[i].trim();
-          const lower = line.toLowerCase();
+        for (const line of lines) {
+          const lower = line.toLowerCase().trim();
 
-          // Look for prayer section
-          if (lower.includes('prayer') || lower.includes('let us pray')) {
+          // Skip headers
+          if (lower.includes('bible verse') || lower.includes('verse') || lower.includes('📖')) {
+            continue;
+          }
+          if (lower.includes('prayer') || lower.includes('let us pray') || lower.includes('🙏')) {
             foundPrayer = true;
             continue;
           }
 
-          // Skip section headers and markers
-          if (lower.includes('verse') || lower.includes('bible') || lower.includes('📖') || lower.includes('🙏')) {
-            continue;
-          }
-
+          // Add to appropriate section
           if (foundPrayer) {
             prayerText += line + ' ';
           } else {
@@ -611,9 +572,21 @@ import MobileLayout from '../components/MobileLayout.tsx'
           }
         }
 
-        if (vText && verseText) vText.textContent = verseText.trim() || textContent;
-        if (pText && prayerText) pText.textContent = prayerText.trim();
+        // If no prayer found, put everything in verse
+        if (!prayerText && verseText) {
+          verseText = textContent;
+        }
       }
+
+      // Populate the elements
+      if (vText) vText.textContent = verseText.trim() || 'Loading your verse...';
+      if (pText) pText.textContent = prayerText.trim() || 'Loading your prayer...';
+
+      // Ensure sections are visible
+      const verseSection = vText?.closest('.mb-3, p-4');
+      const prayerSection = pText?.closest('.p-4');
+      if (verseSection) verseSection.style.display = 'block';
+      if (prayerSection) prayerSection.style.display = 'block';
     }
 
     // Close modal button
@@ -648,7 +621,7 @@ import MobileLayout from '../components/MobileLayout.tsx'
             const token = localStorage.getItem('session_token');
 
             // Create message for Spirit
-            const feelingMessage = `I'm feeling ${feeling} ${emoji}. Please share a bible verse and prayer for me.`;
+            const feelingMessage = `I'm feeling ${feeling} ${emoji}. Please share a relevant bible verse and write a personal prayer for ME to say - in first person as if I'm praying directly to God (using "I", "me", "my" not "we"). Make the prayer sound like I'm speaking, not you.`;
 
             if (!token) {
               // No token - show fallback response
