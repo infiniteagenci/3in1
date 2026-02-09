@@ -27,20 +27,31 @@ interface Achievement {
   id: string;
   title: string;
   description: string;
-  icon: string;
+  icon: string; // Can be emoji or image URL
   requirement: number;
   current: number;
   unlocked: boolean;
   unlockedAt?: string;
 }
 
+// Catholic images for achievements and headers
+const catholicImages = {
+  cross: 'https://images.unsplash.com/photo-1548407260-da850faa41e3?w=100&h=100&fit=crop',
+  rosary: 'https://images.unsplash.com/photo-1629157282177-1c3d82c70f3c?w=100&h=100&fit=crop',
+  church: 'https://images.unsplash.com/photo-1548625361-9872e4533e36?w=100&h=100&fit=crop',
+  candle: 'https://images.unsplash.com/photo-1519863436079-8436f74be632?w=100&h=100&fit=crop',
+  bible: 'https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?w=100&h=100&fit=crop',
+  prayers: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=100&h=100&fit=crop',
+  focusHeader: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=faces'
+};
+
 const achievements: Achievement[] = [
-  { id: 'first-session', title: 'First Steps', description: 'Complete your first focus session', icon: '🌱', requirement: 1, current: 0, unlocked: false },
-  { id: 'week-streak', title: 'Week Warrior', description: 'Complete 7 focus sessions in a week', icon: '🔥', requirement: 7, current: 0, unlocked: false },
-  { id: 'focused-hour', title: 'Focused Hour', description: 'Total 60 minutes of focus time', icon: '⏰', requirement: 60, current: 0, unlocked: false },
-  { id: 'early-bird', title: 'Early Bird', description: 'Complete a session before 8 AM', icon: '🌅', requirement: 1, current: 0, unlocked: false },
-  { id: 'night-owl', title: 'Night Owl', description: 'Complete a session after 10 PM', icon: '🦉', requirement: 1, current: 0, unlocked: false },
-  { id: 'consistent', title: 'Consistent Soul', description: '7 day streak of focus sessions', icon: '💎', requirement: 7, current: 0, unlocked: false }
+  { id: 'first-session', title: 'First Steps', description: 'Complete your first focus session', icon: catholicImages.cross, requirement: 1, current: 0, unlocked: false },
+  { id: 'week-streak', title: 'Week Warrior', description: 'Complete 7 focus sessions in a week', icon: catholicImages.candle, requirement: 7, current: 0, unlocked: false },
+  { id: 'focused-hour', title: 'Focused Hour', description: 'Total 60 minutes of focus time', icon: catholicImages.bible, requirement: 60, current: 0, unlocked: false },
+  { id: 'early-bird', title: 'Early Bird', description: 'Complete a session before 8 AM', icon: catholicImages.church, requirement: 1, current: 0, unlocked: false },
+  { id: 'night-owl', title: 'Night Owl', description: 'Complete a session after 10 PM', icon: catholicImages.rosary, requirement: 1, current: 0, unlocked: false },
+  { id: 'consistent', title: 'Consistent Soul', description: '7 day streak of focus sessions', icon: catholicImages.prayers, requirement: 7, current: 0, unlocked: false }
 ];
 
 const worshipMusic: WorshipMusic[] = [
@@ -375,7 +386,9 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
         {/* Header */}
         <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-6 text-white">
           <div className="flex items-center gap-3">
-            <span className="text-3xl">🧘</span>
+            <div className="w-12 h-12 rounded-full overflow-hidden bg-white/20 flex items-center justify-center">
+              <img src={catholicImages.cross} alt="Cross" className="w-8 h-8 object-cover rounded-full" />
+            </div>
             <div>
               <h2 className="text-2xl font-bold font-playfair">Focus Session</h2>
               <p className="text-green-100 text-sm">Time with God, free from distractions</p>
@@ -569,9 +582,15 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
               }`}
             >
               <div className="flex items-start gap-4">
-                <div className={`text-4xl ${achievement.unlocked ? '' : 'grayscale'}`}>
-                  {achievement.icon}
-                </div>
+                {achievement.icon.startsWith('http') ? (
+                  <div className={`w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 ${achievement.unlocked ? '' : 'grayscale opacity-50'}`}>
+                    <img src={achievement.icon} alt={achievement.title} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className={`text-4xl ${achievement.unlocked ? '' : 'grayscale'}`}>
+                    {achievement.icon}
+                  </div>
+                )}
                 <div className="flex-1">
                   <h4 className={`font-semibold font-geist ${achievement.unlocked ? 'text-gray-900' : 'text-gray-500'}`}>
                     {achievement.title}
@@ -624,8 +643,15 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
             </svg>
             <span className="text-sm font-medium">Back</span>
           </button>
-          <h2 className="text-2xl font-bold font-playfair">Start Focus Session</h2>
-          <p className="text-green-100 text-sm">Set aside dedicated time with God</p>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-white/20 flex items-center justify-center">
+              <img src={catholicImages.church} alt="Church" className="w-8 h-8 object-cover" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold font-playfair">Start Focus Session</h2>
+              <p className="text-green-100 text-sm">Set aside dedicated time with God</p>
+            </div>
+          </div>
         </div>
 
         {/* Form */}
@@ -729,7 +755,7 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
             onClick={startSession}
             className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold font-geist hover:shadow-lg transition-all flex items-center justify-center gap-2"
           >
-            <span>🧘</span>
+            <img src={catholicImages.bible} alt="Bible" className="w-6 h-6 object-cover rounded" />
             Begin Focus Session
           </button>
         </div>
@@ -746,7 +772,9 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
       <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-6 text-white">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3">
-            <span className="text-3xl">🧘</span>
+            <div className="w-12 h-12 rounded-full overflow-hidden bg-white/20 flex items-center justify-center">
+              <img src={catholicImages.prayers} alt="Prayer" className="w-10 h-10 object-cover" />
+            </div>
             <div>
               <h2 className="text-2xl font-bold font-playfair">Stay Focused</h2>
               <p className="text-green-100 text-sm">Dedicated time with God</p>
@@ -756,7 +784,7 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
             onClick={() => setShowAchievements(true)}
             className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
           >
-            <span>🏆</span>
+            <img src={catholicImages.candle} alt="Achievements" className="w-5 h-5 object-cover rounded" />
             Achievements
           </button>
         </div>
@@ -784,7 +812,7 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
           onClick={() => setShowNewSession(true)}
           className="flex-1 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-medium font-geist hover:shadow-lg transition-all flex items-center justify-center gap-2"
         >
-          <span>🧘</span>
+          <img src={catholicImages.bible} alt="Bible" className="w-5 h-5 object-cover rounded" />
           Start Focus Session
         </button>
       </div>
@@ -794,7 +822,9 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
         <h3 className="font-semibold text-gray-900 mb-3 font-geist">Recent Sessions</h3>
         {sessions.length === 0 ? (
           <div className="text-center py-8">
-            <div className="text-5xl mb-3">🧘</div>
+            <div className="w-20 h-20 mx-auto mb-3 rounded-full overflow-hidden">
+              <img src={catholicImages.rosary} alt="Rosary" className="w-full h-full object-cover" />
+            </div>
             <p className="text-gray-600 text-sm font-geist font-light mb-4">
               Begin your journey of focused time with God
             </p>
