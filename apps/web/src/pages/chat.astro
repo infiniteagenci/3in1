@@ -578,9 +578,18 @@ import MobileLayout from '../components/MobileLayout.tsx'
         }
       }
 
-      // Populate the elements
-      if (vText) vText.textContent = verseText.trim() || 'Loading your verse...';
-      if (pText) pText.textContent = prayerText.trim() || 'Loading your prayer...';
+      // Helper function to format text with each sentence on a new line
+      function formatTextWithSentenceBreaks(text) {
+        return text
+          .replace(/\*\*/g, '') // Remove bold markdown
+          .replace(/([.!?])\s+/g, '$1\n') // Put sentence-ending punctuation on new line
+          .replace(/\n+/g, '\n') // Remove extra newlines
+          .trim();
+      }
+
+      // Populate the elements with formatted text
+      if (vText) vText.textContent = formatTextWithSentenceBreaks(verseText.trim()) || 'Loading your verse...';
+      if (pText) pText.textContent = formatTextWithSentenceBreaks(prayerText.trim()) || 'Loading your prayer...';
 
       // Ensure sections are visible
       const verseSection = vText?.closest('.mb-3, p-4');
