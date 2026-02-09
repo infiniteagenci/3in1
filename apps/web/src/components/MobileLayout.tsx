@@ -17,21 +17,18 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
   const [triggerPrayerChat, setTriggerPrayerChat] = useState<{ prayerId: string } | null>(null);
 
   const handleLibraryItemSelect = useCallback((category: string, item: any) => {
-    // Switch to chat and trigger conversation about the selected item
-    setTriggerPrayerChat({ prayerId: `library:${category}:${item.title}` });
-    setActiveTab('chat');
+    // Library item selected - stay on library tab, just for tracking if needed
+    // No longer redirects to chat
   }, []);
 
   const handlePrayerSelect = useCallback((prayerId: string) => {
-    // Switch to chat and trigger prayer conversation
-    setTriggerPrayerChat({ prayerId });
-    setActiveTab('chat');
+    // Prayer selected - stay on prayers tab, just for tracking if needed
+    // No longer redirects to chat
   }, []);
 
   const handleCheckinComplete = useCallback((data: any) => {
-    // Switch to chat and continue conversation
-    setTriggerPrayerChat({ prayerId: `checkin:${JSON.stringify(data)}` });
-    setActiveTab('chat');
+    // Check-in completed - stay on prayers tab
+    // No longer redirects to chat
   }, []);
 
   const renderTab = () => {

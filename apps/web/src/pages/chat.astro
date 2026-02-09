@@ -418,8 +418,12 @@ import MobileLayout from '../components/MobileLayout.tsx'
 
       // Click to open modal (only if not dragging)
       floatingHeart.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Floating heart clicked!', isDragging);
         if (!isDragging) {
           openModal();
+        } else {
+          console.log('Was dragging, not opening modal');
         }
       });
     }
@@ -473,32 +477,55 @@ import MobileLayout from '../components/MobileLayout.tsx'
     }
 
     function openModal() {
-      if (!feelingModal) return;
+      // Re-fetch elements in case they're not available
+      const modal = document.getElementById('feeling-modal');
+      const emojis = document.getElementById('feeling-emojis');
+      const response = document.getElementById('feeling-response');
+      const contentDiv = document.getElementById('feeling-response-content');
+
+      if (!modal) {
+        console.error('Feeling modal not found');
+        return;
+      }
+
+      console.log('Opening modal - elements:', { modal: !!modal, emojis: !!emojis, response: !!response, contentDiv: !!contentDiv });
+
       // Reset modal state
-      feelingEmojis.classList.remove('hidden');
-      feelingResponse.classList.add('hidden');
-      feelingResponseContent.innerHTML = '';
-      feelingModal.classList.remove('hidden');
+      if (emojis) emojis.classList.remove('hidden');
+      if (response) response.classList.add('hidden');
+      if (contentDiv) contentDiv.innerHTML = '';
+      modal.classList.remove('hidden');
     }
 
     function closeModal() {
-      if (!feelingModal) return;
-      feelingModal.classList.add('hidden');
+      const modal = document.getElementById('feeling-modal');
+      if (modal) modal.classList.add('hidden');
     }
 
     function showEmojis() {
-      feelingEmojis.classList.remove('hidden');
-      feelingResponse.classList.add('hidden');
+      const emojis = document.getElementById('feeling-emojis');
+      const response = document.getElementById('feeling-response');
+      if (emojis) emojis.classList.remove('hidden');
+      if (response) response.classList.add('hidden');
+      console.log('Showing emoji selection');
     }
 
     function showResponse(content) {
-      feelingEmojis.classList.add('hidden');
-      feelingResponse.classList.remove('hidden');
+      const emojis = document.getElementById('feeling-emojis');
+      const response = document.getElementById('feeling-response');
+
+      if (emojis) emojis.classList.add('hidden');
+      if (response) response.classList.remove('hidden');
+
+      // Re-fetch verse and prayer text elements
+      const vText = document.getElementById('verse-text');
+      const pText = document.getElementById('prayer-text');
+      const contentDiv = document.getElementById('feeling-response-content');
 
       // Make sure structured sections are visible
-      if (verseTextEl) verseTextEl.parentElement.parentElement.style.display = 'block';
-      if (prayerTextEl) prayerTextEl.parentElement.parentElement.style.display = 'block';
-      if (feelingResponseContent) feelingResponseContent.style.display = 'none';
+      if (vText && vText.parentElement?.parentElement) vText.parentElement.parentElement.style.display = 'block';
+      if (pText && pText.parentElement?.parentElement) pText.parentElement.parentElement.style.display = 'block';
+      if (contentDiv) contentDiv.style.display = 'none';
 
       // Parse content and populate the verse and prayer sections
       if (content.includes('BIBLE VERSE') && content.includes('PRAYER')) {
@@ -518,17 +545,17 @@ import MobileLayout from '../components/MobileLayout.tsx'
           prayerText = prayerMatch[1].replace(/<[^>]+>/g, '');
         }
 
-        if (verseTextEl && verseText) verseTextEl.textContent = verseText;
-        if (prayerTextEl && prayerText) prayerTextEl.textContent = prayerText;
+        if (vText && verseText) vText.textContent = verseText;
+        if (pText && prayerText) pText.textContent = prayerText;
       } else {
         // Fallback - show in response content div
-        if (feelingResponseContent) {
-          feelingResponseContent.innerHTML = content;
-          feelingResponseContent.style.display = 'block';
+        if (contentDiv) {
+          contentDiv.innerHTML = content;
+          contentDiv.style.display = 'block';
         }
         // Hide the structured sections if content doesn't match format
-        if (verseTextEl) verseTextEl.parentElement.parentElement.style.display = 'none';
-        if (prayerTextEl) prayerTextEl.parentElement.parentElement.style.display = 'none';
+        if (vText && vText.parentElement?.parentElement) vText.parentElement.parentElement.style.display = 'none';
+        if (pText && pText.parentElement?.parentElement) pText.parentElement.parentElement.style.display = 'none';
       }
     }
 
@@ -697,6 +724,56 @@ import MobileLayout from '../components/MobileLayout.tsx'
 
     .animate-scale-in {
       animation: scale-in 0.2s ease-out;
+    }
+
+    /* Background pattern with spiritual theme */
+    #chat-container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23C84B9F' stroke-width='0.5' opacity='0.08'%3E%3Cpath d='M30 5c-13.8 0-25 11.2-25 25s11.2 25 25 25 25-11.2 25-25-11.2-25-25zm0 45c-11 0-20-9-20-20s9-20 20-20 20 9 20 20-9 20-20z'/%3E%3C/g%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%238B5FCF' stroke-width='0.5' opacity='0.06'%3E%3Cpath d='M20 35c-8.3 0-15-6.7-15-15V10h30v10c0 8.3-6.7 15-15 15z'/%3E%3Cpath d='M30 20h10v15c0 2.8-2.2 5-5 5H30'/%3E%3C/g%3E%3C/svg%3E");
+      background-repeat: repeat;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    /* Floating decorative elements */
+    .floating-cross::before,
+    .floating-cross::after {
+      content: '✝';
+      position: absolute;
+      font-size: 1.5rem;
+      opacity: 0.05;
+      animation: floatUp 20s infinite linear;
+    }
+
+    .floating-cross::before {
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .floating-cross::after {
+      right: 15%;
+      animation-delay: 10s;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.05;
+      }
+      90% {
+        opacity: 0.05;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
     }
   </style>
 </Layout>
