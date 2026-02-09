@@ -132,35 +132,35 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
 // High-quality aesthetic religious background images
 const backgroundImages = [
   {
-    url: 'https://images.unsplash.com/photo-1548407260-da850faa41e3?w=1920&q=90',
-    name: 'Cross at sunrise',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1920&q=90',
-    name: 'Church silhouette',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1518173946687-a4c036bc1c9a?w=1920&q=90',
-    name: 'Sunlight through forest',
-  },
-  {
     url: 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=1920&q=90',
-    name: 'Stained glass window',
+    name: 'Stained glass',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1548625361-9872e4533e36?w=1920&q=90',
+    name: 'Church architecture',
   },
   {
     url: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=1920&q=90',
-    name: 'Cathedral interior',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=90',
-    name: 'Peaceful landscape',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=90',
-    name: 'Mountain sunrise',
+    name: 'Cathedral',
   },
   {
     url: 'https://images.unsplash.com/photo-1518893494013-481c1d8ed3fd?w=1920&q=90',
-    name: 'Church interior',
+    name: 'Church light',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1920&q=90',
+    name: 'Mountains',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&q=90',
+    name: 'Green hills',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1920&q=90',
+    name: 'Lake',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=90',
+    name: 'Sunrise landscape',
   },
 ];
