@@ -63,21 +63,20 @@ export default function PrayerReminders({ onClose }: PrayerRemindersProps) {
     const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
     const currentSeconds = now.getSeconds();
 
-    // Only check at the start of each minute (0-5 seconds) to avoid duplicate notifications
-    if (currentSeconds > 5) {
+    // Check within the first 10 seconds of each minute to avoid duplicate notifications
+    if (currentSeconds > 10) {
       return;
     }
 
     prayerTimes.forEach((prayer) => {
       if (prayer.enabled && prayer.time === currentTime) {
-        const notificationKey = `last_notification_${prayer.id}`;
+        const notificationKey = `last_notification_${prayer.id}_${now.toDateString()}`;
         const lastPrayerNotification = localStorage.getItem(notificationKey);
-        const today = now.toDateString();
 
         // Only send if we haven't sent one today for this prayer time
-        if (lastPrayerNotification !== today) {
+        if (!lastPrayerNotification) {
           sendPrayerNotification(prayer);
-          localStorage.setItem(notificationKey, today);
+          localStorage.setItem(notificationKey, new Date().toISOString());
         }
       }
     });
@@ -92,9 +91,27 @@ export default function PrayerReminders({ onClose }: PrayerRemindersProps) {
       new Notification(`${prayer.emoji} ${prayer.label}`, {
         body: intent,
         icon: '/icon-192x192.svg',
-        tag: prayer.id,
+        tag: `${prayer.id}_${new Date().toDateString()}`,
         requireInteraction: false,
       });
+    }
+  };
+
+  const testNotification = () => {
+    if ('Notification' in window) {
+      if (Notification.permission === 'granted') {
+        new Notification('🔔 Test Notification', {
+          body: 'Prayer reminders are working! You will receive notifications at your scheduled times.',
+          icon: '/icon-192x192.svg',
+        });
+      } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then((permission) => {
+          setNotificationPermission(permission);
+          if (permission === 'granted') {
+            testNotification();
+          }
+        });
+      }
     }
   };
 
@@ -246,10 +263,16 @@ export default function PrayerReminders({ onClose }: PrayerRemindersProps) {
             <span className="text-xl">💡</span>
             <div>
               <h3 className="font-semibold text-blue-900 text-sm mb-1">How it works</h3>
-              <p className="text-xs text-blue-700">
+              <p className="text-xs text-blue-700 mb-3">
                 Keep this app open in your browser tab to receive prayer reminder notifications at your scheduled times.
                 You can set up to 5 daily prayer times with custom intentions.
               </p>
+              <button
+                onClick={testNotification}
+                className="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Test Notification
+              </button>
             </div>
           </div>
         </div>

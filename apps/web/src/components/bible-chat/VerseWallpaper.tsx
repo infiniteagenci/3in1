@@ -203,7 +203,7 @@ export default function VerseWallpaper({ className = '' }: VerseWallpaperProps) 
         </div>
 
         {/* Customization Section */}
-        <div className="flex-1 p-6 border-l border-gray-200">
+        <div className="flex-1 p-6 border-l border-gray-200 min-h-0">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-gray-900 font-geist">Customize</h3>
             <button
@@ -215,7 +215,7 @@ export default function VerseWallpaper({ className = '' }: VerseWallpaperProps) 
           </div>
 
           {showCustomize && (
-            <div className="space-y-6">
+            <div className="space-y-6 overflow-y-auto max-h-[600px] pb-4">
               {/* Backgrounds */}
               <div>
                 <h4 className="text-sm font-medium text-gray-700 mb-3 font-geist">Background</h4>

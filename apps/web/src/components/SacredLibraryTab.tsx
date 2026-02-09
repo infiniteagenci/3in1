@@ -2,6 +2,7 @@ import CatholicMenu from './CatholicMenu';
 import StudyPlans from './bible-chat/StudyPlans';
 import BiblicalCharacters from './bible-chat/BiblicalCharacters';
 import VerseWallpaper from './bible-chat/VerseWallpaper';
+import RosaryTab from './RosaryTab';
 import { useState } from 'react';
 
 interface SacredLibraryTabProps {
@@ -13,6 +14,7 @@ export default function SacredLibraryTab({ onSelectItem }: SacredLibraryTabProps
   const [showStudyPlans, setShowStudyPlans] = useState(false);
   const [showBiblicalCharacters, setShowBiblicalCharacters] = useState(false);
   const [showVerseWallpaper, setShowVerseWallpaper] = useState(false);
+  const [showRosary, setShowRosary] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const handleCategorySelect = (category: string) => {
@@ -28,6 +30,10 @@ export default function SacredLibraryTab({ onSelectItem }: SacredLibraryTabProps
       setShowVerseWallpaper(true);
       return;
     }
+    if (category === 'rosary') {
+      setShowRosary(true);
+      return;
+    }
     setSelectedCategory(category);
     setShowMenu(true);
   };
@@ -36,11 +42,12 @@ export default function SacredLibraryTab({ onSelectItem }: SacredLibraryTabProps
     { id: 'study-plans', icon: '📚', title: 'Study Plans', description: 'Bible study courses', color: 'from-indigo-500 to-purple-500' },
     { id: 'biblical-characters', icon: '👤', title: 'Characters', description: 'Bible heroes & heroines', color: 'from-amber-500 to-orange-500' },
     { id: 'verse-wallpaper', icon: '🖼️', title: 'Wallpaper', description: 'Verse wallpapers', color: 'from-pink-500 to-rose-500' },
+    { id: 'rosary', icon: '📿', title: 'Rosary', description: 'Daily rosary mysteries', color: 'from-rose-500 to-pink-500' },
     { id: 'prayers', icon: '🙏', title: 'Prayers', description: 'Traditional Catholic prayers', color: 'from-purple-500 to-blue-500' },
     { id: 'sacraments', icon: '✨', title: 'Sacraments', description: 'Seven sacred mysteries', color: 'from-blue-500 to-cyan-500' },
     { id: 'saints', icon: '👼', title: 'Saints', description: 'Inspiring holy lives', color: 'from-green-500 to-emerald-500' },
     { id: 'catechism', icon: '📖', title: 'Catechism', description: 'Church teachings', color: 'from-amber-500 to-orange-500' },
-    { id: 'bible', icon: '📿', title: 'Bible', description: 'Sacred Scripture', color: 'from-rose-500 to-pink-500' },
+    { id: 'bible', icon: '✝️', title: 'Bible', description: 'Sacred Scripture', color: 'from-red-500 to-rose-500' },
     { id: 'traditions', icon: '⛪', title: 'Traditions', description: 'Catholic customs', color: 'from-indigo-500 to-violet-500' },
   ];
 
@@ -112,6 +119,10 @@ export default function SacredLibraryTab({ onSelectItem }: SacredLibraryTabProps
         </div>
       </div>
     );
+  }
+
+  if (showRosary) {
+    return <RosaryTab onClose={() => setShowRosary(false)} />;
   }
 
   if (showMenu && selectedCategory) {
