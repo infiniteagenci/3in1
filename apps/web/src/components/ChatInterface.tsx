@@ -437,7 +437,6 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
           {/* Welcome message when no messages */}
           {messages.length === 0 && !showAgePrompt && !showDailyCheckin && (
             <div className="text-center py-8">
-              <div className="text-5xl mb-4">🙏</div>
               <h3 className="font-playfair text-2xl text-gray-800 mb-2">Welcome, friend!</h3>
               <p className="font-geist text-gray-600">Share what's on your heart. I'm here to listen and help you grow in faith.</p>
             </div>
