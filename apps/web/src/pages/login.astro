@@ -1,6 +1,6 @@
 ---
 // src/pages/login.astro
-// Login page with Google OAuth and Email/Password authentication
+// Login page with Google OAuth only
 import Layout from '../layouts/Layout.astro'
 ---
 
@@ -18,17 +18,17 @@ import Layout from '../layouts/Layout.astro'
     <!-- Loading state -->
     <div id="loading" class="loading hidden">
       <div class="loading-spinner"></div>
-      <span id="loading-text">Checking authentication...</span>
+      <span id="loading-text">Authenticating...</span>
     </div>
 
     <!-- Login container -->
     <div class="login-container">
-      <!-- Auth forms card -->
+      <!-- Auth card (when logged out) -->
       <div id="auth-card" class="auth-card hidden">
         <!-- Logo -->
         <div class="auth-logo">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-lg">
-            <span class="text-white font-bold text-2xl">3</span>
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-lg mx-auto">
+            <span class="text-white font-bold text-3xl">3</span>
           </div>
           <h1 class="auth-title">Welcome to 3in1</h1>
           <p class="auth-subtitle">Your spiritual journey begins here</p>
@@ -48,96 +48,7 @@ import Layout from '../layouts/Layout.astro'
           </div>
         </div>
 
-        <!-- Tabs -->
-        <div class="auth-tabs">
-          <button id="tab-login" class="auth-tab active" data-tab="login">Login</button>
-          <button id="tab-signup" class="auth-tab" data-tab="signup">Sign Up</button>
-        </div>
-
-        <!-- Login Form -->
-        <div id="form-login" class="auth-form active">
-          <div class="form-group">
-            <label for="login-email">Email</label>
-            <input type="email" id="login-email" placeholder="Enter your email" required>
-          </div>
-          <div class="form-group">
-            <label for="login-password">Password</label>
-            <div class="password-input">
-              <input type="password" id="login-password" placeholder="Enter your password" required>
-              <button type="button" id="toggle-login-password" class="toggle-password">
-                <svg class="eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div class="form-actions">
-            <a href="#" id="forgot-password-link" class="forgot-link">Forgot password?</a>
-          </div>
-          <button id="login-submit" class="auth-submit-btn">Login</button>
-          <div id="login-error" class="auth-error hidden"></div>
-          <div id="login-success" class="auth-success hidden"></div>
-        </div>
-
-        <!-- Signup Form -->
-        <div id="form-signup" class="auth-form">
-          <div class="form-group">
-            <label for="signup-name">Full Name</label>
-            <input type="text" id="signup-name" placeholder="Enter your full name" required>
-          </div>
-          <div class="form-group">
-            <label for="signup-email">Email</label>
-            <input type="email" id="signup-email" placeholder="Enter your email" required>
-          </div>
-          <div class="form-group">
-            <label for="signup-password">Password</label>
-            <div class="password-input">
-              <input type="password" id="signup-password" placeholder="Create a password (min 8 characters)" required>
-              <button type="button" id="toggle-signup-password" class="toggle-password">
-                <svg class="eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="signup-confirm-password">Confirm Password</label>
-            <div class="password-input">
-              <input type="password" id="signup-confirm-password" placeholder="Confirm your password" required>
-              <button type="button" id="toggle-confirm-password" class="toggle-password">
-                <svg class="eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <button id="signup-submit" class="auth-submit-btn">Create Account</button>
-          <div id="signup-error" class="auth-error hidden"></div>
-          <div id="signup-success" class="auth-success hidden"></div>
-        </div>
-
-        <!-- Forgot Password Form -->
-        <div id="form-forgot" class="auth-form">
-          <div class="form-group">
-            <label for="forgot-email">Email</label>
-            <input type="email" id="forgot-email" placeholder="Enter your email" required>
-          </div>
-          <p class="form-hint">We'll send you a link to reset your password</p>
-          <button id="forgot-submit" class="auth-submit-btn">Send Reset Link</button>
-          <a href="#" id="back-to-login" class="back-link">← Back to Login</a>
-          <div id="forgot-error" class="auth-error hidden"></div>
-          <div id="forgot-success" class="auth-success hidden"></div>
-        </div>
-
-        <!-- Divider -->
-        <div class="divider">
-          <span class="divider-text">or continue with</span>
-        </div>
-
-        <!-- Google login button -->
+        <!-- Google login button - Primary and only login method -->
         <button id="google-login-btn" class="google-btn">
           <svg class="google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25C22.56 11.47 22.49 10.72 22.36 10H12V14.26H17.92C17.66 15.63 16.88 16.79 15.71 17.57V20.34H19.28C21.36 18.42 22.56 15.6 22.56 12.25Z" fill="#4285F4"/>
@@ -145,8 +56,13 @@ import Layout from '../layouts/Layout.astro'
             <path d="M5.85 14.09C5.62 13.38 5.49 12.63 5.49 11.87C5.49 11.11 5.62 10.36 5.85 9.65V6.83H2.19C1.43 8.28 1 9.96 1 11.87C1 13.78 1.43 15.46 2.19 16.91L5.85 14.09Z" fill="#FBBC05"/>
             <path d="M12 5.38C13.92 5.38 15.61 6.08 16.94 7.45L20.36 3.84C18.22 1.82 15.26 0.5 12 0.5C7.72 0.5 4.04 2.97 2.19 6.59L5.85 9.65C6.73 6.95 9.14 5.38 12 5.38Z" fill="#EA4335"/>
           </svg>
-          Sign in with Google
+          Continue with Google
         </button>
+
+        <!-- Info text -->
+        <p class="auth-info-text">
+          Sign in to access your personalized spiritual companion
+        </p>
       </div>
 
       <!-- User info (when logged in) -->
@@ -167,7 +83,7 @@ import Layout from '../layouts/Layout.astro'
   <script>
     /**
      * Login page client-side logic
-     * Handles authentication state, login/signup, and OAuth callbacks
+     * Handles Google OAuth authentication only
      */
 
     // ===== Configuration =====
@@ -181,42 +97,8 @@ import Layout from '../layouts/Layout.astro'
       loadingText: document.getElementById('loading-text'),
       authCard: document.getElementById('auth-card'),
       userCard: document.getElementById('user-card'),
-      // Forms
-      formLogin: document.getElementById('form-login'),
-      formSignup: document.getElementById('form-signup'),
-      formForgot: document.getElementById('form-forgot'),
-      // Tabs
-      tabLogin: document.getElementById('tab-login'),
-      tabSignup: document.getElementById('tab-signup'),
-      // Login inputs
-      loginEmail: document.getElementById('login-email'),
-      loginPassword: document.getElementById('login-password'),
-      loginSubmit: document.getElementById('login-submit'),
-      loginError: document.getElementById('login-error'),
-      loginSuccess: document.getElementById('login-success'),
-      // Signup inputs
-      signupName: document.getElementById('signup-name'),
-      signupEmail: document.getElementById('signup-email'),
-      signupPassword: document.getElementById('signup-password'),
-      signupConfirmPassword: document.getElementById('signup-confirm-password'),
-      signupSubmit: document.getElementById('signup-submit'),
-      signupError: document.getElementById('signup-error'),
-      signupSuccess: document.getElementById('signup-success'),
-      // Forgot password inputs
-      forgotEmail: document.getElementById('forgot-email'),
-      forgotSubmit: document.getElementById('forgot-submit'),
-      forgotError: document.getElementById('forgot-error'),
-      forgotSuccess: document.getElementById('forgot-success'),
-      // Buttons
       googleLoginBtn: document.getElementById('google-login-btn'),
       logoutBtn: document.getElementById('logout-btn'),
-      toggleLoginPassword: document.getElementById('toggle-login-password'),
-      toggleSignupPassword: document.getElementById('toggle-signup-password'),
-      toggleConfirmPassword: document.getElementById('toggle-confirm-password'),
-      // Links
-      forgotPasswordLink: document.getElementById('forgot-password-link'),
-      backToLogin: document.getElementById('back-to-login'),
-      // User card
       avatar: document.getElementById('avatar'),
       welcomeText: document.getElementById('welcome-text'),
       userEmail: document.getElementById('user-email'),
@@ -251,42 +133,6 @@ import Layout from '../layouts/Layout.astro'
         this.show(elements.userCard);
       },
 
-      showForm(formName: 'login' | 'signup' | 'forgot') {
-        // Hide all forms
-        elements.formLogin?.classList.remove('active');
-        elements.formSignup?.classList.remove('active');
-        elements.formForgot?.classList.remove('active');
-
-        // Remove active class from tabs
-        elements.tabLogin?.classList.remove('active');
-        elements.tabSignup?.classList.remove('active');
-
-        // Show selected form
-        if (formName === 'login') {
-          elements.formLogin?.classList.add('active');
-          elements.tabLogin?.classList.add('active');
-        } else if (formName === 'signup') {
-          elements.formSignup?.classList.add('active');
-          elements.tabSignup?.classList.add('active');
-        } else if (formName === 'forgot') {
-          elements.formForgot?.classList.add('active');
-        }
-      },
-
-      showError(element: HTMLElement | null, message: string) {
-        if (!element) return;
-        element.textContent = message;
-        element.classList.remove('hidden');
-        setTimeout(() => element.classList.add('hidden'), 5000);
-      },
-
-      showSuccess(element: HTMLElement | null, message: string) {
-        if (!element) return;
-        element.textContent = message;
-        element.classList.remove('hidden');
-        setTimeout(() => element.classList.add('hidden'), 5000);
-      },
-
       updateUser(user: { name: string; email: string; avatar_url?: string }) {
         if (user.avatar_url) {
           elements.avatar!.src = user.avatar_url;
@@ -303,38 +149,6 @@ import Layout from '../layouts/Layout.astro'
         elements.userEmail!.textContent = user.email;
       },
     };
-
-    // ===== Password Toggle =====
-    function togglePassword(input: HTMLInputElement) {
-      input.type = input.type === 'password' ? 'text' : 'password';
-    }
-
-    elements.toggleLoginPassword?.addEventListener('click', () => {
-      togglePassword(elements.loginPassword as HTMLInputElement);
-    });
-
-    elements.toggleSignupPassword?.addEventListener('click', () => {
-      togglePassword(elements.signupPassword as HTMLInputElement);
-    });
-
-    elements.toggleConfirmPassword?.addEventListener('click', () => {
-      togglePassword(elements.signupConfirmPassword as HTMLInputElement);
-    });
-
-    // ===== Tab Switching =====
-    elements.tabLogin?.addEventListener('click', () => uiState.showForm('login'));
-    elements.tabSignup?.addEventListener('click', () => uiState.showForm('signup'));
-
-    // ===== Forgot Password Navigation =====
-    elements.forgotPasswordLink?.addEventListener('click', (e) => {
-      e.preventDefault();
-      uiState.showForm('forgot');
-    });
-
-    elements.backToLogin?.addEventListener('click', (e) => {
-      e.preventDefault();
-      uiState.showForm('login');
-    });
 
     // ===== Authentication Functions =====
     const auth = {
@@ -406,68 +220,6 @@ import Layout from '../layouts/Layout.astro'
         }
       },
 
-      async emailLogin(email: string, password: string) {
-        try {
-          const response = await fetch(`${API_URL}/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-          });
-
-          const data = await response.json();
-
-          if (response.ok && data.session_token) {
-            this.setToken(data.session_token);
-            return { success: true, user: data.user };
-          }
-
-          return { success: false, error: data.error || 'Login failed' };
-        } catch (error) {
-          return { success: false, error: 'Network error. Please try again.' };
-        }
-      },
-
-      async emailSignup(name: string, email: string, password: string) {
-        try {
-          const response = await fetch(`${API_URL}/auth/signup`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password }),
-          });
-
-          const data = await response.json();
-
-          if (response.ok && data.session_token) {
-            this.setToken(data.session_token);
-            return { success: true, user: data.user };
-          }
-
-          return { success: false, error: data.error || 'Signup failed' };
-        } catch (error) {
-          return { success: false, error: 'Network error. Please try again.' };
-        }
-      },
-
-      async forgotPassword(email: string) {
-        try {
-          const response = await fetch(`${API_URL}/auth/forgot-password`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email }),
-          });
-
-          const data = await response.json();
-
-          if (response.ok) {
-            return { success: true };
-          }
-
-          return { success: false, error: data.error || 'Request failed' };
-        } catch (error) {
-          return { success: false, error: 'Network error. Please try again.' };
-        }
-      },
-
       async logout() {
         const token = this.getToken();
 
@@ -487,99 +239,8 @@ import Layout from '../layouts/Layout.astro'
 
         this.removeToken();
         uiState.showAuth();
-        uiState.showForm('login');
       },
     };
-
-    // ===== Login Form Handler =====
-    elements.loginSubmit?.addEventListener('click', async () => {
-      const email = elements.loginEmail?.value.trim();
-      const password = elements.loginPassword?.value;
-
-      if (!email || !password) {
-        uiState.showError(elements.loginError, 'Please fill in all fields');
-        return;
-      }
-
-      elements.loginSubmit!.disabled = true;
-      elements.loginSubmit!.textContent = 'Logging in...';
-
-      const result = await auth.emailLogin(email, password);
-
-      if (result.success) {
-        window.location.href = '/chat';
-      } else {
-        uiState.showError(elements.loginError, result.error || 'Invalid email or password');
-      }
-
-      elements.loginSubmit!.disabled = false;
-      elements.loginSubmit!.textContent = 'Login';
-    });
-
-    // ===== Signup Form Handler =====
-    elements.signupSubmit?.addEventListener('click', async () => {
-      const name = elements.signupName?.value.trim();
-      const email = elements.signupEmail?.value.trim();
-      const password = elements.signupPassword?.value;
-      const confirmPassword = elements.signupConfirmPassword?.value;
-
-      if (!name || !email || !password || !confirmPassword) {
-        uiState.showError(elements.signupError, 'Please fill in all fields');
-        return;
-      }
-
-      if (password.length < 8) {
-        uiState.showError(elements.signupError, 'Password must be at least 8 characters');
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        uiState.showError(elements.signupError, 'Passwords do not match');
-        return;
-      }
-
-      elements.signupSubmit!.disabled = true;
-      elements.signupSubmit!.textContent = 'Creating account...';
-
-      const result = await auth.emailSignup(name, email, password);
-
-      if (result.success) {
-        uiState.showSuccess(elements.signupSuccess, 'Account created successfully! Redirecting...');
-        setTimeout(() => {
-          window.location.href = '/chat';
-        }, 1000);
-      } else {
-        uiState.showError(elements.signupError, result.error || 'Signup failed');
-      }
-
-      elements.signupSubmit!.disabled = false;
-      elements.signupSubmit!.textContent = 'Create Account';
-    });
-
-    // ===== Forgot Password Handler =====
-    elements.forgotSubmit?.addEventListener('click', async () => {
-      const email = elements.forgotEmail?.value.trim();
-
-      if (!email) {
-        uiState.showError(elements.forgotError, 'Please enter your email');
-        return;
-      }
-
-      elements.forgotSubmit!.disabled = true;
-      elements.forgotSubmit!.textContent = 'Sending...';
-
-      const result = await auth.forgotPassword(email);
-
-      if (result.success) {
-        uiState.showSuccess(elements.forgotSuccess, 'Password reset link sent to your email!');
-        elements.forgotEmail!.value = '';
-      } else {
-        uiState.showError(elements.forgotError, result.error || 'Failed to send reset link');
-      }
-
-      elements.forgotSubmit!.disabled = false;
-      elements.forgotSubmit!.textContent = 'Send Reset Link';
-    });
 
     // ===== Event Listeners =====
     elements.googleLoginBtn?.addEventListener('click', () => auth.initiateLogin());
@@ -613,7 +274,6 @@ import Layout from '../layouts/Layout.astro'
         uiState.showUser();
       } else {
         uiState.showAuth();
-        uiState.showForm('login');
       }
     }
 
@@ -987,7 +647,7 @@ import Layout from '../layouts/Layout.astro'
     .auth-card {
       background: white;
       border-radius: 24px;
-      padding: 32px;
+      padding: 40px 32px;
       width: 100%;
       max-width: 420px;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
@@ -995,27 +655,35 @@ import Layout from '../layouts/Layout.astro'
 
     .auth-logo {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 32px;
     }
 
     .auth-title {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 700;
       color: #1a1a1a;
-      margin-top: 16px;
+      margin-top: 20px;
       font-family: 'Playfair Display', serif;
     }
 
     .auth-subtitle {
-      font-size: 14px;
+      font-size: 15px;
       color: #666;
       margin-top: 8px;
+    }
+
+    .auth-info-text {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      margin-top: 20px;
+      line-height: 1.5;
     }
 
     /* Language Selector Styles */
     .auth-language-selector {
       position: relative;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
     }
 
     .language-btn {
@@ -1024,10 +692,10 @@ import Layout from '../layouts/Layout.astro'
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 10px 16px;
+      padding: 12px 16px;
       background: white;
       border: 1px solid #e5e7eb;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 14px;
       color: #374151;
       cursor: pointer;
@@ -1061,7 +729,7 @@ import Layout from '../layouts/Layout.astro'
       margin-top: 4px;
       background: white;
       border: 1px solid #e5e7eb;
-      border-radius: 10px;
+      border-radius: 12px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       z-index: 100;
       max-height: 250px;
@@ -1103,175 +771,39 @@ import Layout from '../layouts/Layout.astro'
       color: #9ca3af;
     }
 
-    .auth-tabs {
+    /* Google Button - Prominent, primary CTA */
+    .google-btn {
+      width: 100%;
       display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
-      background: #f3f4f6;
-      padding: 4px;
-      border-radius: 12px;
-    }
-
-    .auth-tab {
-      flex: 1;
-      padding: 10px 16px;
-      border: none;
-      background: transparent;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #666;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .auth-tab.active {
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 16px 24px;
       background: white;
-      color: #9333ea;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    .auth-form {
-      display: none;
-    }
-
-    .auth-form.active {
-      display: block;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 14px;
-      font-weight: 500;
-      color: #333;
-      margin-bottom: 6px;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      font-size: 14px;
-      transition: all 0.2s;
-      box-sizing: border-box;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: #9333ea;
-      box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
-    }
-
-    .password-input {
-      position: relative;
-    }
-
-    .password-input input {
-      padding-right: 44px;
-    }
-
-    .toggle-password {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 4px;
-      color: #666;
-    }
-
-    .toggle-password:hover {
-      color: #9333ea;
-    }
-
-    .eye-icon {
-      width: 20px;
-      height: 20px;
-    }
-
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 16px;
-    }
-
-    .forgot-link {
-      font-size: 13px;
-      color: #9333ea;
-      text-decoration: none;
-    }
-
-    .forgot-link:hover {
-      text-decoration: underline;
-    }
-
-    .form-hint {
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 16px;
-    }
-
-    .back-link {
-      display: block;
-      text-align: center;
-      font-size: 14px;
-      color: #9333ea;
-      text-decoration: none;
-      margin-top: 16px;
-    }
-
-    .back-link:hover {
-      text-decoration: underline;
-    }
-
-    .auth-submit-btn {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #9333ea 0%, #2563eb 100%);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 15px;
+      border: 2px solid #e5e7eb;
+      border-radius: 14px;
+      font-size: 16px;
       font-weight: 600;
+      color: #1a1a1a;
       cursor: pointer;
-      transition: transform 0.1s;
+      transition: all 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
-    .auth-submit-btn:hover:not(:disabled) {
-      transform: scale(1.02);
+    .google-btn:hover {
+      background: #f8f9fa;
+      border-color: #d1d5db;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
     }
 
-    .auth-submit-btn:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
+    .google-btn:active {
+      transform: translateY(0);
     }
 
-    .auth-error,
-    .auth-success {
-      margin-top: 12px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      text-align: center;
-    }
-
-    .auth-error {
-      background: #fef2f2;
-      color: #dc2626;
-      border: 1px solid #fecaca;
-    }
-
-    .auth-success {
-      background: #f0fdf4;
-      color: #16a34a;
-      border: 1px solid #bbf7d0;
+    .google-icon {
+      width: 24px;
+      height: 24px;
     }
 
     /* User card styles */
@@ -1280,16 +812,16 @@ import Layout from '../layouts/Layout.astro'
     }
 
     .avatar {
-      width: 80px;
-      height: 80px;
-      margin: 0 auto 16px;
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 20px;
       border-radius: 50%;
       overflow: hidden;
       background: linear-gradient(135deg, #9333ea 0%, #2563eb 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
+      font-size: 36px;
       font-weight: 700;
       color: white;
     }
@@ -1301,7 +833,7 @@ import Layout from '../layouts/Layout.astro'
     }
 
     .welcome-back {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 700;
       color: #1a1a1a;
       margin-bottom: 8px;
@@ -1309,29 +841,29 @@ import Layout from '../layouts/Layout.astro'
     }
 
     .user-email {
-      font-size: 14px;
+      font-size: 15px;
       color: #666;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
 
     .chat-btn {
       display: inline-block;
-      padding: 12px 24px;
+      padding: 14px 28px;
       background: linear-gradient(135deg, #9333ea 0%, #2563eb 100%);
       color: white;
       text-decoration: none;
       border-radius: 12px;
       font-weight: 600;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     .logout-btn {
-      padding: 8px 16px;
+      padding: 10px 20px;
       background: #f3f4f6;
       color: #666;
       border: none;
-      border-radius: 8px;
-      font-size: 14px;
+      border-radius: 10px;
+      font-size: 15px;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
@@ -1339,6 +871,7 @@ import Layout from '../layouts/Layout.astro'
 
     .logout-btn:hover {
       background: #e5e7eb;
+      color: #1a1a1a;
     }
 
     /* Login background styles */
@@ -1418,13 +951,13 @@ import Layout from '../layouts/Layout.astro'
     }
 
     .loading-spinner {
-      width: 40px;
-      height: 40px;
+      width: 48px;
+      height: 48px;
       border: 4px solid rgba(255, 255, 255, 0.3);
       border-top-color: white;
       border-radius: 50%;
       animation: spin 1s linear infinite;
-      margin: 0 auto 16px;
+      margin: 0 auto 20px;
     }
 
     @keyframes spin {
@@ -1433,61 +966,71 @@ import Layout from '../layouts/Layout.astro'
       }
     }
 
-    .google-btn {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 14px;
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 500;
-      color: #333;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .google-btn:hover {
-      background: #f8f9fa;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .google-icon {
-      width: 24px;
-      height: 24px;
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      margin: 24px 0;
-      text-align: center;
-    }
-
-    .divider-text {
-      padding: 0 16px;
-      color: #666;
-      font-size: 13px;
-      background: white;
-    }
-
-    .divider::before,
-    .divider::after {
+    /* Background pattern overlay */
+    body::before {
       content: '';
-      flex: 1;
-      height: 1px;
-      background: #e5e7eb;
+      position: fixed;
+      inset: 0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='0.3' opacity='0.08'%3E%3Cpath d='M40 10c-16.6 0-30 13.4-30 30s13.4 30 30 30 30-13.4 30-30-13.4-30-30z'/%3E%3Cpath d='M40 25v30M25 40h30'/%3E%3C/g%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='0.3' opacity='0.06'%3E%3Cpath d='M30 5c-13.8 0-25 11.2-25 25s11.2 25 25 25 25-11.2 25-25-11.2-25-25z'/%3E%3C/g%3E%3C/svg%3E");
+      background-repeat: repeat;
+      pointer-events: none;
     }
 
-    .divider::before {
-      margin-right: 16px;
+    /* Floating decorative crosses */
+    body::after {
+      content: '✝';
+      position: fixed;
+      font-size: 120px;
+      color: rgba(255, 255, 255, 0.03);
+      top: 10%;
+      left: 5%;
+      animation: floatDecorative 30s ease-in-out infinite;
     }
 
-    .divider::after {
-      margin-left: 16px;
+    @keyframes floatDecorative {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.03;
+      }
+      50% {
+        transform: translateY(-20px) rotate(10deg);
+        opacity: 0.05;
+      }
+    }
+
+    /* Additional floating elements */
+    .floating-decorative-1::before,
+    .floating-decorative-2::before {
+      content: '✝';
+      position: fixed;
+      font-size: 80px;
+      color: rgba(255, 255, 255, 0.02);
+      animation: floatCross 25s ease-in-out infinite;
+    }
+
+    .floating-decorative-1::before {
+      bottom: 15%;
+      right: 10%;
+      animation-delay: 5s;
+    }
+
+    .floating-decorative-2::before {
+      top: 20%;
+      right: 20%;
+      animation-delay: 12s;
+    }
+
+    @keyframes floatCross {
+      0%, 100% {
+        transform: translateY(0) rotate(-5deg);
+        opacity: 0.02;
+      }
+      50% {
+        transform: translateY(-15px) rotate(5deg);
+        opacity: 0.04;
+      }
     }
   </style>
 </Layout>
