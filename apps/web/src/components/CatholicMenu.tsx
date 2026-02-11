@@ -11,81 +11,132 @@ const catholicContent = {
         id: 'baptism',
         title: 'Baptism',
         description: 'The door to the Church and the beginning of new life',
+        story: 'Baptism is the first sacrament of initiation, washing away original sin and making us children of God. Jesus was baptized by John in the Jordan, and He commanded His apostles to baptize all nations in the name of the Father, Son, and Holy Spirit.',
+        ageGroups: {
+          infants: 'Infants are typically baptized within weeks of birth. Parents and godparents promise to raise the child in the Catholic faith. The baby is anointed with holy oils and water is poured over the head three times.',
+          children: 'Children of catechetical age (7+) enter the Rite of Christian Initiation for Children (RCIC). They receive special instruction and preparation before receiving Baptism, Confirmation, and First Eucharist at the Easter Vigil.',
+          teens: 'Teens who were not baptized as children enter the Rite of Christian Initiation for Teens (RCIT). They journey toward the Easter sacraments with their peers, learning the faith and preparing for full initiation.',
+          adults: 'Adults enter the Rite of Christian Initiation for Adults (RCIA). This is a months-long process of learning about the Catholic faith, culminating in receiving Baptism, Confirmation, and First Eucharist at the Easter Vigil.'
+        },
         prayers: [
           'Prayer for Baptism: "Almighty God, you have given new birth through water and the Holy Spirit..."',
           'Baptismal Promises: "Do you reject Satan? And all his works? And all his empty show?"',
           'Renewal of Baptismal Promises: "I reject Satan; and all his works; and all his empty show..."'
         ],
-        catechism: 'Baptism is the first sacrament of initiation, freeing us from original sin.',
+        catechism: 'Baptism is the first sacrament of initiation, freeing us from original sin and making us members of the Church.',
         scripture: 'Matthew 28:19, Romans 6:4'
       },
       {
         id: 'eucharist',
         title: 'Holy Eucharist',
         description: 'The source and summit of Christian life',
+        story: 'At the Last Supper, Jesus took bread, blessed it, broke it, and gave it to His disciples saying "This is my body." He did the same with the cup, saying "This is my blood." He commanded them to "Do this in memory of me." The Eucharist is truly the Body and Blood of Christ.',
+        ageGroups: {
+          infants: 'Infants who are in danger of death may receive Holy Communion as Viaticum. The Church desires that even the youngest not be deprived of this spiritual food.',
+          children: 'Children typically receive First Holy Communion around age 7-8 (second grade). They prepare through religious education, learning about the Real Presence, the Mass, and how to receive reverently.',
+          teens: 'Teens should continue to receive Eucharist weekly. Many parishes offer teen Masses and youth programs to help them understand and appreciate this sacrament more deeply.',
+          adults: 'Adults are obligated to attend Mass and receive Communion at least once a year (Easter Duty), though the Church encourages weekly reception. Adults must fast for one hour before receiving.'
+        },
         prayers: [
           'Prayer before Communion: "Lord Jesus Christ, with faith in your love and mercy..."',
           'Prayer after Communion: "Lord, I am not worthy that you should enter under my roof..."',
           'Act of Spiritual Communion: "My Jesus, I believe that you are present in the Holy Sacrament..."',
           'Anima Christi: "Soul of Christ, sanctify me. Body of Christ, save me..."'
         ],
-        catechism: 'The Eucharist is the memorial of Christ\'s Passover, the work of salvation accomplished by Christ.',
+        catechism: 'The Eucharist is the memorial of Christ\'s Passover, the source and summit of Christian life, containing the whole spiritual good of the Church.',
         scripture: 'John 6:53-58, 1 Corinthians 11:23-29'
       },
       {
         id: 'confirmation',
         title: 'Confirmation',
         description: 'Completion of baptismal grace',
+        story: 'Confirmation completes the sacraments of initiation. In the early Church, bishops would confirm all baptisms by laying on hands and anointing with chrism. Today, the bishop anoints with chrism on the forehead, saying "Be sealed with the Gift of the Holy Spirit."',
+        ageGroups: {
+          infants: 'Infants in danger of death may be confirmed immediately after baptism, receiving the fullness of the Holy Spirit.',
+          children: 'In many dioceses, children are confirmed between ages 7-9, often together with First Eucharist. This restores the ancient order of initiation sacraments.',
+          teens: 'In some dioceses, teens are confirmed around age 15-16 (high school). Preparation includes retreats, service projects, and instruction on the Holy Spirit\'s gifts and fruits.',
+          adults: 'Adult converts receive Confirmation at the Easter Vigil along with Baptism and Eucharist. Adult Catholics who missed Confirmation can prepare through special programs and receive from the bishop.'
+        },
         prayers: [
           'Prayer for Confirmation: "Come, Holy Spirit, fill the hearts of your faithful..."',
           'Sequence for Pentecost: "Come, Holy Spirit, come! And from your celestial home..."'
         ],
-        catechism: 'Confirmation perfects Baptismal grace and gives us the special strength of the Holy Spirit.',
+        catechism: 'Confirmation perfects Baptismal grace, gives us the special strength of the Holy Spirit, and obliges us to spread and defend the faith.',
         scripture: 'Acts 2:1-4, Acts 8:14-17'
       },
       {
         id: 'reconciliation',
         title: 'Reconciliation',
         description: 'Sacrament of healing and forgiveness',
+        story: 'Jesus appeared to His apostles after resurrection, breathed on them, and said "Whose sins you forgive are forgiven them." Priests act in persona Christi, absolving sins in Jesus\' name. Confession includes examination of conscience, confession, penance, and absolution.',
+        ageGroups: {
+          infants: 'Infants cannot commit personal sin but still bear original sin, which is washed away in Baptism.',
+          children: 'Children prepare for First Reconciliation around age 7, usually before First Communion. They learn the difference between right and wrong, and how to examine their conscience.',
+          teens: 'Teens are encouraged to confess monthly or quarterly. Confession helps them navigate moral challenges, peer pressure, and growing independence with God\'s grace.',
+          adults: 'Adults should confess at least once a year (preferably during Lent or Advent). Many find monthly confession helpful for spiritual growth. All serious sins must be confessed.'
+        },
         prayers: [
           'Act of Contrition: "Oh my God, because you are so good..."',
           'Examination of Conscience Prayer: "Holy Spirit, enlighten my mind..."',
           'Prayer for Forgiveness: "Lord Jesus Christ, you are the mercy of the Father..."'
         ],
-        catechism: 'Penance reconciles us with God and the Church.',
+        catechism: 'Penance reconciles us with God and the Church, forgiving sins committed after Baptism.',
         scripture: 'John 20:22-23, 2 Corinthians 5:18-20'
       },
       {
         id: 'anointing',
         title: 'Anointing of the Sick',
         description: 'Healing sacrament for the ill',
+        story: 'Jesus and the apostles anointed many sick people with oil and healed them. This sacrament brings grace for the sick, strengthens them, and prepares them for eternal life if death is near. Formerly called "Extreme Unction," it is now available before death becomes imminent.',
+        ageGroups: {
+          infants: 'Infants who are critically ill may be anointed, giving them grace and strength. Parents should request the sacrament promptly.',
+          children: 'Children facing serious illness, surgery, or chronic conditions can be anointed. The sacrament helps them understand suffering in light of Christ\'s passion.',
+          teens: 'Teens with serious health conditions, mental illness, or facing major surgery can be anointed. It helps them unite their suffering with Christ\'s.',
+          adults: 'Adults should request anointing when seriously ill, before major surgery, or in declining health due to age. It may be repeated if the condition worsens.'
+        },
         prayers: [
           'Prayer for the Sick: "Lord Jesus Christ, you came to heal the sick..."',
           'Prayer for Healing: "Almighty and everlasting God, the eternal health..."'
         ],
-        catechism: 'This sacrament unites the sick with Christ\'s suffering.',
+        catechism: 'This sacrament unites the sick with Christ\'s suffering, brings peace, and may lead to physical healing if it is for the soul\'s good.',
         scripture: 'James 5:14-15, Mark 16:18'
       },
       {
         id: 'holy-orders',
         title: 'Holy Orders',
         description: 'Sacrament of apostolic ministry',
+        story: 'Jesus chose twelve apostles and gave them authority to teach, sanctify, and lead. Through Holy Orders, bishops, priests, and deacons continue this ministry. Only men can be ordained, as Christ chose only men as apostles. Those ordained act in persona Christi.',
+        ageGroups: {
+          infants: 'Infants cannot be ordained but can be dedicated to God, as Samuel was in the Old Testament.',
+          children: 'Boys as young as 7-8 may serve at the altar, fostering vocation awareness. Many priests first felt God\'s call while serving as altar boys.',
+          teens: 'Teens considering priesthood can join discernment groups, attend seminary visits, and speak with vocation directors. High school seminaries exist for serious discerners.',
+          adults: 'Adults (18+) enter seminary for 6-9 years of formation. Permanent deacons are often married men over 30, while priests remain celibate. Discernment continues throughout formation.'
+        },
         prayers: [
           'Prayer for Priests: "Lord Jesus Christ, Eternal High Priest..."',
-          'Prayer for Vocations: "Lord Jesus Christ, Shepherd of your people..."'
+          'Prayer for Vocations: "Lord Jesus Christ, Shepherd of your people..."',
+          'Prayer for Discernment: "God, I do not know if You are calling me to priesthood. Give me wisdom and clarity to know Your will."'
         ],
-        catechism: 'Holy Orders ordains men to serve the Church as deacons, priests, and bishops.',
+        catechism: 'Holy Orders ordains men to serve the Church as deacons, priests, and bishops, who act in persona Christi.',
         scripture: 'Luke 22:19-20, 1 Timothy 3:1-13'
       },
       {
         id: 'matrimony',
         title: 'Holy Matrimony',
         description: 'Sacred bond of marriage',
+        story: 'God created marriage in the Garden of Eden. Jesus elevated it to a sacrament, making marriage a sign of His love for the Church. The couple are the ministers of the sacrament to each other; the priest witnesses. Valid Catholic marriage is permanent and open to children.',
+        ageGroups: {
+          infants: 'Infants born into valid marriages are legitimate and have rights to parental care. Parents model Christian marriage for their children.',
+          children: 'Children from holy marriages learn love, fidelity, and sacrifice. They witness their parents\' faith and prepare for their own future vocations.',
+          teens: 'Teens begin dating and learning about relationships. They are taught that marriage is permanent and should only be entered after serious discernment and preparation.',
+          adults: 'Adults must be at least 18 (16 with permission) and complete marriage preparation (Pre-Cana). They must be free to marry (not previously married) and commit to permanence, fidelity, and openness to children.'
+        },
         prayers: [
           'Prayer for Married Couples: "Lord God, you have consecrated marriage..."',
-          'Prayer for Families: "God our Father, we thank you for the gift of family..."'
+          'Prayer for Families: "God our Father, we thank you for the gift of family..."',
+          'Prayer for Engaged Couples: "Lord, bless this couple as they prepare for marriage. Help them build a love that lasts a lifetime."'
         ],
-        catechism: 'Marriage is a covenant between a man and woman, reflecting Christ\'s love for the Church.',
+        catechism: 'Marriage is a covenant between a man and woman, reflecting Christ\'s love for the Church - permanent, faithful, and open to life.',
         scripture: 'Ephesians 5:31-32, Matthew 19:4-6'
       }
     ]
@@ -448,8 +499,14 @@ const catholicContent = {
         id: 'peter',
         title: 'St. Peter',
         description: 'First Pope and Prince of Apostles',
-        image: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=400&h=400&fit=crop',
-        prayers: ['Prayer for the Pope: "Lord, we pray for Your Holy Father Pope Francis..."'],
+        story: 'Simon Peter was a fisherman from Galilee when Jesus called him to be "a fisher of men." impulsive and bold, Peter was often the first to speak and act. He walked on water toward Jesus until fear made him sink. He professed Jesus as "the Christ, the Son of the living God" and was given the keys to the Kingdom. After denying Jesus three times during His passion, Peter wept bitterly and was reconcigned by Christ after the resurrection. He became the leader of the early Church, preached at Pentecost, performed miracles, and was martyred in Rome by crucifixion upside-down, feeling unworthy to die as his Lord did.',
+        novena: 'St. Peter Novena: For nine days, pray: "O glorious St. Peter, Prince of the Apostles, who was chosen by Christ to lead His Church, strengthen our faith and make us bold witnesses of the Gospel. Help us to remain steadfast in times of trial and to trust in Christ\'s mercy. Through Christ our Lord. Amen."',
+        prayers: [
+          'Prayer to St. Peter: O glorious St. Peter, you were the first to confess Jesus as Christ and Lord. You were given the keys to the Kingdom and became the rock on which Christ built His Church. Help us to have a steadfast faith and to be bold witnesses of the Gospel. Intercede for the Holy Father Pope Francis and for the entire Church.',
+          'Prayer for the Pope: Lord, we pray for Your Holy Father Pope Francis. Protect him, strengthen him, and guide him as he leads Your Church. Keep him safe from all harm and fill him with Your wisdom and grace.',
+          'Prayer for Courage: St. Peter, who feared persecution but found courage through the Holy Spirit, help us to overcome our fears and boldly proclaim our faith.',
+          'Prayer for Reconciliation: St. Peter, who denied Christ but was forgiven and restored, help us to trust in God\'s mercy when we fail and to always return to Him.'
+        ],
         catechism: 'Peter was chosen by Christ to lead His Church as the first Pope.',
         scripture: 'Matthew 16:18-19, Acts 2:14-41'
       },
@@ -457,8 +514,14 @@ const catholicContent = {
         id: 'paul',
         title: 'St. Paul',
         description: 'Apostle to the Gentiles',
-        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
-        prayers: ['Prayer for Evangelization: "Lord, like St. Paul, give us zeal to spread Your Gospel..."'],
+        story: 'Saul of Tarsus was a zealous Pharisee who persecuted Christians. While traveling to Damascus to arrest believers, he was struck down by a brilliant light and heard Jesus ask, "Saul, Saul, why do you persecute me?" Blinded for three days, he was healed by Ananias and baptized. Paul became the greatest missionary in Church history, traveling throughout the Roman world preaching the Gospel. He wrote 13 letters of the New Testament, establishing churches and theology. He was beheaded in Rome during Nero\'s persecution, having fought the good fight and finished the race.',
+        novena: 'St. Paul Novena: For nine days, pray: "O great St. Paul, Apostle to the Gentiles, who was transformed from persecutor to preacher, fill us with zeal for the Gospel. Help us to spread Christ\'s message with courage and conviction. Through Christ our Lord. Amen."',
+        prayers: [
+          'Prayer to St. Paul: O glorious St. Paul, once a persecutor of Christians, you were transformed by Christ\'s grace into His greatest apostle. You traveled the world, suffered imprisonment, and gave your life for the Gospel. Help us to be bold witnesses of Christ and to never be ashamed of the Gospel.',
+          'Prayer for Evangelization: Lord, like St. Paul, give us zeal to spread Your Gospel to all nations. Open our mouths to proclaim Your truth and open hearts to receive it.',
+          'Prayer for Conversion: St. Paul, who encountered Christ and was completely transformed, pray for all who have not yet met Jesus. Touch their hearts as yours was touched on the road to Damascus.',
+          'Prayer for Missionaries: St. Paul, great missionary, protect and guide all who carry the Gospel to distant lands. Give them courage, wisdom, and fruit in their labors.'
+        ],
         catechism: 'Paul\'s letters form much of New Testament teaching on Christian life.',
         scripture: 'Acts 9:1-22, Romans 1:16'
       },
@@ -466,10 +529,13 @@ const catholicContent = {
         id: 'francis',
         title: 'St. Francis of Assisi',
         description: 'Founder of Franciscans, patron of animals',
-        image: 'https://images.unsplash.com/photo-1518173946687-a4c036bc1c9a?w=400&h=400&fit=crop',
+        story: 'Born into wealth, Francis lived a wild youth until he heard God call him to "rebuild my Church." He renounced his inheritance, gave away his clothes, and began preaching radical poverty. He founded the Franciscan order and preached to birds and animals. He received the stigmata - the wounds of Christ - on Mount La Verna. His Canticle of the Sun celebrates God through creation.',
+        novena: 'St. Francis Novena: For nine days, pray for his intercession to grow in humility and love for all creation. Pray: "St. Francis, who kissed the leper and preached to the birds, help me to see God in all creation and to serve the poorest of the poor. Through Christ our Lord. Amen."',
         prayers: [
-          'Peace Prayer: Lord, make me an instrument of Your peace...',
-          'Canticle of the Sun: Most High, all-powerful, good Lord...'
+          'Peace Prayer: Lord, make me an instrument of Your peace. Where there is hatred, let me sow love; where there is injury, pardon; where there is doubt, faith; where there is despair, hope; where there is darkness, light; where there is sadness, joy. O Divine Master, grant that I may not so much seek to be consoled as to console; to be understood as to understand; to be loved as to love. For it is in giving that we receive; it is in pardoning that we are pardoned; it is in dying that we are born to eternal life. Amen.',
+          'Canticle of the Sun: Most High, all-powerful, good Lord. To You be praise, glory, and honor. All creatures You have made, especially Brother Sun who brings the day. You give us light through Sister Moon and the stars. You give us water through Brother Wind and air, and food through Sister Earth. Thank you for these gifts, praise and bless You.',
+          'Prayer for Animals: St. Francis, you saw all creatures as brothers and sisters. Pray for our pets and all animals that they may be treated with kindness.',
+          'Prayer for the Poor: St. Francis, you embraced Lady Poverty. Help us to trust in God\'s provision and to share generously with those in need.'
         ],
         catechism: 'Francis embraced poverty and preached the Gospel through joy and simplicity.',
         scripture: 'Matthew 10:9-10, Luke 14:33'
@@ -478,8 +544,14 @@ const catholicContent = {
         id: 'therese',
         title: 'St. Thérèse of Lisieux',
         description: 'Doctor of the Church, Little Way',
-        image: 'https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?w=400&h=400&fit=crop',
-        prayers: ['Prayer: St. Thérèse, intercede for us to do small things with great love...'],
+        story: 'Marie Françoise Thérèse Martin was born in France in 1873, the youngest of nine children. Her mother died when she was four, and she was raised by her older sisters. At age 15, she entered the Carmelite monastery in Lisieux, where she lived a hidden life of prayer and sacrifice. She developed her "Little Way" - doing small things with great love for God. She suffered from tuberculosis and died at age 24, promising to spend her heaven doing good on earth. Her autobiography "Story of a Soul" has inspired millions. She was declared a Doctor of the Church in 1997.',
+        novena: 'St. Thérèse Novena: For nine days, pray: "O Little Flower of Jesus, who promised to spend your heaven doing good on earth, send down a shower of roses upon me. Grant me the favor I ask through your intercession. Help me to do small things with great love. Amen."',
+        prayers: [
+          'Prayer to St. Thérèse: O Little Flower of Lisieux, you found holiness in doing ordinary things with extraordinary love. Teach me your Little Way - to accept my smallness, to trust in God\'s mercy, and to offer every action as a prayer. You promised to spend your heaven doing good on earth; please grant the grace I seek.',
+          'Act of Oblation: Living in the heart of the Church, my Mother, I shall be love. Thus I shall be everything, and my dream will be realized. O my God, I want to love You and to make You loved.',
+          'Prayer for Trust: St. Thérèse, who trusted in God like a child, help me to abandon myself to His loving care without fear or anxiety.',
+          'Prayer for Suffering: St. Thérèse, who offered your suffering for souls, help me to unite my crosses with Christ\'s for the salvation of others.'
+        ],
         catechism: 'Thérèse taught the "Little Way" of spiritual childhood and doing small things with love.',
         scripture: 'Matthew 18:3-4, Mark 10:15'
       },
@@ -487,8 +559,14 @@ const catholicContent = {
         id: 'thomas-aquinas',
         title: 'St. Thomas Aquinas',
         description: 'Angelic Doctor, theologian',
-        image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400&h=400&fit=crop',
-        prayers: ['Prayer for Students: "St. Thomas Aquinas, patron of students and schools..."'],
+        story: 'Thomas was born in Italy in 1225 to a noble family. Against his family\'s wishes, he joined the Dominican order. His brothers imprisoned him for a year trying to change his mind, but Thomas remained firm. He studied under Albert the Great and became one of the greatest theologians in history. He wrote the Summa Theologica, a comprehensive work of Catholic theology. Tradition says he heard Christ speak from a crucifix saying "You have written well of me, Thomas. What is your reward?" Thomas replied "Only yourself, Lord." He died in 1274 while commenting on the Song of Songs.',
+        novena: 'St. Thomas Aquinas Novena: For nine days, pray: "O glorious St. Thomas, Angelic Doctor of the Church, patron of students and schools, enlighten my mind with divine wisdom. Help me to seek truth with humility and to use my knowledge for God\'s glory. Through Christ our Lord. Amen."',
+        prayers: [
+          'Prayer for Students: O St. Thomas Aquinas, patron of students and schools, grant me the grace to understand what I study and to retain what I learn. Help me to use my education to serve God and my neighbor. Intercede for all students, especially those struggling with their studies.',
+          'Prayer for Wisdom: O God, who made St. Thomas Aquinas admirable for his zeal for your Church and for his learning, grant us, we pray, to understand what he taught and to imitate what he did. Through Christ our Lord.',
+          'Prayer for Truth: St. Thomas, who sought truth above all things, help us to find Truth in Jesus Christ and to remain faithful to His Church.',
+          'Prayer for Teachers: St. Thomas, great teacher of the faith, bless all educators. Give them wisdom, patience, and love for their students.'
+        ],
         catechism: 'Thomas Aquinas authored the Summa Theologica, a comprehensive work of Catholic theology.',
         scripture: '1 Corinthians 1:17-25'
       },
@@ -496,8 +574,14 @@ const catholicContent = {
         id: 'augustine',
         title: 'St. Augustine',
         description: 'Doctor of Grace, bishop of Hippo',
-        image: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=400&fit=crop',
-        prayers: ['Prayer: "Late have I loved you, O Beauty ever ancient, ever new..."'],
+        story: 'Augustine was born in North Africa in 354 AD. His mother Monica prayed constantly for his conversion, but he pursued a life of pleasure and heretical teaching. He famously prayed "Lord, give me chastity, but not yet." After hearing a child\'s voice saying "Take up and read," he opened Scripture to Romans 13:13-14 and was converted. Baptized by St. Ambrose, he returned to Africa, founded a religious community, and became bishop of Hippo. His writings including Confessions and City of God shaped Western Christianity. He died as his city was under siege by Vandals in 430 AD.',
+        novena: 'St. Augustine Novena: For nine days, pray: "O great St. Augustine, who were converted through the prayers of your mother Monica and the grace of God, help me to turn away from sin and seek God with all my heart. Intercede for all who are far from God. Through Christ our Lord. Amen."',
+        prayers: [
+          'Prayer to St. Augustine: O great St. Augustine, you who were transformed from a sinner to a saint, pray for me. You who wrote "You have made us for yourself, O Lord, and our heart is restless until it rests in you," help me to find true rest in God alone. Intercede for all who are struggling with sin and seeking conversion.',
+          'Prayer for Conversion: Late have I loved you, O Beauty ever ancient, ever new. Late have I loved you! You were within me, and I outside. You called, and I ran away. Help me to run to You now.',
+          'Prayer for Those Far from God: St. Augustine, whose mother\'s tears won your conversion, intercede for all prodigals. Pray that they may hear God\'s voice and return to Him.',
+          'Prayer for Wisdom: O God, who instructed the heart of your servant Augustine by the light of your grace, grant that we may in the same manner be filled with your wisdom.'
+        ],
         catechism: 'Augustine\'s Confessions and City of God are foundational works of Western Christianity.',
         scripture: 'Psalm 90, Romans 8'
       },
@@ -505,8 +589,14 @@ const catholicContent = {
         id: 'anthony',
         title: 'St. Anthony of Padua',
         description: 'Patron of lost things',
-        image: 'https://images.unsplash.com/photo-1518893494013-481c1d8ed3fd?w=400&h=400&fit=crop',
-        prayers: ['Prayer: "St. Anthony, please help me find what I have lost..."'],
+        story: 'Fernando Martins de Bulhões was born in Portugal in 1195. He joined the Augustinians but was inspired by the first Franciscan martyrs to become a Franciscan, taking the name Anthony. He hoped to be a missionary but was shipwrecked in Italy. There he preached with such eloquence that crowds gathered to hear him. He was the first Franciscan to teach theology and was known as the "Hammer of Heretics." He died at age 36 and was canonized within a year. He is famous as the patron of lost things because of a story about a man who recovered a lost book through Anthony\'s intercession.',
+        novena: 'St. Anthony Novena: For nine days, pray: "O glorious St. Anthony, helper of all who seek, when we lose what is precious to us, help us find it. Restore to us what is lost and lead us back to God when we stray. Through Christ our Lord. Amen."',
+        prayers: [
+          'Prayer to Find Lost Items: O St. Anthony, whose power is so great in finding lost things, please help me now to find [item]. I believe in your power before the throne of God. Amen.',
+          'Prayer for Lost Souls: St. Anthony, who preaches to those who have lost their way, intercede for all who have wandered from the faith. Bring them home to the Church.',
+          'Prayer for the Poor: St. Anthony, protector of the poor, help us to see Christ in those in need and to share generously with them.',
+          'Prayer for Preachers: St. Anthony, eloquent preacher, bless all who proclaim God\'s word. Give them the fire of your zeal and the clarity of your teaching.'
+        ],
         catechism: 'Anthony was a powerful preacher and miracle worker, patron of the poor and lost items.',
         scripture: 'Matthew 25:35-40'
       },
@@ -514,8 +604,14 @@ const catholicContent = {
         id: 'jude',
         title: 'St. Jude Thaddeus',
         description: 'Patron of hopeless causes',
-        image: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=400&h=400&fit=crop',
-        prayers: ['Prayer: "St. Jude, apostle of Christ, intercede for us..."'],
+        story: 'Jude was one of the Twelve Apostles, also called Thaddaeus. He is traditionally believed to have traveled as a missionary to Persia where he was martyred. In his New Testament letter, he urges believers to "contend for the faith." Because his name sounds like "Judas" (the betrayer), devotion to him was neglected for centuries. When people finally turned to him in prayer, they discovered his powerful intercession, especially in desperate situations. He is now known as the patron of hopeless causes and situations that seem impossible.',
+        novena: 'St. Jude Novena: For nine days, pray: "O glorious St. Jude, apostle and martyr, great in virtue and rich in miracles, near kinsman of Jesus Christ, faithful intercessor of all who invoke your special patronage in time of need. To you I have recourse from the depths of my heart and humbly beg you to whom God has given such great power to come to my assistance. Help me in my urgent need. Amen."',
+        prayers: [
+          'Prayer to St. Jude: Most holy Apostle, St. Jude, faithful servant and friend of Jesus, the Church honors and invokes you universally as the patron of difficult cases, of things almost despaired of. Pray for me, I am so helpless and alone. Make use, I implore you, of that particular privilege accorded you to bring visible and speedy help where help is almost despaired of. Come to my assistance in this great need that I may receive the consolation and help of heaven in all my necessities, tribulations, and sufferings.',
+          'Prayer for Hopeless Causes: St. Jude, patron of hopeless causes, pray for me when all seems lost. When I cannot see a way forward, intercede for me before the throne of God.',
+          'Prayer for the Desperate: St. Jude, friend of Jesus in his suffering, comfort all who are in despair. Bring them hope and the assurance that God is with them.',
+          'Prayer for Impossible Situations: O St. Jude, who never fails those who trust in you, intercede for me in this impossible situation. Nothing is impossible with God.'
+        ],
         catechism: 'St. Jude is the patron saint of hopeless causes and difficult situations.',
         scripture: 'Luke 6:12-16'
       },
@@ -523,8 +619,14 @@ const catholicContent = {
         id: 'rita',
         title: 'St. Rita of Cascia',
         description: 'Patroness of impossible causes',
-        image: 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=400&h=400&fit=crop',
-        prayers: ['Prayer: "St. Rita, helper of the hopeless, pray for us..."'],
+        story: 'Rita was born in Italy in 1381. Despite wanting to be a nun, her parents arranged her marriage to a violent man. Through her patience and prayers, her husband was converted, but he was later murdered in a feud. Rita\'s two sons vowed revenge, but she prayed they would die rather than commit mortal sin. Both died of natural causes shortly after. Rita then entered the convent where she received a partial stigmata - a wound on her forehead from a crown of thorns. She is known as the patroness of impossible causes due to her patient endurance and miraculous answers to prayer.',
+        novena: 'St. Rita Novena: For nine days, pray: "O glorious St. Rita, patroness of impossible causes, mirror of God\'s grace, you bore on your forehead the mark of Christ\'s passion. Help me in my desperate need. Intercede for me before the throne of God. Through Christ our Lord. Amen."',
+        prayers: [
+          'Prayer to St. Rita: O holy St. Rita, who endured so much suffering with patience and faith, intercede for me in my impossible situation. You who bore the stigmata of Christ\'s crown of thorns, help me to carry my cross with faith. Obtain for me the grace I need from God.',
+          'Prayer for Abused Wives: St. Rita, who suffered abuse from your husband but won his conversion through patience and prayer, protect all victims of domestic violence. Give them courage and hope.',
+          'Prayer for Forgiveness: St. Rita, who forgave your husband\'s murderers and prayed for your sons\' repentance, help me to forgive those who have hurt me.',
+          'Prayer for Mothers: St. Rita, who lost your husband and both sons, comfort all grieving mothers. Help them to trust in God\'s mercy.'
+        ],
         catechism: 'St. Rita is known as the patroness of impossible causes and abused wives.',
         scripture: 'Romans 8:28'
       },
@@ -532,8 +634,14 @@ const catholicContent = {
         id: 'monica',
         title: 'St. Monica',
         description: 'Mother of St. Augustine',
-        image: 'https://images.unsplash.com/photo-1548625361-9872e4533e36?w=400&h=400&fit=crop',
-        prayers: ['Prayer: "St. Monica, patron saint of mothers, pray for us..."'],
+        story: 'Monica was born in North Africa in 331 AD and married a pagan official named Patricius, who had a violent temper. Through her patience and prayers, he was baptized before his death. Her greatest cross was her son Augustine, who lived a sinful life and rejected Christianity. Monica wept and prayed for him for 17 years, following him to Rome and Milan. In Milan, she met St. Ambrose whose preaching helped convert Augustine. Monica died shortly after his baptism, rejoicing that God had answered her prayers. She is the patron saint of mothers, wives, and patience.',
+        novena: 'St. Monica Novena: For nine days, pray: "O holy St. Monica, mother of St. Augustine, who by your tears and prayers won your son\'s conversion, intercede for all mothers and their children. Help us to trust God\'s timing and never to give up praying for our loved ones. Through Christ our Lord. Amen."',
+        prayers: [
+          'Prayer to St. Monica: O glorious St. Monica, who by your patience and prayers won the conversion of your husband and son, intercede for me. Help me to be patient in suffering and persistent in prayer. Obtain for me the grace to never lose hope for those I love.',
+          'Prayer for Mothers: St. Monica, whose tears won your son\'s soul, watch over all mothers. Comfort those who worry about their children and strengthen them to keep praying.',
+          'Prayer for Wayward Children: St. Monica, who never stopped praying for Augustine, intercede for all children who have strayed from God. Bring them home to the faith.',
+          'Prayer for Patience: St. Monica, who endured so much with patience, help me to accept difficulties as opportunities for grace.'
+        ],
         catechism: 'Monica\'s persistent prayers led to her son Augustine\'s conversion.',
         scripture: 'Luke 18:1-8, 1 Thessalonians 5:17'
       },
@@ -541,10 +649,13 @@ const catholicContent = {
         id: 'patrick',
         title: 'St. Patrick',
         description: 'Apostle of Ireland',
-        image: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&h=400&fit=crop',
+        story: 'Patrick was born in Britain around 385 AD. At age 16, he was captured by Irish pirates and sold into slavery, working as a shepherd for six years. During this time, he converted to Christ and learned to pray constantly. After escaping and returning home, he had a vision calling him back to Ireland as a missionary. Ordained a bishop, he returned to Ireland in 432 AD. Through his preaching, countless Irish were converted, including kings and princes. He used the shamrock to explain the Trinity and is said to have driven all snakes from Ireland. He died on March 17, 461 AD.',
+        novena: 'St. Patrick Novena: For nine days, pray: "O glorious St. Patrick, apostle of Ireland, who preached the Gospel to pagans and converted a nation, help me to be a faithful witness of Christ. Intercede for all missionaries and for the conversion of sinners. Through Christ our Lord. Amen."',
         prayers: [
-          'St. Patrick\'s Breastplate: "Christ be with me, Christ before me..."',
-          'Prayer: "St. Patrick, missionary to Ireland, pray for us..."'
+          'St. Patrick\'s Breastplate: Christ be with me, Christ before me, Christ behind me, Christ in me, Christ beneath me, Christ above me, Christ on my right, Christ on my left, Christ when I lie down, Christ when I sit down, Christ when I arise, Christ in the heart of every man who thinks of me, Christ in the mouth of everyone who speaks of me, Christ in every eye that sees me, Christ in every ear that hears me.',
+          'Prayer to St. Patrick: O glorious St. Patrick, who left your home and comfort to bring the faith to Ireland, help us to be generous missionaries of the Gospel. Intercede for the Irish people and for all who preach Christ.',
+          'Prayer for Protection: St. Patrick, who protected Ireland from paganism, protect us from all evil. Surround us with God\'s presence.',
+          'Prayer for Converts: St. Patrick, who converted a nation, pray for all who are entering the Church. Welcome them as Christ welcomed you.'
         ],
         catechism: 'Patrick converted Ireland through preaching, miracles, and faithful witness.',
         scripture: 'Matthew 28:19-20'
@@ -553,8 +664,14 @@ const catholicContent = {
         id: 'catherine',
         title: 'St. Catherine of Siena',
         description: 'Doctor of the Church, mystic',
-        image: 'https://images.unsplash.com/photo-1518173946687-a4c036bc1c9a?w=400&h=400&fit=crop',
-        prayers: ['Prayer: "St. Catherine, who dialogued with Christ, pray for us..."'],
+        story: 'Catherine Benincasa was born in Siena in 1347, the 24th of 25 children. From childhood she had mystical experiences and vowed her life to Christ at age 7. She became a Dominican tertiary and lived a life of prayer and service. She received the stigmata and had mystical dialogues with God. She played a key role in persuading the Pope to return from Avignon to Rome. She wrote "The Dialogue," a mystical conversation between the soul and God. She died at age 33 and was declared a Doctor of the Church in 1970. She is patron of Italy, Europe, and nurses.',
+        novena: 'St. Catherine Novena: For nine days, pray: "O glorious St. Catherine, Doctor of the Church and mystic, who conversed intimately with Christ, help me to grow in prayer and love for God. Intercede for the Church and for all who seek God\'s will. Through Christ our Lord. Amen."',
+        prayers: [
+          'Prayer to St. Catherine: O glorious St. Catherine, who mystical union with Christ produced such spiritual fruit, help me to seek God above all things. You who advised popes and served the poor, teach me to combine contemplation with action.',
+          'Prayer for the Church: St. Catherine, who helped restore the papacy to Rome, intercede for the Holy Father and the entire Church. Unite all Christians in one faith.',
+          'Prayer for Courage: St. Catherine, who fearlessly spoke truth to power, give me courage to stand up for what is right even when it is difficult.',
+          'Prayer for the Sick: St. Catherine, who cared for the sick during the plague, intercede for all who suffer illness. Comfort them and their caregivers.'
+        ],
         catechism: 'Catherine was a mystic, theologian, and advisor to popes.',
         scripture: '1 Corinthians 12:31'
       },
@@ -562,10 +679,13 @@ const catholicContent = {
         id: 'benedict',
         title: 'St. Benedict',
         description: 'Father of Western monasticism',
-        image: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=400&h=400&fit=crop',
+        story: 'Benedict was born in Italy around 480 AD. Sent to study in Rome, he was disgusted by the immorality he saw and fled to the mountains to live as a hermit. His holiness attracted followers, and he eventually founded 12 monasteries. He wrote the Rule of St. Benedict, which emphasizes prayer, work, community life, and moderation. His motto "Ora et Labora" (Pray and Work) captures the Benedictine spirit. He is known for many miracles, including breaking a poisoned wineglass with the sign of the cross. He is patron of Europe and students.',
+        novena: 'St. Benedict Novena: For nine days, pray: "O glorious St. Benedict, father of Western monasticism, help me to balance prayer and work in my life. Protect me from all evil and guide me in the path of holiness. Through Christ our Lord. Amen."',
         prayers: [
-          'The Rule of St. Benedict: "Ora et Labora" - Pray and Work',
-          'Prayer: St. Benedict, patron of Europe, pray for us'
+          'Prayer to St. Benedict: O glorious St. Benedict, who sought God in solitude and served Him in community, teach me to pray and work faithfully. Protect me from all evil and help me to grow in holiness.',
+          'The Medal Prayer: The Cross be my light; let not the dragon be my guide. Begone Satan! Suggest not vain things to me. Evil is the cup you offer; drink your own poison.',
+          'Prayer for Balance: St. Benedict, who taught prayer and work, help me to find balance in my life. May I worship God in both my prayers and my daily work.',
+          'Prayer for Protection: St. Benedict, who wore the cross as a shield, protect all who call upon you from every danger, especially from the snares of the devil.'
         ],
         catechism: 'Benedict founded Western monasticism and wrote the Rule that guides many religious.',
         scripture: 'Luke 10:41-42'
@@ -574,11 +694,13 @@ const catholicContent = {
         id: 'ignatius',
         title: 'St. Ignatius of Loyola',
         description: 'Founder of Jesuits, Spiritual Exercises',
-        image: 'https://images.unsplash.com/photo-1518893494013-481c1d8ed3fd?w=400&h=400&fit=crop',
+        story: 'Iñigo López de Loyola was born in Spain in 1491. A soldier and courtier, he was struck by a cannonball in battle. During his long recovery, he read the Life of Christ and the Lives of the Saints, which inspired him to serve God. He founded the Society of Jesus (Jesuits) in 1534. His Spiritual Exercises became a powerful tool for discernment and spiritual growth. He sent missionaries worldwide, including St. Francis Xavier. Ignatius was a master of discerning God\'s will and teaching others to find God in all things. He died in 1556, and the Jesuits now number thousands worldwide.',
+        novena: 'St. Ignatius Novena: For nine days, pray: "O glorious St. Ignatius, founder of the Jesuits and teacher of discernment, help me to find God\'s will in my life. Teach me to see God in all things and to choose what leads most to His greater glory. Through Christ our Lord. Amen."',
         prayers: [
-          'Suscipe: "Take, Lord, and receive all my liberty, my memory, my understanding, and my entire will..."',
-          'Prayer for Discernment: "Teach me, good Lord, to be generous, to serve you as you deserve..."',
-          'Novena to St. Ignatius for discernment and spiritual growth'
+          'Suscipe: Take, Lord, and receive all my liberty, my memory, my understanding, and my entire will, all that I have and possess. You have given all to me; to You, O Lord, I return it. All is Yours; dispose of it wholly according to Your will. Give me only Your love and Your grace; that is enough for me.',
+          'Prayer for Discernment: Teach me, good Lord, to be generous, to serve You as You deserve, to give and not to count the cost, to fight and not to heed the wounds, to toil and not to seek for rest, to labor and not to ask for any reward, save that of knowing that I do Your will.',
+          'Prayer for Finding God: St. Ignatius, who found God in all things, help me to recognize His presence in my daily life - in work, in prayer, in relationships, in every moment.',
+          'Prayer for Spiritual Growth: St. Ignatius, master of the spiritual life, guide me in my journey toward God. Help me to overcome attachments and seek only what leads to greater love.'
         ],
         catechism: 'Ignatius founded the Society of Jesus and developed the Spiritual Exercises for discernment.',
         scripture: 'Philippians 3:8-14'
@@ -587,10 +709,13 @@ const catholicContent = {
         id: 'francis-xavier',
         title: 'St. Francis Xavier',
         description: 'Apostle of the Indies, missionary',
-        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+        story: 'Francis Xavier was born in Spain in 1506 and met St. Ignatius of Loyola at the University of Paris. Together they founded the Jesuits. Francis was sent as a missionary to Asia, arriving in Goa, India in 1542. For the next ten years, he preached throughout India, Malaysia, and Japan. He baptized tens of thousands, cared for the sick, and instructed children. He died on an island off China at age 46, waiting to enter that closed land. He is considered the greatest missionary since St. Paul and is patron of foreign missions.',
+        novena: 'St. Francis Xavier Novena: For nine days, pray: "O glorious St. Francis Xavier, apostle of the Indies and patron of missionaries, help us to share our faith with zeal and love. Intercede for all missionaries and for the conversion of unbelievers. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer for missionaries: "St. Francis Xavier, patron of foreign missions..."',
-          'Novena to St. Francis Xavier for missionary zeal'
+          'Prayer to St. Francis Xavier: O glorious St. Francis Xavier, who left everything to preach Christ to distant lands, inflame my heart with missionary zeal. Help me to be a witness of the Gospel wherever I am. Intercede for all missionaries and for those who have not yet heard the good news.',
+          'Prayer for Missionaries: O God, who through the preaching of St. Francis Xavier won many peoples to Yourself, grant that the hearts of the faithful may burn with the same zeal for spreading the Gospel.',
+          'Prayer for Evangelization: St. Francis Xavier, who baptized thousands and preached to kings, give me courage to share my faith with others.',
+          'Prayer for the Unreached: St. Francis Xavier, who died trying to enter China, intercede for all peoples who have not yet heard of Christ. Send laborers into His harvest.'
         ],
         catechism: 'Francis Xavier was a Jesuit missionary who spread the Gospel in Asia.',
         scripture: 'Romans 10:14-15, Matthew 28:19'
@@ -599,10 +724,10 @@ const catholicContent = {
         id: 'therese-lisieux',
         title: 'St. Thérèse of the Child Jesus',
         description: 'Little Flower, Doctor of the Church',
-        image: 'https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?w=400&h=400&fit=crop',
+        story: 'Same as St. Thérèse of Lisieux above - this is an alternate entry for the same saint.',
+        novena: 'See St. Thérèse of Lisieux novena above.',
         prayers: [
-          'Prayer: "St. Thérèse, my spiritual mother, help me to do small things with great love..."',
-          'Novena to St. Thérèse for obtaining favors through her intercession'
+          'See St. Thérèse of Lisieux prayers above.'
         ],
         catechism: 'Thérèse is the patron saint of missionaries, florists, and pilots.',
         scripture: 'Matthew 18:3-4'
@@ -611,10 +736,13 @@ const catholicContent = {
         id: 'dominic',
         title: 'St. Dominic',
         description: 'Founder of Dominicans, preacher',
-        image: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=400&h=400&fit=crop',
+        story: 'Dominic de Guzmán was born in Spain around 1170. A canon of the cathedral, he accompanied his bishop to southern France where they encountered the Albigensian heresy. Dominic saw the need for well-educated preachers who could teach the true faith and defend it against errors. In 1216, he founded the Order of Preachers (Dominicans). He received the Rosary from the Blessed Virgin Mary as a weapon against heresy. Dominic traveled throughout Europe preaching, converting many, and establishing friaries. He died in 1221 and was canonized in 1234.',
+        novena: 'St. Dominic Novena: For nine days, pray: "O glorious St. Dominic, founder of the Order of Preachers and promoter of the Holy Rosary, help me to love and preach the truth of the Catholic faith. Intercede for all preachers and teachers. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Dominic, preacher of the Rosary, pray for us..."',
-          'Novena to St. Dominic for preaching and teaching'
+          'Prayer to St. Dominic: O glorious St. Dominic, who founded the Order of Preachers and promoted the Rosary throughout the world, intercede for me. Help me to love the truth and to share it with others. Bless all preachers and teachers of the faith.',
+          'Prayer for Preachers: O God, who raised up St. Dominic to preach the true faith and to refute error, grant that we may have in him an effective intercessor.',
+          'Prayer for the Rosary: St. Dominic, who received the Rosary from Mary, help me to pray it faithfully and to bring others to this powerful devotion.',
+          'Prayer for Truth: St. Dominic, light of the Church, guide all who teach and defend the faith. Give them clarity of thought and strength of conviction.'
         ],
         catechism: 'Dominic founded the Order of Preachers and promoted the Rosary.',
         scripture: 'Romans 10:14-15'
@@ -623,10 +751,13 @@ const catholicContent = {
         id: 'anne',
         title: 'St. Anne',
         description: 'Mother of the Blessed Virgin Mary',
-        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop',
+        story: 'Anne was the wife of St. Joachim and mother of the Blessed Virgin Mary. Though not mentioned in the Bible, ancient tradition tells us she and Joachim were devout but childless for many years. An angel appeared to each separately, promising them a daughter who would be dedicated to God. Anne brought Mary to the Temple at age three, where she lived until betrothed to Joseph. Anne is honored as the grandmother of Jesus. Many churches and hospitals are named after her, and she is especially invoked by couples seeking children and by grandmothers.',
+        novena: 'St. Anne Novena: For nine days, pray: "O good St. Anne, mother of she who is our life, our sweetness, and our hope, obtain for me the grace I need. Pray for all mothers and grandmothers, and for all who desire children. Through Jesus Christ your grandson. Amen."',
         prayers: [
-          'Prayer: "Good St. Anne, mother of she who is our life..."',
-          'Novena to St. Anne for finding a spouse and for mothers'
+          'Prayer to St. Anne: O glorious St. Anne, mother of Mary and grandmother of Jesus, intercede for me. You who brought forth the Mother of God, obtain for me the grace to imitate your faith and devotion. Watch over all mothers and grandmothers.',
+          'Prayer for Mothers: St. Anne, loving mother of Mary, bless all mothers. Give them strength, wisdom, and patience as they raise their children.',
+          'Prayer for Grandmothers: St. Anne, devoted grandmother, watch over all grandmothers. Help them pass on the faith to their grandchildren.',
+          'Prayer for Couples Seeking Children: Good St. Anne, who waited years for a child, intercede for all couples longing for children. May God bless them with the gift of life.'
         ],
         catechism: 'Anne is the grandmother of Jesus and patron of mothers and grandmothers.',
         scripture: 'Luke 3:27'
@@ -635,10 +766,13 @@ const catholicContent = {
         id: 'joachim',
         title: 'St. Joachim',
         description: 'Father of the Blessed Virgin Mary',
-        image: 'https://images.unsplash.com/photo-1548407260-da850faa41e3?w=400&h=400&fit=crop',
+        story: 'Joachim was the husband of St. Anne and father of the Blessed Virgin Mary. Tradition holds that he was a wealthy and pious man from Nazareth. Because he and Anne were childless for many years, Joachim was rejected from offering sacrifice in the Temple, as childlessness was considered a sign of God\'s displeasure. Devastated, he went into the desert to fast and pray. An angel appeared, announcing that Anne would bear a daughter. Returning to Jerusalem, he met Anne at the city gate, and they rejoiced together.',
+        novena: 'St. Joachim Novena: For nine days, pray: "O glorious St. Joachim, father of Mary and grandfather of Jesus, intercede for me. You who trusted God\'s promise in your old age, help me to trust God\'s providence. Bless all fathers and grandfathers. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Joachim, father of Mary and grandfather of Jesus..."',
-          'Novena to St. Joachim for fathers and grandparents'
+          'Prayer to St. Joachim: O glorious St. Joachim, father of the Blessed Virgin Mary and grandfather of our Lord Jesus Christ, intercede for me. You who trusted God\'s promise despite long waiting, help me to trust in God\'s timing. Bless and protect all fathers.',
+          'Prayer for Fathers: St. Joachim, devoted father and grandfather, bless all fathers. Give them wisdom, patience, and faith as they lead their families.',
+          'Prayer for Grandfathers: St. Joachim, loving grandfather, watch over all grandfathers. May they pass on the faith to their grandchildren.',
+          'Prayer for Trust: St. Joachim, who trusted God\'s promise after years of disappointment, help me to trust God even when His answers seem delayed.'
         ],
         catechism: 'Joachim is the grandfather of Jesus and patron of fathers and grandfathers.',
         scripture: 'Luke 3:27'
@@ -647,10 +781,13 @@ const catholicContent = {
         id: 'john-vianney',
         title: 'St. John Vianney',
         description: 'Cure of Ars, patron of priests',
-        image: 'https://images.unsplash.com/photo-1518893494013-481c1d8ed3fd?w=400&h=400&fit=crop',
+        story: 'John Marie Vianney was born in France in 1786, the son of a farmer. His studies for the priesthood were interrupted by the French Revolution and he struggled greatly with Latin. Through heroic perseverance, he was ordained in 1815 and sent to the small village of Ars, where he spent the rest of his life. He was a gifted confessor and preacher, spending up to 18 hours a day in the confessional. People from all over Europe came to him for reconciliation. He performed miracles and had profound spiritual insight. He died in 1859 and is patron of parish priests.',
+        novena: 'St. John Vianney Novena: For nine days, pray: "O glorious St. John Vianney, patron of priests, intercede for all priests. Help them to be holy, zealous, and compassionate. Bless our parish priests with your spirit. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. John Vianney, patron of priests, pray for our priests..."',
-          'Novena for vocations and for priests'
+          'Prayer to St. John Vianney: O glorious St. John Vianney, Cure of Ars, you who spent hours in the confessional and labored tirelessly for souls, intercede for me. Help me to appreciate the sacrament of reconciliation and to seek God\'s mercy. Bless and protect all priests.',
+          'Prayer for Priests: O God, who gave St. John Vianney to Your Church as a model of priestly holiness, grant that all priests may imitate his zeal for souls and his devotion to the Eucharist.',
+          'Prayer for Confessors: St. John Vianney, great confessor, help all priests to be compassionate and wise in the confessional. Give them your discernment.',
+          'Prayer for Vocations: St. John Vianney, zealous pastor, inspire young men to answer God\'s call to the priesthood. Send holy priests to Your Church.'
         ],
         catechism: 'John Vianney is the patron saint of parish priests.',
         scripture: 'Hebrews 5:1-4'
@@ -659,10 +796,13 @@ const catholicContent = {
         id: 'pius-x',
         title: 'St. Pius X',
         description: 'Pope who promoted frequent Communion',
-        image: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=400&h=400&fit=crop',
+        story: 'Giuseppe Sarto was born in Italy in 1835, the son of a poor cobbler and postman. He rose through the ranks of the priesthood to become Patriarch of Venice and then Pope in 1903, taking the name Pius X. As Pope, he reformed liturgical music, encouraged daily Bible reading, and fought modernist theology. His greatest legacy was lowering the age for First Communion to age 7 and encouraging frequent Communion. He died at the outbreak of World War I in 1914. He was canonized in 1954 and his motto was "To restore all things in Christ."',
+        novena: 'St. Pius X Novena: For nine days, pray: "O glorious St. Pius X, who promoted frequent Communion and early First Communion, help us to receive Jesus in the Eucharist with devotion. Intercede for the Holy Father and the entire Church. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Pius X, defender of the Catholic faith, pray for us..."',
-          'Encyclical promoting early and frequent Communion'
+          'Prayer to St. Pius X: O glorious St. Pius X, lover of the Holy Eucharist and champion of frequent Communion, help me to approach the altar with reverence and love. You who taught children to receive Jesus, bless all who receive First Communion.',
+          'Prayer for the Pope: St. Pius X, holy Pope, intercede for our Holy Father Pope Francis. Protect him, guide him, and grant him wisdom in leading the Church.',
+          'Prayer for Eucharistic Devotion: St. Pius X, who promoted frequent Communion, help us to receive Jesus worthily and frequently. May the Eucharist be the center of our lives.',
+          'Prayer for Children: St. Pius X, who lowered the age for First Communion, watch over all children making their First Communion. Prepare their hearts to receive Jesus.'
         ],
         catechism: 'Pius X encouraged frequent Communion and lowered the age for First Communion.',
         scripture: 'John 6:53-58'
@@ -671,10 +811,13 @@ const catholicContent = {
         id: 'maximilian',
         title: 'St. Maximilian Kolbe',
         description: 'Martyr of Auschwitz, apostle of Mary',
-        image: 'https://images.unsplash.com/photo-1548407260-da850faa41e3?w=400&h=400&fit=crop',
+        story: 'Raymond Kolbe was born in Poland in 1894. At age 12, Mary appeared to him offering two crowns: one white representing purity, one red representing martyrdom. He accepted both. He became a Franciscan priest and founded the Militia of the Immaculata to spread devotion to Mary. During World War II, he was arrested by the Nazis and sent to Auschwitz. When a prisoner escaped, ten men were chosen to starve as punishment. One cried out for his family. Maximilian volunteered to take his place. In the starvation bunker, he led prayers and songs until he died after two weeks. He is patron of prisoners.',
+        novena: 'St. Maximilian Kolbe Novena: For nine days, pray: "O glorious St. Maximilian Kolbe, martyr of charity, who gave your life for another, help us to love as Christ loved. Intercede for all prisoners and for the pro-life cause. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Maximilian Kolbe, who gave his life for another..."',
-          'Novena for prisoners and for pro-life intentions'
+          'Prayer to St. Maximilian: O glorious St. Maximilian Kolbe, martyr of Auschwitz, who gave your life so another might live, intercede for me. You who accepted both the crown of purity and the crown of martyrdom, help me to be generous in my love for others.',
+          'Prayer for Prisoners: St. Maximilian, prisoner for Christ, watch over all those incarcerated. Comfort them, strengthen them, and bring them hope.',
+          'Prayer for Pro-Life: St. Maximilian, who sacrificed your life for another, intercede for the pro-life movement. May all life be respected from conception to natural death.',
+          'Prayer for the Persecuted: St. Maximilian, who died in a concentration camp, be with all who are persecuted for their faith. Give them courage and hope.'
         ],
         catechism: 'Maximilian Kolbe is the patron saint of prisoners, pro-life movements, and journalists.',
         scripture: 'John 15:13'
@@ -683,9 +826,13 @@ const catholicContent = {
         id: 'faustina',
         title: 'St. Faustina Kowalska',
         description: 'Secretary of Divine Mercy',
+        story: 'Helena Kowalska was born in Poland in 1905 to a poor peasant family. Despite having only three years of formal education, she was called by Jesus to become a religious and to spread the message of Divine Mercy. As a nun, she received visions and locutions from Jesus, who asked her to write a diary. Jesus revealed the Chaplet of Divine Mercy, the Image of Divine Mercy, and the feast of Divine Mercy Sunday. She suffered greatly and died of tuberculosis at age 33 in 1938. Her Diary has been translated into many languages and the Divine Mercy devotion has spread worldwide.',
+        novena: 'St. Faustina Novena: For nine days, pray: "O St. Faustina, secretary of Divine Mercy, help us to trust in Jesus\' mercy completely. Obtain for us the grace to be merciful to others. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Faustina, vessel of Divine Mercy, pray for us..."',
-          'Novena to Divine Mercy revealed to St. Faustina'
+          'Prayer to St. Faustina: O St. Faustina, vessel of Divine Mercy, who trusted completely in Jesus\' mercy, intercede for me. Help me to trust in God\'s mercy even when I feel unworthy. Obtain for all sinners the grace of conversion.',
+          'Chaplet of Divine Mercy: (using rosary beads) Eternal Father, I offer You the Body and Blood, Soul and Divinity of Your dearly beloved Son, Our Lord Jesus Christ, in atonement for our sins and those of the whole world. (On each Hail Mary bead: For the sake of His sorrowful Passion, have mercy on us and on the whole world.)',
+          'Prayer for Mercy: Jesus, I trust in You. St. Faustina, teach us to trust completely in God\'s infinite mercy.',
+          'Prayer for the Dying: St. Faustina, who prayed for the dying at the hour of mercy, intercede for all who are in their final moments. May they experience God\'s mercy.'
         ],
         catechism: 'Faustina received the Divine Mercy devotion and wrote the Diary.',
         scripture: 'Psalm 136, Ephesians 2:4-5'
@@ -694,9 +841,13 @@ const catholicContent = {
         id: 'raphael',
         title: 'St. Raphael the Archangel',
         description: 'Archangel of healing',
+        story: 'Raphael is one of the seven archangels who stand before God\'s throne. His name means "God heals." In the Book of Tobit, Raphael disguises himself as a human and accompanies Tobiah on a journey. He protects Tobiah from danger, helps him catch a fish whose organs drive away demons, and heals Tobiah\'s father\'s blindness. Only at the end does he reveal his true identity as an archangel. Raphael is the patron of healers, travelers, and those seeking matches in marriage. He intercedes for physical, emotional, and spiritual healing.',
+        novena: 'St. Raphael Novena: For nine days, pray: "O glorious St. Raphael, archangel and healer, accompany me on my journey. Bring God\'s healing to my body, mind, and soul. Guide me safely to my destination. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer to St. Raphael: "St. Raphael, angel of health and healing..."',
-          'Novena to St. Raphael for healing and for travelers'
+          'Prayer to St. Raphael: O glorious St. Raphael, archangel of God who heals, accompany me on my journey as you accompanied Tobiah. Protect me from danger, heal me from sickness, and guide me safely home. Intercede for all who are ill, all travelers, and all who seek God\'s will.',
+          'Prayer for Healing: St. Raphael, whose name means "God heals," bring God\'s healing power to all who suffer. Comfort the sick, strengthen the weak, and restore health to body and soul.',
+          'Prayer for Travelers: St. Raphael, protector of travelers, watch over all who journey. Keep them safe from harm and guide them to their destination.',
+          'Prayer for Matchmakers: St. Raphael, who helped Sarah find a husband, bless all who seek a godly spouse. Guide them to their vocation.'
         ],
         catechism: 'Raphael is the archangel of healing and patron of travelers.',
         scripture: 'Tobit 12:15'
@@ -705,9 +856,13 @@ const catholicContent = {
         id: 'gabriel',
         title: 'St. Gabriel the Archangel',
         description: 'Archangel who announced to Mary',
+        story: 'Gabriel is one of the seven archangels who stand before God\'s throne. His name means "Strength of God." He is God\'s messenger for the most important announcements. In the Old Testament, he explained Daniel\'s vision. In the New Testament, he announced to Zechariah the birth of John the Baptist and then to Mary the birth of Jesus. His greeting "Hail, full of grace, the Lord is with you" became the beginning of the Hail Mary. Gabriel is the patron of communicators, messengers, and those who work in media.',
+        novena: 'St. Gabriel Novena: For nine days, pray: "O glorious St. Gabriel, archangel and messenger of God, help us to hear and respond to God\'s word as Mary did. Intercede for all who communicate the Gospel. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer to St. Gabriel: "St. Gabriel, messenger of God, pray for us..."',
-          'Novena to St. Gabriel for communicators and for purity'
+          'Prayer to St. Gabriel: O glorious St. Gabriel, archangel and messenger of God, who announced the birth of Christ to Mary, help me to hear God\'s voice and respond with faith. Intercede for all who work in communication and media.',
+          'Prayer for Communicators: St. Gabriel, God\'s messenger, bless all who communicate news and information. May they speak truth and bring messages of hope.',
+          'Prayer for Purity: St. Gabriel, who addressed Mary as "full of grace," help us to remain pure and holy in thought, word, and deed.',
+          'Prayer for Annunciation: St. Gabriel, who brought the good news of salvation, help us to share the Gospel with others joyfully.'
         ],
         catechism: 'Gabriel is the archangel who announced the births of John the Baptist and Jesus.',
         scripture: 'Luke 1:19-38'
@@ -716,9 +871,13 @@ const catholicContent = {
         id: 'michael-archangel',
         title: 'St. Michael the Archangel',
         description: 'Leader of heavenly armies',
+        story: 'Michael is the archangel who led the heavenly armies against Satan and the fallen angels. His name means "Who is like God?" - a battle cry against Satan\'s pride. In the Book of Daniel, Michael is the great prince who protects God\'s people. In Revelation, he defeats the dragon. Tradition says Michael appeared at Monte Gargano in Italy and at Monte Sant\'Angelo. He is honored as protector of the Church, defender against evil, and patron of soldiers, police, and doctors. Pope Leo XIII had a vision of Satan\'s attacks on the Church and composed the famous prayer to St. Michael.',
+        novena: 'St. Michael Novena: For nine days, pray: "O glorious St. Michael, prince of the heavenly host, defend us in battle against the wickedness and snares of the devil. May God rebuke him, we humbly pray. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer to St. Michael: "St. Michael the Archangel, defend us in battle..."',
-          'Novena to St. Michael for protection against evil'
+          'Prayer to St. Michael: St. Michael the Archangel, defend us in battle. Be our protection against the wickedness and snares of the devil. May God rebuke him, we humbly pray. And do you, O prince of the heavenly host, by the power of God, cast into hell Satan and all the evil spirits who prowl about the world seeking the ruin of souls.',
+          'Prayer for Protection: St. Michael, warrior of God, protect the Church from all evil. Defend the faithful from temptation and danger.',
+          'Prayer for Soldiers: St. Michael, patron of soldiers, watch over all who serve in the military. Protect them from harm and give them courage.',
+          'Prayer for the Dying: St. Michael, who escorts souls to heaven, be with all who are dying. Deliver them from the snares of the devil.'
         ],
         catechism: 'Michael is the archangel who led the battle against Satan.',
         scripture: 'Revelation 12:7-9'
@@ -727,9 +886,13 @@ const catholicContent = {
         id: 'martin-porres',
         title: 'St. Martin de Porres',
         description: 'Patron of social justice',
+        story: 'Martin was born in Lima, Peru in 1579, the illegitimate son of a Spanish nobleman and a freed slave. Because of his mixed race, he was treated as a second-class citizen. He became a Dominican lay brother and served in many roles: barber, surgeon, almoner, and infirmarian. He cared for the sick, fed the poor, and tended to animals. He had a special gift for reconciling enemies and healing divisions. His monastery was known for its harmony, thanks to Martin\'s prayers. He died in 1639 and was canonized in 1962. He is patron of social justice, racial harmony, and barbers.',
+        novena: 'St. Martin de Porres Novena: For nine days, pray: "O glorious St. Martin de Porres, who served all without distinction, help us to see Christ in every person. Intercede for racial harmony and social justice. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Martin de Porres, friend of the poor and sick..."',
-          'Novena to St. Martin for those seeking racial harmony'
+          'Prayer to St. Martin: O glorious St. Martin de Porres, who served the poor, the sick, and the outcast with great love, intercede for me. Help me to see Christ in every person and to serve without discrimination. You who broke down barriers of race and class, pray for harmony and justice.',
+          'Prayer for Racial Harmony: St. Martin de Porres, who crossed racial barriers to serve all, intercede for an end to racism and discrimination. May all people see each other as children of God.',
+          'Prayer for the Sick: St. Martin, compassionate caregiver, comfort all who are ill. Protect healthcare workers and bless their work of healing.',
+          'Prayer for the Poor: St. Martin, friend of the poor, help us to share generously with those in need. May we see Jesus in the poor and serve Him through them.'
         ],
         catechism: 'Martin de Porres is the patron saint of social justice, barbers, and innkeepers.',
         scripture: 'Matthew 25:35-40'
@@ -738,9 +901,13 @@ const catholicContent = {
         id: 'claire',
         title: 'St. Clare of Assisi',
         description: 'Patron of television, founder of Poor Clares',
+        story: 'Clare was born in Italy in 1194 to a noble family. Inspired by St. Francis, she ran away from home at age 18 to follow Christ in poverty. She founded the Order of Poor Ladies (Poor Clares), becoming the first woman to write a religious rule. When her convent was attacked by soldiers, Clare displayed the Blessed Sacrament at the window and prayed; the attackers fled. She was so ill that she could not attend Mass but miraculously saw and heard it on the wall of her room - making her patron of television. She died in 1253 and was canonized two years later.',
+        novena: 'St. Clare Novena: For nine days, pray: "O glorious St. Clare, follower of St. Francis and patroness of television, help us to use media for God\'s glory. Intercede for all who suffer from eye problems. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Clare, follower of St. Francis, pray for us..."',
-          'Novena to St. Clare for eye problems and for television workers'
+          'Prayer to St. Clare: O glorious St. Clare, who left wealth and comfort to follow Christ in poverty, intercede for me. Help me to detach from worldly things and seek God alone. You who protected your convent through the Eucharist, teach me devotion to the Blessed Sacrament.',
+          'Prayer for Eyes: St. Clare, patron of those with eye problems, intercede for all who suffer from eye disease and blindness. Restore their sight, physical and spiritual.',
+          'Prayer for Those in Media: St. Clare, patron of television, bless all who work in media. May they use their platforms to spread truth and goodness.',
+          'Prayer for the Poor: St. Clare, lover of holy poverty, help us to be generous and to trust in God\'s provision.'
         ],
         catechism: 'Clare founded the Poor Clares and is the patron saint of television.',
         scripture: 'Luke 18:28'
@@ -749,9 +916,13 @@ const catholicContent = {
         id: 'louis',
         title: 'St. Louis de Montfort',
         description: 'Promoter of Marian devotion',
+        story: 'Louis-Marie Grignion de Montfort was born in France in 1673. Ordained a priest in 1700, he traveled throughout France preaching missions and promoting devotion to Mary. He wrote "True Devotion to Mary," teaching that consecration to Mary is the shortest, easiest, and most perfect way to Jesus. He also wrote "The Secret of the Rosary" and "The Love of Eternal Wisdom." He founded two religious communities: the Montfort Fathers and the Daughters of Wisdom. He died at age 43 in 1716. His methods of Marian consecration influenced Pope John Paul II.',
+        novena: 'St. Louis de Montfort Novena: For nine days, pray: "O glorious St. Louis de Montfort, apostle of Mary, teach us true devotion to the Blessed Virgin. Help us to consecrate ourselves completely to Jesus through Mary. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Louis de Montfort, teacher of true devotion to Mary..."',
-          'Novena for learning to love Mary'
+          'Prayer to St. Louis: O glorious St. Louis de Montfort, fiery preacher of Mary\'s love, teach me true devotion to the Mother of God. Help me to consecrate myself to Jesus through Mary\'s hands. May I, like you, bring many souls to her Son.',
+          'Act of Consecration: I, a faithless sinner, renew and ratify today in your hands, O Immaculate Mother, the vows of my Baptism. I renounce forever Satan, his pomps and works, and I give myself entirely to Jesus Christ, the Incarnate Wisdom, to carry my cross after Him all the days of my life.',
+          'Prayer for Marian Devotion: St. Louis, who taught that Mary leads us to Jesus, help all to love and honor the Blessed Mother.',
+          'Prayer for Preachers: St. Louis, zealous missionary, bless all who preach the Gospel. Give them your fire and your Marian devotion.'
         ],
         catechism: 'Louis de Montfort wrote True Devotion to Mary.',
         scripture: 'Luke 1:26-55'
@@ -760,9 +931,13 @@ const catholicContent = {
         id: 'alphonsus',
         title: 'St. Alphonsus Liguori',
         description: 'Founder of Redemptorists, moral theologian',
+        story: 'Alphonsus was born in Italy in 1696. A brilliant lawyer, he lost his only case and left the legal profession to become a priest. He became famous for his missions and his simple, clear preaching. In 1732, he founded the Congregation of the Most Holy Redeemer (Redemptorists) to preach to the poor and abandoned. He wrote many works including "The Glories of Mary" and "Moral Theology," for which he was named a Doctor of the Church. He suffered greatly in his old age but remained patient and trusting. He died in 1787 and is patron of confessors, moral theologians, and arthritis sufferers.',
+        novena: 'St. Alphonsus Novena: For nine days, pray: "O glorious St. Alphonsus, patron of confessors, help us to receive God\'s mercy in the sacrament of reconciliation. Intercede for all who struggle with guilt and scruples. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Alphonsus Liguori, patron of confessors, pray for us..."',
-          'Novena for sinners and for those struggling with scruples'
+          'Prayer to St. Alphonsus: O glorious St. Alphonsus, bishop and doctor of the Church, patron of confessors, intercede for me. Help me to appreciate God\'s mercy and to frequent the sacrament of reconciliation. You who suffered from arthritis, comfort all who live with chronic pain.',
+          'Prayer for Confessors: St. Alphonsus, moral theologian, bless all priests who hear confessions. Give them wisdom, compassion, and understanding.',
+          'Prayer for Mercy: St. Alphonsus, who wrote beautifully about God\'s mercy, help all sinners to approach God with confidence and contrition.',
+          'Prayer for the Suffering: St. Alphonsus, who endured chronic pain, comfort all who suffer. Help them to unite their suffering with Christ\'s.'
         ],
         catechism: 'Alphonsus Liguori is the patron saint of confessors and moral theologians.',
         scripture: 'James 5:16, 1 John 1:9'
@@ -771,9 +946,13 @@ const catholicContent = {
         id: 'dismas',
         title: 'St. Dismas',
         description: 'The Good Thief, patron of prisoners',
+        story: 'Dismas is the name tradition gives to the "good thief" crucified alongside Jesus. While the other thief mocked Jesus, Dismas rebuked him, saying "We deserve our punishment, but this man has done nothing wrong." Then he turned to Jesus and made a simple but profound request: "Jesus, remember me when you come into your kingdom." Jesus replied with the promise of salvation: "Today you will be with me in Paradise." Dismas is the patron saint of prisoners, deathbed conversions, and hopeless cases.',
+        novena: 'St. Dismas Novena: For nine days, pray: "O St. Dismas, who repented on the cross and found mercy, help all prisoners and those facing death to turn to Christ. May they find hope even in despair. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Dismas, who converted on the cross, pray for us..."',
-          'Novena for prisoners and for deathbed conversions'
+          'Prayer to St. Dismas: O glorious St. Dismas, who repented at the last moment and received paradise, intercede for me. Help me to turn to Christ no matter how far I have strayed. Obtain mercy for all prisoners and those facing death.',
+          'Prayer for Prisoners: St. Dismas, fellow prisoner of Christ, watch over all who are incarcerated. Comfort them, strengthen them, and bring them to repentance.',
+          'Prayer for Deathbed Conversions: St. Dismas, who found salvation at the last hour, intercede for all who are dying. May they turn to Christ and find mercy.',
+          'Prayer for Hope: St. Dismas, who found hope in despair, help all who feel their situation is hopeless to trust in God\'s mercy.'
         ],
         catechism: 'Dismas was the thief crucified with Jesus who repented and was promised paradise.',
         scripture: 'Luke 23:39-43'
@@ -782,9 +961,13 @@ const catholicContent = {
         id: 'stephen',
         title: 'St. Stephen',
         description: 'First martyr, deacon',
+        story: 'Stephen was one of the first seven deacons ordained by the apostles. He was "full of faith and the Holy Spirit" and performed great miracles. His preaching about Jesus angered the Jewish authorities, who brought false witnesses against him. In his defense speech, Stephen recounted Israel\'s history and accused them of rejecting the Messiah. Enraged, they stoned him to death. Stephen forgave his murderers, crying out "Lord, do not hold this sin against them." His martyrdom was witnessed by Saul (later St. Paul), who approved of his death.',
+        novena: 'St. Stephen Novena: For nine days, pray: "O glorious St. Stephen, first martyr, who forgave your murderers, help us to forgive those who hurt us. Intercede for all deacons and persecuted Christians. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Stephen, first martyr, pray for us..."',
-          'Novena for deacons and for those persecuted for faith'
+          'Prayer to St. Stephen: O glorious St. Stephen, first martyr of the Church, full of faith and the Holy Spirit, intercede for me. Help me to be bold in witnessing to Christ and to forgive those who persecute me.',
+          'Prayer for Forgiveness: St. Stephen, who forgave those who stoned you, help me to forgive those who have hurt me. May I respond to persecution with love.',
+          'Prayer for Deacons: St. Stephen, deacon and martyr, bless all deacons. Give them your faith, your zeal, and your charity.',
+          'Prayer for the Persecuted: St. Stephen, first witness to die for Christ, comfort all who are persecuted for their faith. Give them courage and endurance.'
         ],
         catechism: 'Stephen was the first Christian martyr and a deacon.',
         scripture: 'Acts 6-7'
@@ -793,9 +976,13 @@ const catholicContent = {
         id: 'lawrence',
         title: 'St. Lawrence',
         description: 'Deacon, martyr of Rome',
+        story: 'Lawrence was a deacon in Rome in the 3rd century, responsible for the Church\'s treasures and the care of the poor. When the emperor demanded the Church\'s wealth, Lawrence asked for three days to gather it. During that time, he distributed the Church\'s goods to the poor. Then he presented the poor, the crippled, and the blind to the emperor, saying "These are the Church\'s treasures." Enraged, the emperor had Lawrence roasted to death on a gridiron. Lawrence famously joked, "I\'m done on this side, turn me over!" He is patron of cooks, comedians, and the poor.',
+        novena: 'St. Lawrence Novena: For nine days, pray: "O glorious St. Lawrence, who saw Christ in the poor, help us to serve those in need. Intercede for chefs and all who prepare food. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Lawrence, who gave his life for the poor..."',
-          'Novena for chefs and comedians'
+          'Prayer to St. Lawrence: O glorious St. Lawrence, deacon and martyr, who saw the poor as the Church\'s true treasure, intercede for me. Help me to serve the needy with generosity and to face suffering with joy and humor.',
+          'Prayer for Chefs: St. Lawrence, patron of cooks, bless all who prepare food for others. May they prepare meals with love and share generously with the hungry.',
+          'Prayer for the Poor: St. Lawrence, protector of the poor, help us to see Christ in those in need. May we share our resources generously.',
+          'Prayer for Joy: St. Lawrence, who joked even while martyred, help us to maintain joy and humor even in difficult times.'
         ],
         catechism: 'Lawrence is the patron saint of chefs and comedians.',
         scripture: 'Hebrews 13:16'
@@ -804,9 +991,13 @@ const catholicContent = {
         id: 'sebastian',
         title: 'St. Sebastian',
         description: 'Martyr, patron of athletes',
+        story: 'Sebastian was a Roman soldier who secretly became a Christian. He comforted persecuted Christians and converted many to the faith. When discovered, Emperor Diocletian ordered him tied to a tree and shot with arrows. Left for dead, he was nursed back to health by St. Irene. He then confronted the emperor again, who had him beaten to death and thrown in a sewer. Sebastian survived and died a martyr\'s death. He is depicted as a young man tied to a tree with arrows. He is patron of athletes, soldiers, and those suffering from plague.',
+        novena: 'St. Sebastian Novena: For nine days, pray: "O glorious St. Sebastian, athlete for Christ, intercede for all athletes. Give them strength, discipline, and fair play. Protect all from illness. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Sebastian, athlete for Christ, pray for us..."',
-          'Novena for athletes and for protection from plague'
+          'Prayer to St. Sebastian: O glorious St. Sebastian, athlete for Christ and martyr, intercede for me. Give me courage to live my faith even when it is dangerous. Protect all athletes and soldiers.',
+          'Prayer for Athletes: St. Sebastian, patron of athletes, bless all who compete in sports. Give them strength, discipline, and the spirit of fair play.',
+          'Prayer for Soldiers: St. Sebastian, soldier of Christ, protect all who serve in the military. Give them courage and keep them safe from harm.',
+          'Prayer for the Sick: St. Sebastian, invoked against plague and disease, intercede for all who are ill. Bring them healing and comfort.'
         ],
         catechism: 'Sebastian is the patron saint of athletes and soldiers.',
         scripture: '2 Timothy 4:7'
@@ -815,9 +1006,13 @@ const catholicContent = {
         id: 'christopher',
         title: 'St. Christopher',
         description: 'Patron of travelers',
+        story: 'Christopher, whose name means "Christ-bearer," was traditionally a tall man who wanted to serve the greatest king. After serving a king who feared the devil, then the devil who feared Christ, he sought to serve Christ. A hermit told him to carry travelers across a dangerous river. One night, a child asked to be carried. As Christopher crossed, the child became incredibly heavy, nearly sinking him. The child revealed Himself as Jesus, who carries the weight of the world\'s sins. Christopher became a missionary and was martyred. He is patron of travelers.',
+        novena: 'St. Christopher Novena: For nine days, pray: "O glorious St. Christopher, Christ-bearer, protect all who travel. Keep them safe from accident and danger. Bring them safely to their destination. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Christopher, patron of travelers, protect us..."',
-          'Novena for safe travel and for drivers'
+          'Prayer to St. Christopher: O glorious St. Christopher, who carried Christ across the river, intercede for all who travel. Protect them from every danger and bring them safely home. Help me to carry Christ to others in my daily journey.',
+          'Prayer for Travelers: St. Christopher, patron of travelers, watch over all journeys - by car, plane, train, ship, or foot. Protect from accident, injury, and harm.',
+          'Prayer for Drivers: St. Christopher, bless all who drive. Keep them alert, patient, and safe. Bring them home to their families.',
+          'Prayer for Carrying Christ: St. Christopher, Christ-bearer, help me to carry Jesus in my heart and share Him with everyone I meet.'
         ],
         catechism: 'Christopher is the patron saint of travelers.',
         scripture: 'Psalm 91:11-12'
@@ -826,9 +1021,13 @@ const catholicContent = {
         id: 'nicholas',
         title: 'St. Nicholas',
         description: 'Bishop of Myra, patron of children',
+        story: 'Nicholas was born in Asia Minor in the 3rd century. He became Bishop of Myra and was known for his generosity and miracles. The most famous story tells of three poor girls whose father could not afford dowries, meaning they would be sold into slavery. Nicholas secretly threw bags of gold through their window at night, providing for their future. He also saved three men from execution and provided grain during a famine. He died on December 6, 343 AD. His generosity inspired the figure of Santa Claus. He is patron of children, merchants, and sailors.',
+        novena: 'St. Nicholas Novena: For nine days, pray: "O glorious St. Nicholas, helper of the poor and protector of children, intercede for us. Help us to be generous as you were. Protect all children and those who provide for them. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Nicholas, helper of the poor and needy..."',
-          'Novena for children and for those seeking justice'
+          'Prayer to St. Nicholas: O glorious St. Nicholas, bishop and miracle-worker, intercede for me. You who gave secretly to those in need, teach us generous charity. Protect all children, especially those who are poor, abandoned, or abused.',
+          'Prayer for Children: St. Nicholas, patron of children, watch over all young people. Protect them from harm and guide them in faith.',
+          'Prayer for the Generous: St. Nicholas, model of charity, help us to share generously with those in need. May we give without seeking recognition.',
+          'Prayer for Merchants: St. Nicholas, patron of merchants, bless all businesses. Guide them to deal honestly and justly, caring for the poor.'
         ],
         catechism: 'Nicholas is the patron saint of children, merchants, and sailors.',
         scripture: 'Matthew 19:14'
@@ -837,9 +1036,13 @@ const catholicContent = {
         id: 'valentine',
         title: 'St. Valentine',
         description: 'Martyr, patron of lovers',
+        story: 'Valentine was a priest in Rome during the 3rd century. Emperor Claudius II forbade young men from marrying, believing single men made better soldiers. Valentine defied this unjust order and continued to perform Christian marriages. He was arrested and while in prison, converted the jailer and his daughter. Legend says he sent the girl a note signed "From your Valentine" before his martyrdom. He was beaten and beheaded around 269 AD. His feast day became associated with romantic love, and he is patron of lovers, engaged couples, and happy marriages.',
+        novena: 'St. Valentine Novena: For nine days, pray: "O glorious St. Valentine, martyr and patron of lovers, bless all couples. Help them to love as Christ loves the Church. Strengthen marriages and prepare engaged couples for holy union. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Valentine, witness to Christian love..."',
-          'Novena for engaged couples and for happy marriages'
+          'Prayer to St. Valentine: O glorious St. Valentine, who witnessed to Christian love even to death, intercede for me. Bless all marriages with fidelity, understanding, and sacrificial love. Help couples to grow together in faith.',
+          'Prayer for Couples: St. Valentine, patron of lovers, bless all couples - married, engaged, or dating. May their love reflect Christ\'s love for the Church.',
+          'Prayer for Marriages: St. Valentine, strengthen all marriages. Help spouses to forgive, communicate, and grow together in holiness.',
+          'Prayer for the Engaged: St. Valentine, bless all couples preparing for marriage. Prepare them for the sacred commitment they are about to make.'
         ],
         catechism: 'Valentine is the patron saint of lovers and engaged couples.',
         scripture: '1 Corinthians 13:4-7'
@@ -848,9 +1051,13 @@ const catholicContent = {
         id: 'mark',
         title: 'St. Mark',
         description: 'Evangelist, author of Gospel',
+        story: 'John Mark was a companion of St. Peter and St. Paul. His mother\'s home in Jerusalem was a meeting place for early Christians. He accompanied Paul and Barnabas on their first missionary journey but left early, causing Paul to refuse to take him later. Barnabas took Mark to Cyprus, where they reconciled with Paul. Later, Mark worked closely with Peter in Rome, and Peter calls him "my son" in his letter. Mark wrote the second Gospel, based on Peter\'s preaching. Tradition says he founded the Church in Alexandria and was martyred there. He is patron of notaries and lawyers.',
+        novena: 'St. Mark Novena: For nine days, pray: "O glorious St. Mark, evangelist and companion of Peter, help us to understand and proclaim the Gospel. Intercede for all who share God\'s word. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Mark, evangelist, intercede for us..."',
-          'Novena for evangelists and for those seeking to understand Scripture'
+          'Prayer to St. Mark: O glorious St. Mark, evangelist and companion of the apostles, intercede for me. You who wrote the Gospel according to Mark, help me to understand Scripture and share it with others.',
+          'Prayer for Understanding: St. Mark, who recorded Peter\'s preaching, help all who read Scripture to understand its meaning and apply it to their lives.',
+          'Prayer for Evangelists: St. Mark, preacher of the Gospel, bless all who share God\'s word. Give them courage, clarity, and fruit.',
+          'Prayer for Second Chances: St. Mark, who failed on a mission but later became a great evangelist, help those who have failed to try again.'
         ],
         catechism: 'Mark wrote the second Gospel and is the patron saint of notaries.',
         scripture: 'Mark 1:1'
@@ -859,9 +1066,13 @@ const catholicContent = {
         id: 'luke',
         title: 'St. Luke',
         description: 'Evangelist, physician',
+        story: 'Luke was a Greek physician from Antioch who never met Jesus personally. He carefully investigated the events of Jesus\' life and wrote the third Gospel and the Acts of the Apostles. His Gospel emphasizes Jesus\' compassion for the poor, women, and outcasts. He was a companion of St. Paul on several missionary journeys, including Paul\'s final journey to Rome. Luke alone records the parables of the Good Samaritan and the Prodigal Son. Tradition says he remained unmarried, died at age 84, and was an artist who painted the first icons of Mary. He is patron of physicians, surgeons, and artists.',
+        novena: 'St. Luke Novena: For nine days, pray: "O glorious St. Luke, physician and evangelist, intercede for all doctors and nurses. Help them to bring healing and compassion. Guide all who read Scripture to understand God\'s mercy. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Luke, physician and evangelist..."',
-          'Novena for doctors and for those seeking to understand Jesus\' compassion'
+          'Prayer to St. Luke: O glorious St. Luke, physician and evangelist, intercede for me. You who recorded Jesus\' compassion for the suffering, help me to see Christ in those who are sick or marginalized. Bless all healthcare workers.',
+          'Prayer for Doctors: St. Luke, patron of physicians, bless all doctors, nurses, and caregivers. Give them skill, compassion, and wisdom. May they see their patients as Christ sees them.',
+          'Prayer for the Sick: St. Luke, healer and evangelist, comfort all who are ill. Bring them physical healing and spiritual peace.',
+          'Prayer for Artists: St. Luke, patron of artists, bless all who create art for God\'s glory. May their work elevate hearts to heaven.'
         ],
         catechism: 'Luke wrote the third Gospel and the Acts of the Apostles.',
         scripture: 'Luke 1:1-4'
@@ -870,9 +1081,13 @@ const catholicContent = {
         id: 'matthew',
         title: 'St. Matthew',
         description: 'Apostle, evangelist, tax collector',
+        story: 'Matthew was a tax collector in Capernaum when Jesus called him to leave everything and follow him. Tax collectors were despised as collaborators with Rome and often dishonest. Yet Jesus saw something in Matthew and chose him as an apostle. Matthew immediately left his lucrative post and hosted a feast for his fellow sinners to meet Jesus. He wrote the first Gospel, emphasizing how Jesus fulfilled Old Testament prophecies. Tradition says he preached for 15 years in Judea before traveling to Ethiopia, where he was martyred. He is patron of tax collectors, accountants, and bankers.',
+        novena: 'St. Matthew Novena: For nine days, pray: "O glorious St. Matthew, apostle and evangelist, who left wealth to follow Christ, help us to value God\'s kingdom above worldly gain. Intercede for all who work in finance. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Matthew, apostle and evangelist..."',
-          'Novena for tax collectors and for those seeking to follow Jesus\' call'
+          'Prayer to St. Matthew: O glorious St. Matthew, apostle and evangelist, who left your tax booth to follow Jesus, intercede for me. Help me to respond quickly to Christ\'s call and to leave behind whatever keeps me from following Him.',
+          'Prayer for Those in Finance: St. Matthew, patron of accountants, bless all who work with money. Give them integrity and honesty in all their dealings.',
+          'Prayer for Conversion: St. Matthew, who invited fellow sinners to meet Jesus, help me to share the Gospel with those far from God.',
+          'Prayer for Generosity: St. Matthew, who gave up wealth to follow Christ, teach us detachment from material possessions.'
         ],
         catechism: 'Matthew wrote the first Gospel and was a tax collector.',
         scripture: 'Matthew 9:9'
@@ -881,9 +1096,13 @@ const catholicContent = {
         id: 'john',
         title: 'St. John the Apostle',
         description: 'Beloved disciple, evangelist',
+        story: 'John was a fisherman from Galilee, the brother of James, and one of Jesus\' twelve apostles. He was especially close to Jesus - present at the Transfiguration, the raising of Jairus\' daughter, and in the Garden of Gethsemane. He leaned on Jesus\' chest at the Last Supper and was the only apostle to stand at the foot of the cross. Jesus entrusted Mary to John\'s care. John wrote the fourth Gospel, three epistles, and the Book of Revelation. He was the only apostle not martyred, dying of old age in Ephesus. He is patron of writers, theologians, and those in love.',
+        novena: 'St. John Novena: For nine days, pray: "O glorious St. John, beloved disciple and apostle of love, help us to rest our heads on Christ\'s heart as you did. Intercede for all writers and for those seeking to love as Jesus loved. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. John the Apostle, whom Jesus loved..."',
-          'Novena for love of Jesus and for writers'
+          'Prayer to St. John: O glorious St. John, apostle whom Jesus loved, help me to grow in intimate friendship with Christ. You who rested your head on Jesus\' chest, teach me to find my home in His Sacred Heart.',
+          'Prayer for Love: St. John, apostle of love, teach us to love as Jesus loves - selflessly, completely, sacrificially.',
+          'Prayer for Writers: St. John, evangelist and writer, bless all who write. May their words point others to Christ and His love.',
+          'Prayer for Purity: St. John, virgin apostle, help us to remain pure in heart and to honor the Blessed Mother whom you cared for.'
         ],
         catechism: 'John wrote the fourth Gospel and three epistles.',
         scripture: 'John 13:23'
@@ -892,9 +1111,13 @@ const catholicContent = {
         id: 'james-greater',
         title: 'St. James the Greater',
         description: 'Apostle of Spain, Santiago',
+        story: 'James was a fisherman, the brother of John, and one of Jesus\' first apostles. With John and Peter, he witnessed the Transfiguration and Jesus\' agony in the garden. Jesus gave them the nickname "Boanerges" - sons of thunder - for their zeal. After Pentecost, tradition says James preached in Spain before returning to Judea, where Herod Agrippa beheaded him in 44 AD - the first apostle martyred. His followers supposedly carried his body back to Spain, where his shrine at Santiago de Compostela became a major pilgrimage site. He is patron of Spain, pilgrims, and laborers.',
+        novena: 'St. James Novena: For nine days, pray: "O glorious St. James, first apostle to die for Christ, intercede for all pilgrims. Give us courage to witness to our faith even when it is dangerous. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. James, apostle and pilgrim..."',
-          'Novena for travelers and for those seeking courage'
+          'Prayer to St. James: O glorious St. James, apostle and pilgrim, who gave your life for Christ, intercede for me. You who traveled far to spread the Gospel, bless all who travel - especially pilgrims seeking God.',
+          'Prayer for Pilgrims: St. James, patron of pilgrims, protect all who journey to holy places. May they encounter Christ along the way and return transformed.',
+          'Prayer for Courage: St. James, one of the sons of thunder, give us courage to witness to our faith boldly, even when it requires sacrifice.',
+          'Prayer for Laborers: St. James, patron of workers, bless all who labor. May they offer their work as prayer and find dignity in honest work.'
         ],
         catechism: 'James is the patron saint of pilgrims and Spain.',
         scripture: 'Acts 12:1-2'
@@ -903,9 +1126,13 @@ const catholicContent = {
         id: 'philip',
         title: 'St. Philip the Apostle',
         description: 'Apostle, brought Nathanael to Jesus',
+        story: 'Philip was from Bethsaida, the same city as Peter and Andrew. After Jesus called him, Philip immediately found Nathanael and told him "We have found the one Moses wrote about!" When Nathanael was skeptical, Philip simply said "Come and see." At the feeding of the 5000, Jesus tested Philip by asking where to buy bread for the crowd. Philip\'s practical response showed his trust in human calculation over divine power. Later, Philip asked Jesus to "show us the Father," leading to Jesus\' profound reply "Whoever has seen me has seen the Father." Philip preached in Greece and was martyred there.',
+        novena: 'St. Philip Novena: For nine days, pray: "O glorious St. Philip, apostle who brought Nathanael to Jesus, help us to share our faith with those around us. Intercede for all evangelizers. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Philip, apostle and evangelist..."',
-          'Novena for evangelizers and for those seeking to share their faith'
+          'Prayer to St. Philip: O glorious St. Philip, apostle who immediately shared the good news with Nathanael, help me to be an evangelizer. Give me the zeal to invite others to "come and see" Jesus.',
+          'Prayer for Evangelizers: St. Philip, who brought your friend to Christ, bless all who share their faith. Give them words to speak and hearts full of love.',
+          'Prayer for Trust: St. Philip, who learned to trust divine power over human calculation, help me to trust God\'s provision rather than my own resources.',
+          'Prayer for Those Seeking God: St. Philip, who invited Nathanael to "come and see," help all who are searching for truth to encounter Christ.'
         ],
         catechism: 'Philip brought Nathanael to Jesus.',
         scripture: 'John 1:43-46'
@@ -914,9 +1141,13 @@ const catholicContent = {
         id: 'bartholomew',
         title: 'St. Bartholomew (Nathanael)',
         description: 'Apostle, flayed alive',
+        story: 'Bartholomew, likely the same person as Nathanael, was from Cana. When Philip told him about Jesus, Nathanael asked "Can anything good come from Nazareth?" But when he met Jesus, who said "Here is a true Israelite in whom there is no deceit," he immediately confessed "Rabbi, you are the Son of God; you are the king of Israel." Tradition says he preached in India, Armenia, and Mesopotamia. He was martyred in Armenia by being flayed alive and then crucified upside down. He is often depicted holding his flayed skin. He is patron of plasterers, tanners, and those with nervous diseases.',
+        novena: 'St. Bartholomew Novena: For nine days, pray: "O glorious St. Bartholomew, who confessed Jesus as Son of God, strengthen our faith. Intercede for all persecuted Christians. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Bartholomew, apostle of Armenia..."',
-          'Novena for plasterers and for those seeking honesty'
+          'Prayer to St. Bartholomew: O glorious St. Bartholomew, apostle and martyr, who confessed Jesus as Son of God after one meeting, strengthen my faith. Help me to recognize Christ\'s presence and to proclaim Him boldly.',
+          'Prayer for Honesty: St. Bartholomew, in whom Jesus found no deceit, help us to be honest and sincere in all our dealings.',
+          'Prayer for Persecuted Christians: St. Bartholomew, who suffered a brutal martyrdom, comfort all Christians persecuted for their faith. Give them courage and endurance.',
+          'Prayer for Skeptics: St. Bartholomew, who doubted at first but believed upon meeting Jesus, bless all who are skeptical about the faith. May they encounter Christ.'
         ],
         catechism: 'Bartholomew was brought to Jesus by Philip.',
         scripture: 'John 1:45-51'
@@ -925,9 +1156,13 @@ const catholicContent = {
         id: 'matthias',
         title: 'St. Matthias',
         description: 'Apostle, replaced Judas',
+        story: 'After Judas Iscariot\'s betrayal and suicide, the apostles gathered to choose a replacement. They selected two candidates - Joseph Barsabbas and Matthias - and prayed, asking God to show which He had chosen. They cast lots, and Matthias was chosen to complete the number twelve, representing the twelve tribes of Israel. Little else is known about Matthias from Scripture. Tradition says he preached in Judea and then in Cappadocia near the Black Sea. He was martyred by stoning and then beheaded with an axe. He is invoked for those seeking God\'s will in difficult decisions.',
+        novena: 'St. Matthias Novena: For nine days, pray: "O glorious St. Matthias, chosen apostle, help us to discern God\'s will in difficult decisions. Intercede for all called to replace others in ministry. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Matthias, chosen apostle..."',
-          'Novena for those seeking God\'s will in difficult choices'
+          'Prayer to St. Matthias: O glorious St. Matthias, chosen to complete the number of apostles, intercede for me. You were selected by lot after prayer, help me to seek God\'s will in my decisions and to trust His guidance.',
+          'Prayer for Discernment: St. Matthias, chosen by God through prayer and lots, help all who are discerning important decisions. Guide them to seek God\'s will above human preferences.',
+          'Prayer for Second Chances: St. Matthias, who took the place of Judas, comfort all who step into roles left by others. Help them to be faithful.',
+          'Prayer for Faithfulness: St. Matthias, apostle and martyr, give us the grace to remain faithful to our calling, even when it comes unexpectedly.'
         ],
         catechism: 'Matthias was chosen to replace Judas Iscariot.',
         scripture: 'Acts 1:15-26'
@@ -936,9 +1171,13 @@ const catholicContent = {
         id: 'thomas-apostle',
         title: 'St. Thomas the Apostle',
         description: 'Doubting Apostle, patron of India',
+        story: 'Thomas, called Didymus (twin), was one of the Twelve. He is most famous for doubting Jesus\' resurrection, refusing to believe unless he could touch Jesus\' wounds. A week later, Jesus appeared and invited Thomas to touch His side. Thomas made the greatest confession in Scripture: "My Lord and my God!" Jesus said those who believe without seeing are blessed. Tradition says Thomas preached in Persia and then India, where he built a church with his own hands. He was martyred in India, pierced with spears. He is patron of India, architects, and those struggling with faith.',
+        novena: 'St. Thomas Novena: For nine days, pray: "O glorious St. Thomas, who touched the wounds of Christ, help all who struggle with doubt. Intercede for the people of India and for architects. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer: "St. Thomas, who touched the wounds of Christ..."',
-          'Novena for skeptics and for those struggling with faith'
+          'Prayer to St. Thomas: O glorious St. Thomas, who doubted and then believed, intercede for me when my faith wavers. Help me to confess with you "My Lord and my God!" and to find peace in believing.',
+          'Prayer for Skeptics: St. Thomas, who needed to see to believe, comfort all who struggle with doubt. May they encounter the risen Christ and find faith.',
+          'Prayer for India: St. Thomas, apostle to India, bless the people of that land. Strengthen the Church there and protect all persecuted Christians.',
+          'Prayer for Builders: St. Thomas, patron of architects, bless all who build. May they create structures that glorify God and serve human needs.'
         ],
         catechism: 'Thomas is the patron saint of India and architects.',
         scripture: 'John 20:24-29'
@@ -947,9 +1186,10 @@ const catholicContent = {
         id: 'simon-peter',
         title: 'St. Simon Peter',
         description: 'First Pope, fisherman apostle',
+        story: 'This is the same as St. Peter above. Simon Peter was a fisherman from Galilee when Jesus called him to be a fisher of men. Jesus gave him the name Peter (Rock) and said "Upon this rock I will build my church." He was the first Pope, the leader of the apostles, and the Prince of Apostles.',
+        novena: 'See St. Peter novena above.',
         prayers: [
-          'Prayer: "St. Peter, first Pope and Vicar of Christ..."',
-          'Novena for the Pope and for the papacy'
+          'See St. Peter prayers above.'
         ],
         catechism: 'Peter was the first Pope and the leader of the apostles.',
         scripture: 'Matthew 16:18-19'
@@ -958,9 +1198,10 @@ const catholicContent = {
         id: 'jude-thaddaeus',
         title: 'St. Jude Thaddaeus',
         description: 'Apostle, patron of lost causes',
+        story: 'Same as St. Jude above. Jude was one of the Twelve Apostles, also called Thaddaeus or Lebbaeus. He is the author of the New Testament letter that bears his name. Because his name sounds like Judas Iscariot, devotion to him was neglected. When people finally turned to him, they discovered his powerful intercession, especially for hopeless causes.',
+        novena: 'See St. Jude novena above.',
         prayers: [
-          'Prayer to St. Jude: "St. Jude, apostle of Christ, intercede for us..."',
-          'Novena for hopeless situations and desperate cases'
+          'See St. Jude prayers above.'
         ],
         catechism: 'Jude Thaddaeus is the patron saint of hopeless causes.',
         scripture: 'Luke 6:16'
@@ -1197,29 +1438,33 @@ const catholicContent = {
         id: 'liturgical-year',
         title: 'Liturgical Calendar',
         description: 'Church year and seasons',
+        story: 'The Catholic Church celebrates time itself as sacred. The liturgical year unfolds the mystery of Christ from His incarnation and birth to His ascension, the sending of the Spirit, and the expectation of His return. Each season has its own colors, prayers, and traditions.',
         prayers: [
-          'Advent: Preparation for Christmas (4 weeks)',
-          'Christmas: Celebration of Christ\'s birth (12 days)',
-          'Lent: 40 days of penance before Easter',
-          'Easter: Celebration of resurrection (50 days)',
-          'Ordinary Time: Weeks outside major seasons',
-          'Feast days: Saints\' days and holy days of obligation'
+          'Advent: Purple vestments, 4 weeks of preparation for Christmas. Advent wreath with 4 candles. Waiting and hope.',
+          'Christmas: White/Gold vestments, December 25 - January 12 (Baptism of Lord). Nativity scenes, carols, gift-giving.',
+          'Lent: Purple/rose vestments, 40 days of fasting, prayer, almsgiving. Ash Wednesday ashes on forehead. Stations of Cross.',
+          'Paschal Triduum: Holy Thursday (foot washing), Good Friday (veneration of cross), Holy Saturday (Easter Vigil)',
+          'Easter: White vestments, 50 days celebrating resurrection. Empty tomb symbols, alleluias, lilies.',
+          'Ordinary Time: Green vestments, growing in discipleship. Focus on Christ\'s public ministry.',
+          'Feast days: Saints\' days celebrated throughout the year. Patron saints of parishes and individuals.'
         ],
-        catechism: 'The liturgical year celebrates the mysteries of Christ\'s life.',
+        catechism: 'The liturgical year celebrates the mysteries of Christ\'s life in a cycle of seasons.',
         scripture: 'Leviticus 23, Colossians 2:16-17'
       },
       {
         id: 'holy-days',
         title: 'Holy Days of Obligation',
         description: 'Major feast days requiring Mass',
+        story: 'Holy days are special celebrations when Catholics are obligated to attend Mass, just as on Sundays. These commemorate central mysteries of the faith. In some countries, certain holy days are transferred to Sunday.',
         prayers: [
-          'Mary, Mother of God - January 1',
-          'Epiphany - January 6',
-          'Ascension of Jesus - 40 days after Easter',
-          'Assumption of Mary - August 15',
-          'All Saints - November 1',
-          'Immaculate Conception - December 8',
-          'Christmas - December 25'
+          'Mary, Mother of God (January 1): Honors Mary\'s divine maternity. World Day of Peace.',
+          'Epiphany (January 6): The Magi visit Jesus. Manifestation to Gentiles. Blessing of homes with chalk.',
+          'Ascension of Jesus (40 days after Easter): Christ ascends to heaven. Thursday or Sunday celebration.',
+          'Corpus Christi (Thursday after Trinity Sunday): Processions honoring the Body and Blood of Christ.',
+          'Assumption of Mary (August 15): Mary taken body and soul into heaven. Blessing of herbs and flowers.',
+          'All Saints (November 1): All the saints in heaven. Cemetery visits, honoring the departed.',
+          'Immaculate Conception (December 8): Mary conceived without sin. Patronal feast of USA, Philippines, etc.',
+          'Christmas (December 25): Birth of Jesus Christ. Midnight Mass, family celebrations, gift-giving.'
         ],
         catechism: 'Holy days are special celebrations requiring participation in Mass.',
         scripture: 'Acts 2:1, Leviticus 23'
@@ -1228,12 +1473,13 @@ const catholicContent = {
         id: 'church-fathers',
         title: 'Church Fathers',
         description: 'Early Christian theologians',
+        story: 'The Church Fathers were early theologians (1st-8th centuries) whose writings established Christian doctrine. They defended the faith against heresies and explained apostolic teaching. Their works are still studied today.',
         prayers: [
-          'Patristic Period: 1st-8th centuries',
-          'Eastern Fathers: Athanasius, Basil, Gregory Nazianzen, John Chrysostom',
-          'Western Fathers: Ambrose, Jerome, Augustine, Gregory the Great',
-          'Desert Fathers: Early monastics and hermits',
-          'Their writings preserve and explain apostolic teaching'
+          'Patristic Period: 1st-8th centuries, spanning from apostolic age to early medieval period.',
+          'Eastern (Greek) Fathers: Athanasius (defended Christ\'s divinity), Basil the Great (monasticism), Gregory Nazianzen (Trinity), John Chrysostom (preaching), Cyril of Alexandria (Mary as Mother of God)',
+          'Western (Latin) Fathers: Ambrose (baptized Augustine), Jerome (translated Bible to Latin), Augustine of Hippo (grace, original sin), Gregory the Great (Gregorian chant, liturgy)',
+          'Desert Fathers: Anthony and others who fled to desert to pray, beginning monasticism',
+          'Their writings preserve and explain apostolic teaching, forming the basis of Christian theology'
         ],
         catechism: 'The Church Fathers preserved apostolic teaching and developed theology.',
         scripture: '2 Timothy 2:2, Jude 1:3'
@@ -1242,14 +1488,15 @@ const catholicContent = {
         id: 'ecumenical-councils',
         title: 'Ecumenical Councils',
         description: 'Church-wide teaching councils',
+        story: 'An ecumenical council is a meeting of all Catholic bishops worldwide, convened by the Pope, to definitively settle matters of doctrine and discipline. There have been 21 ecumenical councils in Church history.',
         prayers: [
-          'Council of Nicaea (325) - Defended Christ\'s divinity',
-          'Council of Constantinople (381) - Affirmed Trinity',
-          'Council of Ephesus (431) - Mary as Mother of God',
-          'Council of Chalcedon (451) - Christ\'s two natures',
-          'Council of Trent (1545-1563) - Reformation response',
-          'Vatican I (1869-1870) - Papal infallibility',
-          'Vatican II (1962-1965) - Church in modern world'
+          'Council of Nicaea I (325): Defended Christ\'s divinity against Arianism. Composed Nicene Creed.',
+          'Council of Constantinople I (381): Affirmed full divinity of Holy Spirit. Expanded Nicene Creed.',
+          'Council of Ephesus (431): Proclaimed Mary as Theotokos (Mother of God). Condemned Nestorianism.',
+          'Council of Chalcedon (451): Affirmed Christ has two natures (divine and human) in one person.',
+          'Council of Trent (1545-1563): Responded to Protestant Reformation. Clarified doctrine of sacraments, justification, Scripture and Tradition.',
+          'Vatican I (1869-1870): Defined papal infallibility when speaking ex cathedra on faith or morals.',
+          'Vatican II (1962-1965): Updated Church for modern world. Liturgy in vernacular, ecumenism, religious freedom.'
         ],
         catechism: 'Ecumenical councils define Catholic doctrine and practice.',
         scripture: 'Acts 15 (Council of Jerusalem)'
@@ -1258,11 +1505,13 @@ const catholicContent = {
         id: 'papacy',
         title: 'The Papacy',
         description: 'Pope as successor to Peter',
+        story: 'Jesus chose Peter as the head of the apostles, giving him the "keys to the kingdom." The Pope is the Bishop of Rome and successor of St. Peter. He has supreme authority over the entire Church. The papacy has continued unbroken for over 2000 years.',
         prayers: [
-          'Prayer for the Pope: "Lord, we pray for Your Holy Father Pope Francis..."',
-          'Papal infallibility: Teaching authority on faith and morals',
-          'Apostolic succession: Unbroken line from Peter',
-          'Petrine primacy: Pope as visible head of Church'
+          'Prayer for the Pope: "Lord, we pray for Your Holy Father Pope Francis. Protect him, strengthen him, and guide him as he leads Your Church."',
+          'Papal infallibility: When the Pope speaks ex cathedra (from the chair of Peter) on faith or morals, he is protected from error by the Holy Spirit.',
+          'Apostolic succession: Unbroken line from Peter to Pope Francis through laying on of hands.',
+          'Petrine primacy: Pope as visible head of Church, Vicar of Christ, Servant of the Servants of God.',
+          'Papal titles: Bishop of Rome, Vicar of Jesus Christ, Successor of the Prince of the Apostles, Supreme Pontiff, Primate of Italy, Archbishop and Metropolitan of the Roman Province, Sovereign of the Vatican City State, Servant of the Servants of God.'
         ],
         catechism: 'The Pope is the successor of St. Peter and Christ\'s representative on earth.',
         scripture: 'Matthew 16:18-19, John 21:15-17'
@@ -1271,11 +1520,13 @@ const catholicContent = {
         id: 'relics',
         title: 'Veneration of Relics',
         description: 'Honoring holy objects and remains',
+        story: 'Since apostolic times, Christians have honored the relics (remains) of saints. The bones of St. Polycarp were described as "more precious than gold." Relics are placed in altars and venerated but never worshipped.',
         prayers: [
-          'First-class relics: Body or parts of saints',
-          'Second-class relics: Items used by saints',
-          'Third-class relics: Objects touched to relics',
-          'Veneration vs. Worship: Honoring, not adoring'
+          'First-class relics: Physical remains of saints (bones, hair, ashes). Most treasured. Placed in altar stones.',
+          'Second-class relics: Items used or worn by saints during life (clothing, prayer books, instruments of torture).',
+          'Third-class relics: Objects touched to first or second-class relics. Many people carry these as blessings.',
+          'Veneration vs. Worship: We venerate (honor) relics and saints but worship (adore) God alone. Relics are channels of God\'s grace.',
+          'Famous relics: True Cross (fragments of Jesus\' cross), Shroud of Turin, relics of Apostles in Roman basilicas.'
         ],
         catechism: 'Relics connect us to the saints and their holy example.',
         scripture: 'Acts 19:11-12, 2 Kings 13:21'
@@ -1284,14 +1535,121 @@ const catholicContent = {
         id: 'icons',
         title: 'Religious Art and Icons',
         description: 'Visual expressions of faith',
+        story: 'Sacred art has been part of Christianity from the catacomb paintings onward. Icons (sacred images) are called "windows to heaven" in the East. In the West, stained glass, statues, and paintings taught the faith to the illiterate.',
         prayers: [
-          'Iconography: Windows to heaven',
-          'Religious statues: Reminders of holy models',
-          'Crucifix: Remembrance of Christ\'s sacrifice',
-          'Stained glass: Teaching through beauty'
+          'Iconography: Byzantine and Orthodox tradition. Icons are written, not painted. Venerated as sacred.',
+          'Religious statues: Three-dimensional representations of Jesus, Mary, and saints. Teaching tools and devotion aids.',
+          'Crucifix: Cross with corpus of Christ. Focuses on Jesus\' sacrifice. Required in every Catholic church.',
+          'Stained glass: Narratives of Bible and saints. "Bible of the poor" - taught faith through beauty.',
+          'Catholic art principles: Must be reverent, doctrinally sound, and lead the viewer to God.'
         ],
         catechism: 'Sacred art helps elevate the mind to God.',
         scripture: 'Exodus 25:18-22, Psalm 96:6'
+      },
+      {
+        id: 'pilgrimage',
+        title: 'Pilgrimage',
+        description: 'Sacred journeys to holy sites',
+        story: 'Since the 4th century, Christians have traveled to holy places as pilgrims. Pilgrimage is a spiritual journey, a physical symbol of our journey to God. Pilgrims seek forgiveness, healing, or special blessings.',
+        prayers: [
+          'Holy Land: Israel/Palestine. Walk where Jesus walked. Church of Holy Sepulchre, Via Dolorosa, Bethlehem.',
+          'Rome: Eternal City. Four major basilicas, tomb of Peter, catacombs. Jubilee years every 25 years.',
+          'Santiago de Compostela: Spain. Tomb of St. James. Camino pilgrimage routes across Europe.',
+          'Lourdes: France. Grotto where Mary appeared to St. Bernadette. Healing baths. Millions visit annually.',
+          'Fatima: Portugal. Mary appeared to three children in 1917. Message of prayer and repentance.',
+          'Guadalupe: Mexico. Mary\'s image on Juan Diego\'s tilma. Most visited Catholic shrine in the world.',
+          'National shrines: Every country has sacred sites where Catholics gather for prayer and celebration.'
+        ],
+        catechism: 'Pilgrimage expresses the Church\'s belief that we are strangers and pilgrims on earth, journeying to heaven.',
+        scripture: 'Psalm 84, Hebrews 11:13-16'
+      },
+      {
+        id: 'blessings',
+        title: 'Sacramentals and Blessings',
+        description: 'Sacred signs and prayers',
+        story: 'Sacramentals are sacred signs (objects, actions, prayers) that prepare us to receive grace and dispose us to cooperate with it. Unlike sacraments, they do not confer grace by their own power but through the Church\'s prayer.',
+        prayers: [
+          'Blessed objects: Rosaries, medals, scapulars, crucifixes, holy water, salt, candles, palms, ashes.',
+          'Brown Scapular: Promise from Mary: "Whosoever dies wearing this shall not suffer eternal fire."',
+          'Miraculous Medal: Medal based on Mary\'s appearance to St. Catherine Labouré. Many miracles reported.',
+          'St. Benedict Medal: Powerful protection against evil. Includes Latin abbreviations for prayers.',
+          'Holy Water: Reminds us of Baptism. Used for blessing ourselves, homes, and the sick.',
+          'Blessed salt: Protection and preservation. Used in cooking and sprinkling.',
+          'Palms: Blessed on Palm Sunday. Kept in homes as protection and reminder of Christ\'s victory.'
+        ],
+        catechism: 'Sacramentals are sacred signs that prepare us to receive and cooperate with grace.',
+        scripture: 'Acts 19:11-12, Mark 6:13'
+      },
+      {
+        id: 'fasting-abstinence',
+        title: 'Fasting and Abstinence',
+        description: 'Penitential practices',
+        story: 'Jesus fasted for 40 days. The Church imitates Him, especially during Lent. Fasting (eating less) and abstinence (not eating meat) are forms of self-denial that help us grow in holiness.',
+        prayers: [
+          'Days of Fast: Ash Wednesday and Good Friday. Ages 18-59. One full meal, two small meals, no eating between meals.',
+          'Days of Abstinence: All Fridays in Lent. Ages 14+. No meat (fish allowed). Also: Ash Wednesday, Good Friday.',
+          'Fridays outside Lent: Abstinence from meat recommended; substitute another penance.',
+          'Ember Days: Traditional quarterly days of fasting and prayer for God\'s blessings on the seasons.',
+          'Easter Duty: Receive Communion and go to confession between First Sunday of Lent and Trinity Sunday.',
+          'Eucharistic Fast: No food or drink (except water/medicine) for one hour before receiving Communion.'
+        ],
+        catechism: 'Penance prepares us for the celebration of the Paschal Mystery and helps us grow in self-mastery.',
+        scripture: 'Matthew 6:16-18, Joel 2:12-13'
+      },
+      {
+        id: 'gestures-prayers',
+        title: 'Catholic Gestures and Postures',
+        description: 'Bodily prayer expressions',
+        story: 'Catholic worship involves the whole body - kneeling, standing, bowing, genuflecting. These physical actions express reverence and help us engage fully in prayer.',
+        prayers: [
+          'Sign of the Cross: "In the name of the Father, and of the Son, and of the Holy Spirit. Amen." Fundamental Catholic prayer.',
+          'Genuflection: Bending right knee to the floor as sign of adoration toward the tabernacle. Made before entering pew.',
+          'Bowing: Slight bow of head when name of Jesus is spoken; profound bow (from waist) at mention of Trinity, Mary, or saints.',
+          'Kneeling: Posture of humility and adoration. During Eucharistic Prayer, after Communion, for private prayer.',
+          'Standing: Posture of respect and attention. During Gospel reading, Creed, Our Father, final blessing.',
+          'Sitting: Posture of listening and meditation. During readings before Gospel, homily, preparation of gifts.',
+          'Striking breast: "Through my fault..." during Confiteor. Sign of repentance.',
+          'Hands: Orans position (arms raised) by priest; folded hands by congregation; prayer hands joined at breast.'
+        ],
+        catechism: 'Bodily gestures express and strengthen our participation in liturgical prayer.',
+        scripture: 'Psalm 95:6, Philippians 2:10-11'
+      },
+      {
+        id: 'incense-candles',
+        title: 'Incense and Candles',
+        description: 'Sacred liturgical elements',
+        story: 'Since ancient times, incense has been used in worship. Its rising smoke symbolizes prayers ascending to heaven. Candles represent Christ as light of the world.',
+        prayers: [
+          'Incense: Used at high Mass, funerals, Eucharistic adoration. Symbol of prayer rising to God (Psalm 141).',
+          'Thurible: Censor that holds burning incense. Swung by thurifer (server) in reverent pattern.',
+          'Votive candles: Candles lit by faithful in prayer. Continues prayer after we leave church.',
+          'Paschal Candle: Large candle blessed at Easter Vigil. Symbol of Christ risen. Used at baptisms and funerals.',
+          'Altar candles: At least two candles on altar during Mass. Six candles for solemn occasions.',
+          'Sanctuary lamp: Candle indicating presence of Blessed Sacrament in tabernacle. Always burning.',
+          'Baptismal candle: Given to newly baptized. "Keep the flame of faith alive in your heart."'
+        ],
+        catechism: 'Incense and candles are elements of liturgical worship that engage the senses and symbolize spiritual realities.',
+        scripture: 'Psalm 141:2, Revelation 8:3-4, John 8:12'
+      },
+      {
+        id: 'church-architecture',
+        title: 'Church Architecture',
+        description: 'Sacred space design',
+        story: 'Catholic churches are designed as "houses of God" where heaven and earth meet. Traditional church architecture follows ancient patterns that teach the faith and draw us into worship.',
+        prayers: [
+          'Cruciform shape: Cross-shaped floor plan. Nave (body), transepts (arms), sanctuary (head).',
+          'Orientation: Traditionally built with altar facing East (direction of rising sun, symbol of Christ).',
+          'Nave: Main body of church. People gather here. Nave means "ship" - Church as ark of salvation.',
+          'Sanctuary: Elevated area containing altar. Only for liturgical ministers. Symbol of heaven.',
+          'Altar: Table of sacrifice. Contains relics of saints. Kissed by priest at start and end of Mass.',
+          'Tabernacle: "Tent" where Eucharist is reserved. Should be prominent, solid, immovable. Red candle indicates presence.',
+          'Ambry: Cabinet containing holy oils. Near baptistry or in sanctuary.',
+          'Stations of Cross: 14 images on church walls depicting Christ\'s passion. Walked during Lent.',
+          'Statues and icons: Reminders of saints and angels. "Cloud of witnesses" surrounding us.',
+          'Stained glass windows: Teach Bible stories through beauty. "Poor man\'s Bible."'
+        ],
+        catechism: 'Church buildings are sacred spaces designed for the celebration of the liturgy and the glory of God.',
+        scripture: '1 Kings 6-8 (Temple), Revelation 21 (Heavenly Jerusalem)'
       }
     ]
   },
@@ -1765,10 +2123,24 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                             </div>
                           )}
 
+                          {item.story && (
+                            <div className="mt-2 p-2 bg-purple-50 rounded-lg border border-purple-200">
+                              <p className="text-xs font-semibold text-purple-700 mb-1 font-geist">📖 Story:</p>
+                              <p className="text-xs text-purple-600 font-geist line-clamp-2">{item.story.substring(0, 150)}...</p>
+                            </div>
+                          )}
+
+                          {item.novena && (
+                            <div className="mt-2 p-2 bg-rose-50 rounded-lg border border-rose-200">
+                              <p className="text-xs font-semibold text-rose-700 mb-1 font-geist">🙏 Novena:</p>
+                              <p className="text-xs text-rose-600 font-geist line-clamp-2">{item.novena.substring(0, 150)}...</p>
+                            </div>
+                          )}
+
                           {item.catechism && (
                             <div className="mt-2 p-2 bg-blue-50 rounded-lg border border-blue-200">
-                              <p className="text-xs font-semibold text-blue-700 mb-1 font-geist">📖 Teaching:</p>
-                              <p className="text-xs text-blue-600 font-geist line-clamp-2">{item.catechism}</p>
+                              <p className="text-xs font-semibold text-blue-700 mb-1 font-geist">📚 Teaching:</p>
+                              <p className="text-xs text-blue-600 font-geist line-clamp-2">{item.catechism.substring(0, 150)}...</p>
                             </div>
                           )}
 
