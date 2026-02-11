@@ -49,10 +49,9 @@ export default function SacredLibraryTab({ onSelectItem }: SacredLibraryTabProps
     { id: 'biblical-characters', icon: '👤', title: 'Characters', description: 'Bible heroes & heroines', color: 'from-amber-500 to-orange-500' },
     { id: 'verse-wallpaper', icon: '🖼️', title: 'Wallpaper', description: 'Verse wallpapers', color: 'from-pink-500 to-rose-500' },
     { id: 'rosary', icon: '📿', title: 'Rosary', description: 'Daily rosary mysteries', color: 'from-rose-500 to-pink-500' },
-    { id: 'prayers', icon: '🙏', title: 'Prayers', description: 'Traditional Catholic prayers', color: 'from-purple-500 to-blue-500' },
     { id: 'sacraments', icon: '✨', title: 'Sacraments', description: 'Seven sacred mysteries', color: 'from-blue-500 to-cyan-500' },
     { id: 'saints', icon: '👼', title: 'Saints', description: 'Inspiring holy lives', color: 'from-green-500 to-emerald-500' },
-    { id: 'catechism', icon: '📖', title: 'Catechism', description: 'Church teachings', color: 'from-amber-500 to-orange-500' },
+    { id: 'catechism', icon: '📖', title: 'Catechism', description: 'Church teachings & prayers', color: 'from-amber-500 to-orange-500' },
     { id: 'bible', icon: '✝️', title: 'Bible', description: 'Sacred Scripture', color: 'from-red-500 to-rose-500' },
     { id: 'traditions', icon: '⛪', title: 'Traditions', description: 'Catholic customs', color: 'from-indigo-500 to-violet-500' },
   ];

@@ -1382,3 +1382,57 @@ body {
 .dark .shadow-sm {
   box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.05) !important;
 }
+
+/* ========================================
+   Google Translate Widget Styles - Hidden but functional
+   ======================================== */
+.goog-te-banner-frame,
+.goog-te-gadget,
+.skiptranslate,
+.goog-te-spinner,
+.goog-te-spinner-pos {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+}
+
+.goog-te-combo {
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+#google_translate_element,
+.goog-te-combo {
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+}
+
+iframe[src*="translate.google.com"],
+iframe[src*="google.com/translate"] {
+  display: none !important;
+  visibility: hidden !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
+.skiptranslate,
+.skiptranslate *,
+.goog-te-gadget,
+.goog-te-gadget * {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0 !important;
+  position: static !important;
+}

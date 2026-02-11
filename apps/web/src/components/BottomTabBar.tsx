@@ -13,7 +13,7 @@ const tabs: TabItem[] = [
   { id: 'chat', icon: '💬', label: 'Chat', gradient: 'from-amber-400 to-orange-500', glow: 'from-amber-200 to-orange-200' },
   { id: 'library', icon: '✝️', label: 'Sacred Library', gradient: 'from-purple-400 to-indigo-500', glow: 'from-purple-200 to-indigo-200' },
   { id: 'calendar', icon: '📅', label: 'Calendar', gradient: 'from-blue-400 to-cyan-500', glow: 'from-blue-200 to-cyan-200' },
-  { id: 'prayers', icon: '🙏', label: 'Prayers', gradient: 'from-pink-400 to-rose-500', glow: 'from-pink-200 to-rose-200' },
+  { id: 'prayers', icon: '🙏', label: 'Focus', gradient: 'from-pink-400 to-rose-500', glow: 'from-pink-200 to-rose-200' },
   { id: 'profile', icon: '👤', label: 'Profile', gradient: 'from-teal-400 to-emerald-500', glow: 'from-teal-200 to-emerald-200' },
 ];
 
