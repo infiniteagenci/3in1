@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 
-// Bible books organized by testament
+// Bible books organized by testament - Catholic Bible (73 books)
 const bibleBooks = {
   oldTestament: [
+    // Pentateuch (5 books)
     { id: 'genesis', name: 'Genesis', chapters: 50 },
     { id: 'exodus', name: 'Exodus', chapters: 40 },
     { id: 'leviticus', name: 'Leviticus', chapters: 27 },
     { id: 'numbers', name: 'Numbers', chapters: 36 },
     { id: 'deuteronomy', name: 'Deuteronomy', chapters: 34 },
+    // Historical Books (16 books)
     { id: 'joshua', name: 'Joshua', chapters: 24 },
     { id: 'judges', name: 'Judges', chapters: 21 },
     { id: 'ruth', name: 'Ruth', chapters: 4 },
@@ -20,16 +22,21 @@ const bibleBooks = {
     { id: 'ezra', name: 'Ezra', chapters: 10 },
     { id: 'nehemiah', name: 'Nehemiah', chapters: 13 },
     { id: 'esther', name: 'Esther', chapters: 10 },
+    // Wisdom Books (7 books)
     { id: 'job', name: 'Job', chapters: 42 },
     { id: 'psalms', name: 'Psalms', chapters: 150 },
     { id: 'proverbs', name: 'Proverbs', chapters: 31 },
     { id: 'ecclesiastes', name: 'Ecclesiastes', chapters: 12 },
     { id: 'song-of-solomon', name: 'Song of Solomon', chapters: 8 },
+    { id: 'wisdom', name: 'Wisdom', chapters: 19, deuterocanonical: true },
+    { id: 'sirach', name: 'Sirach (Ecclesiasticus)', chapters: 51, deuterocanonical: true },
+    // Prophets (18 books)
     { id: 'isaiah', name: 'Isaiah', chapters: 66 },
     { id: 'jeremiah', name: 'Jeremiah', chapters: 52 },
     { id: 'lamentations', name: 'Lamentations', chapters: 5 },
+    { id: 'baruch', name: 'Baruch', chapters: 6, deuterocanonical: true },
     { id: 'ezekiel', name: 'Ezekiel', chapters: 48 },
-    { id: 'daniel', name: 'Daniel', chapters: 12 },
+    { id: 'daniel', name: 'Daniel', chapters: 14 },
     { id: 'hosea', name: 'Hosea', chapters: 14 },
     { id: 'joel', name: 'Joel', chapters: 3 },
     { id: 'amos', name: 'Amos', chapters: 9 },
@@ -42,6 +49,14 @@ const bibleBooks = {
     { id: 'haggai', name: 'Haggai', chapters: 2 },
     { id: 'zechariah', name: 'Zechariah', chapters: 14 },
     { id: 'malachi', name: 'Malachi', chapters: 4 },
+    // Deuterocanonical Books (7 books)
+    { id: 'tobit', name: 'Tobit', chapters: 14, deuterocanonical: true },
+    { id: 'judith', name: 'Judith', chapters: 16, deuterocanonical: true },
+    { id: '1-maccabees', name: '1 Maccabees', chapters: 16, deuterocanonical: true },
+    { id: '2-maccabees', name: '2 Maccabees', chapters: 15, deuterocanonical: true },
+    { id: 'wisdom', name: 'Wisdom', chapters: 19, deuterocanonical: true },
+    { id: 'sirach', name: 'Sirach (Ecclesiasticus)', chapters: 51, deuterocanonical: true },
+    { id: 'baruch', name: 'Baruch', chapters: 6, deuterocanonical: true },
   ],
   newTestament: [
     { id: 'matthew', name: 'Matthew', chapters: 28 },
@@ -105,10 +120,10 @@ export default function BibleTab({ onClose }: BibleTabProps) {
   const [searchResults, setSearchResults] = useState<typeof sampleVerses>([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  // Fetch verses from an API
+  // Fetch verses from an API - using GNTCE (Good News Bible Today's English Version Catholic)
   const fetchBibleVerse = async (bookId: string, chapter: number) => {
     try {
-      const response = await fetch(`https://bible-api.com/api/${bookId}/${chapter}?translation=kjv`);
+      const response = await fetch(`https://bible-api.com/${bookId}+${chapter}?translation=gnbce-c`);
       if (response.ok) {
         const data = await response.json();
         return data.verses || [];
@@ -180,7 +195,7 @@ export default function BibleTab({ onClose }: BibleTabProps) {
             <span className="text-4xl">📖</span>
             <div>
               <h1 className="text-2xl font-bold font-playfair">Holy Bible</h1>
-              <p className="text-sm text-purple-100">Sacred Scripture</p>
+              <p className="text-sm text-purple-100">Good News Bible (Today's English Version) - Catholic</p>
             </div>
           </div>
         </div>
@@ -230,7 +245,7 @@ export default function BibleTab({ onClose }: BibleTabProps) {
             >
               <div className="text-4xl mb-3">📜</div>
               <h3 className="font-bold text-gray-800 font-playfair">Old Testament</h3>
-              <p className="text-xs text-gray-500 mt-1">39 Books</p>
+              <p className="text-xs text-gray-500 mt-1">46 Books (Catholic)</p>
             </button>
 
             <button
@@ -351,9 +366,12 @@ export default function BibleTab({ onClose }: BibleTabProps) {
 
         {/* Verses */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <h3 className="text-sm font-semibold text-gray-700 mb-3 font-geist">
-            Chapter {selectedChapter}
-          </h3>
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-sm font-semibold text-gray-700 font-geist">
+              Chapter {selectedChapter}
+            </h3>
+            <span className="text-xs text-purple-600 font-medium">GNTCE</span>
+          </div>
           <div className="space-y-4">
             {verses.map((verse: any) => (
               <div key={verse.verse} className="flex gap-3 pb-3 border-b border-gray-100 last:border-0">

@@ -162,8 +162,11 @@ export default function VerseWallpaper({ className = '' }: VerseWallpaperProps) 
                   <p className="text-lg leading-relaxed mb-4 italic font-crimson">
                     "{currentVerse.text}"
                   </p>
-                  <p className="text-sm font-semibold font-geist">
+                  <p className="text-sm font-semibold font-geist mb-1">
                     {currentVerse.reference}
+                  </p>
+                  <p className="text-xs opacity-80 font-geist">
+                    {currentVerse.version}
                   </p>
                 </div>
 
