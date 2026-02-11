@@ -90,127 +90,6 @@ const catholicContent = {
       }
     ]
   },
-  prayers: {
-    title: 'Prayers',
-    icon: '🙏',
-    description: 'Traditional Catholic prayers',
-    items: [
-      {
-        id: 'our-father',
-        title: 'Our Father (Lord\'s Prayer)',
-        description: 'The prayer Jesus taught His disciples',
-        prayers: ['Our Father, who art in heaven, hallowed be thy name. Thy kingdom come, thy will be done...'],
-        catechism: 'The summary of the entire Gospel and the perfect prayer.',
-        scripture: 'Matthew 6:9-13, Luke 11:2-4'
-      },
-      {
-        id: 'hail-mary',
-        title: 'Hail Mary',
-        description: 'Prayer honoring the Blessed Mother',
-        prayers: ['Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women...'],
-        catechism: 'A prayer of praise and petition to Mary, the Mother of God.',
-        scripture: 'Luke 1:28, Luke 1:42'
-      },
-      {
-        id: 'glory-be',
-        title: 'Glory Be',
-        description: 'Doxology praising the Trinity',
-        prayers: ['Glory be to the Father, and to the Son, and to the Holy Spirit...'],
-        catechism: 'A short prayer of praise to the Holy Trinity.',
-        scripture: 'Romans 16:27, Jude 1:25'
-      },
-      {
-        id: 'rosary',
-        title: 'The Holy Rosary',
-        description: 'Meditative prayer on the life of Christ',
-        prayers: [
-          'Apostles\' Creed: "I believe in God, the Father Almighty..."',
-          'Joyful Mysteries: Annunciation, Visitation, Nativity, Presentation, Finding in Temple',
-          'Sorrowful Mysteries: Agony in Garden, Scourging, Crowning with Thorns, Carrying Cross, Crucifixion',
-          'Glorious Mysteries: Resurrection, Ascension, Descent of Holy Spirit, Assumption, Coronation',
-          'Luminous Mysteries: Baptism, Wedding at Cana, Proclamation of Kingdom, Transfiguration, Institution of Eucharist'
-        ],
-        catechism: 'The Rosary is a meditative prayer honoring Mary and contemplating Christ\'s life.',
-        scripture: 'Luke 1:28, Luke 1:42'
-      },
-      {
-        id: 'divine-mercy',
-        title: 'Divine Mercy Chaplet',
-        description: 'Prayer for mercy through Christ\'s passion',
-        prayers: [
-          'Opening Prayer: "Eternal Father, I offer you the Body and Blood, Soul and Divinity..."',
-          'For the sake of His sorrowful Passion, have mercy on us and on the whole world (10x)',
-          'Holy God Prayer: "Holy God, Holy Mighty One, Holy Immortal One, have mercy on us..."'
-        ],
-        catechism: 'Devotion to God\'s infinite mercy revealed to St. Faustina.',
-        scripture: 'Psalm 136, Ephesians 2:4-5'
-      },
-      {
-        id: 'st-michael',
-        title: 'Prayer to St. Michael',
-        description: 'Protection against evil',
-        prayers: ['St. Michael the Archangel, defend us in battle...'],
-        catechism: 'A prayer for protection and strength in spiritual warfare.',
-        scripture: 'Revelation 12:7-9, Daniel 10:13'
-      },
-      {
-        id: 'memorare',
-        title: 'Memorare',
-        description: 'Prayer to the Blessed Virgin Mary',
-        prayers: ['Remember, O most gracious Virgin Mary, that never was it known...'],
-        catechism: 'A prayer of confidence in Mary\'s intercession.',
-        scripture: 'John 2:1-11'
-      },
-      {
-        id: 'act-faith',
-        title: 'Act of Faith',
-        description: 'Profession of belief',
-        prayers: ['O my God, I firmly believe that you are one God in three divine persons...'],
-        catechism: 'A prayer professing faith in the Holy Trinity and Catholic teachings.',
-        scripture: 'Hebrews 11:1, 1 Corinthians 13:13'
-      },
-      {
-        id: 'act-hope',
-        title: 'Act of Hope',
-        description: 'Prayer of trust in God\'s mercy',
-        prayers: ['O my God, relying on your almighty power and infinite goodness...'],
-        catechism: 'A prayer expressing hope in God\'s promises and heaven.',
-        scripture: 'Romans 15:13, Titus 2:13'
-      },
-      {
-        id: 'act-charity',
-        title: 'Act of Charity',
-        description: 'Prayer of love for God',
-        prayers: ['O my God, I love you above all things...'],
-        catechism: 'A prayer expressing love for God and neighbor.',
-        scripture: 'Matthew 22:37, 1 John 4:7-8'
-      },
-      {
-        id: 'guardian-angel',
-        title: 'Prayer to Guardian Angel',
-        description: 'Prayer for angelic protection',
-        prayers: ['Angel of God, my guardian dear, to whom God\'s love commits me here...'],
-        catechism: 'A prayer to one\'s guardian angel for protection and guidance.',
-        scripture: 'Psalm 91:11-12, Matthew 18:10'
-      },
-      {
-        id: 'grace-meals',
-        title: 'Grace Before Meals',
-        description: 'Prayer of thanksgiving',
-        prayers: ['Bless us, O Lord, and these your gifts, which we are about to receive...'],
-        catechism: 'A prayer thanking God for food and sustenance.',
-        scripture: 'Matthew 14:19, Acts 27:35'
-      },
-      {
-        id: 'grace-after',
-        title: 'Grace After Meals',
-        description: 'Thanksgiving after eating',
-        prayers: ['We give you thanks, Almighty God, for all your benefits...'],
-        catechism: 'A prayer of gratitude after meals.',
-        scripture: 'Deuteronomy 8:10, 1 Timothy 4:4-5'
-      }
-    ]
-  },
   catechism: {
     title: 'Catechism',
     icon: '📖',
@@ -342,6 +221,190 @@ const catholicContent = {
         ],
         catechism: 'The precepts are the minimum requirements for living the Catholic faith.',
         scripture: 'Acts 2:42, 1 Corinthians 11:26'
+      },
+      {
+        id: 'our-father',
+        title: 'Our Father (Lord\'s Prayer)',
+        description: 'The prayer Jesus taught His disciples',
+        prayers: ['Our Father, who art in heaven, hallowed be thy name. Thy kingdom come, thy will be done on earth as it is in heaven. Give us this day our daily bread, and forgive us our trespasses, as we forgive those who trespass against us. And lead us not into temptation, but deliver us from evil. Amen.'],
+        catechism: 'The summary of the entire Gospel and the perfect prayer taught by Jesus Himself.',
+        scripture: 'Matthew 6:9-13, Luke 11:2-4'
+      },
+      {
+        id: 'hail-mary',
+        title: 'Hail Mary',
+        description: 'Prayer honoring the Blessed Mother',
+        prayers: ['Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women, and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death. Amen.'],
+        catechism: 'A prayer of praise and petition to Mary, the Mother of God.',
+        scripture: 'Luke 1:28, Luke 1:42'
+      },
+      {
+        id: 'glory-be',
+        title: 'Glory Be (Doxology)',
+        description: 'Praise to the Holy Trinity',
+        prayers: ['Glory be to the Father, and to the Son, and to the Holy Spirit. As it was in the beginning, is now, and ever shall be, world without end. Amen.'],
+        catechism: 'A short prayer of praise to the Holy Trinity.',
+        scripture: 'Romans 16:27, Jude 1:25'
+      },
+      {
+        id: 'apostles-creed',
+        title: 'Apostles\' Creed',
+        description: 'Statement of Catholic faith',
+        prayers: ['I believe in God, the Father Almighty, Creator of heaven and earth; and in Jesus Christ, His only Son, our Lord; who was conceived by the Holy Spirit, born of the Virgin Mary, suffered under Pontius Pilate, was crucified, died and was buried. He descended into hell; the third day He rose again from the dead; He ascended into heaven, and sits at the right hand of God, the Father Almighty; from thence He shall come to judge the living and the dead. I believe in the Holy Spirit, the Holy Catholic Church, the communion of saints, the forgiveness of sins, the resurrection of the body, and life everlasting. Amen.'],
+        catechism: 'The basic statement of Christian faith, dating to the early Church.',
+        scripture: '1 Corinthians 15:3-4'
+      },
+      {
+        id: 'nicene-creed',
+        title: 'Nicene Creed',
+        description: 'Profession of faith from the Mass',
+        prayers: ['I believe in one God, the Father almighty, maker of heaven and earth, of all things visible and invisible. I believe in one Lord Jesus Christ, the Only Begotten Son of God, born of the Father before all ages. God from God, Light from Light, true God from true God, begotten, not made, consubstantial with the Father; through him all things were made. For us men and for our salvation he came down from heaven, and by the Holy Spirit was incarnate of the Virgin Mary, and became man. For our sake he was crucified under Pontius Pilate, he suffered death and was buried, and rose again on the third day in accordance with the Scriptures. He ascended into heaven and is seated at the right hand of the Father. He will come again in glory to judge the living and the dead and his kingdom will have no end. I believe in the Holy Spirit, the Lord, the giver of life, who proceeds from the Father and the Son, who with the Father and the Son is adored and glorified, who has spoken through the prophets. I believe in one, holy, catholic and apostolic Church. I confess one Baptism for the forgiveness of sins and I look forward to the resurrection of the dead and the life of the world to come. Amen.'],
+        catechism: 'The profession of faith used in the Liturgy, affirming core Catholic doctrines.',
+        scripture: 'John 1:1-3, John 10:30'
+      },
+      {
+        id: 'act-faith',
+        title: 'Act of Faith',
+        description: 'Profession of belief',
+        prayers: ['O my God, I firmly believe that you are one God in three divine persons, Father, Son, and Holy Spirit. I believe that your divine Son became man and died for our sins, and that he will come to judge the living and the dead. I believe these and all the truths which your holy Catholic Church teaches, because you have revealed them, who can neither deceive nor be deceived. Amen.'],
+        catechism: 'A prayer professing faith in the Holy Trinity and Catholic teachings.',
+        scripture: 'Hebrews 11:1, 1 Corinthians 13:13'
+      },
+      {
+        id: 'act-hope',
+        title: 'Act of Hope',
+        description: 'Prayer of trust in God\'s mercy',
+        prayers: ['O my God, relying on your almighty power and infinite goodness and promises, I hope to obtain pardon of my sins, the help of your grace, and life everlasting, through the merits of Jesus Christ, my Lord and Redeemer. Amen.'],
+        catechism: 'A prayer expressing hope in God\'s promises and heaven.',
+        scripture: 'Romans 15:13, Titus 2:13'
+      },
+      {
+        id: 'act-charity',
+        title: 'Act of Charity',
+        description: 'Prayer of love for God',
+        prayers: ['O my God, I love you above all things, with my whole heart and soul, because you are all-good and worthy of all love. I love my neighbor as myself for love of you. Forgive me for not loving you enough. Help me to love you more each day. Amen.'],
+        catechism: 'A prayer expressing love for God and neighbor.',
+        scripture: 'Matthew 22:37, 1 John 4:7-8'
+      },
+      {
+        id: 'act-contrition',
+        title: 'Act of Contrition',
+        description: 'Prayer of sorrow for sin',
+        prayers: ['O my God, I am heartily sorry for having offended you, and I detest all my sins because of your just punishments, but most of all because they offend you, my God, who are all-good and deserving of all my love. I firmly resolve, with the help of your grace, to sin no more and to avoid the near occasions of sin. Amen.'],
+        catechism: 'A prayer expressing sorrow for sins and resolve to amend.',
+        scripture: 'Psalm 51, 2 Corinthians 7:10'
+      },
+      {
+        id: 'guardian-angel',
+        title: 'Prayer to Guardian Angel',
+        description: 'Prayer for angelic protection',
+        prayers: ['Angel of God, my guardian dear, to whom God\'s love commits me here, ever this day be at my side, to light and guard, to rule and guide. Amen.'],
+        catechism: 'A prayer to one\'s guardian angel for protection and guidance.',
+        scripture: 'Psalm 91:11-12, Matthew 18:10'
+      },
+      {
+        id: 'grace-meals',
+        title: 'Grace Before Meals',
+        description: 'Prayer of thanksgiving',
+        prayers: ['Bless us, O Lord, and these your gifts, which we are about to receive from your bounty. Through Christ our Lord. Amen.'],
+        catechism: 'A prayer thanking God for food and sustenance.',
+        scripture: 'Matthew 14:19, Acts 27:35'
+      },
+      {
+        id: 'grace-after',
+        title: 'Grace After Meals',
+        description: 'Thanksgiving after eating',
+        prayers: ['We give you thanks, Almighty God, for all your benefits, who lives and reigns forever. And may the souls of the faithful departed, through the mercy of God, rest in peace. Amen.'],
+        catechism: 'A prayer of gratitude after meals.',
+        scripture: 'Deuteronomy 8:10, 1 Timothy 4:4-5'
+      },
+      {
+        id: 'st-michael',
+        title: 'Prayer to St. Michael',
+        description: 'Protection against evil',
+        prayers: ['St. Michael the Archangel, defend us in battle. Be our protection against the wickedness and snares of the devil. May God rebuke him, we humbly pray; and do you, O Prince of the heavenly host, by the power of God, cast into hell Satan and all the evil spirits who prowl about the world seeking the ruin of souls. Amen.'],
+        catechism: 'A prayer for protection and strength in spiritual warfare.',
+        scripture: 'Revelation 12:7-9, Daniel 10:13'
+      },
+      {
+        id: 'memorare',
+        title: 'Memorare',
+        description: 'Prayer to the Blessed Virgin Mary',
+        prayers: ['Remember, O most gracious Virgin Mary, that never was it known that anyone who fled to your protection, implored your help or sought your intercession, was left unaided. Inspired with this confidence, I fly to you, O Virgin of virgins, my Mother; to you do I come, before you I stand, sinful and sorrowful. O Mother of the Word Incarnate, despise not my petitions, but in your mercy hear and answer me. Amen.'],
+        catechism: 'A prayer of confidence in Mary\'s intercession.',
+        scripture: 'John 2:1-11'
+      },
+      {
+        id: 'rosary-prayer',
+        title: 'The Holy Rosary',
+        description: 'Meditative prayer on the life of Christ',
+        prayers: [
+          'Apostles\' Creed: I believe in God, the Father Almighty...',
+          'Our Father: Our Father, who art in heaven...',
+          'Hail Mary (10x): Hail Mary, full of grace...',
+          'Glory Be: Glory be to the Father...',
+          'Fatima Prayer: O my Jesus, forgive us our sins, save us from the fires of hell, lead all souls to heaven, especially those in most need of your mercy.',
+          'Joyful Mysteries: Annunciation, Visitation, Nativity, Presentation, Finding in Temple',
+          'Sorrowful Mysteries: Agony in Garden, Scourging, Crowning with Thorns, Carrying Cross, Crucifixion',
+          'Glorious Mysteries: Resurrection, Ascension, Descent of Holy Spirit, Assumption, Coronation',
+          'Luminous Mysteries: Baptism, Wedding at Cana, Proclamation of Kingdom, Transfiguration, Institution of Eucharist'
+        ],
+        catechism: 'The Rosary is a meditative prayer honoring Mary and contemplating Christ\'s life.',
+        scripture: 'Luke 1:28, Luke 1:42'
+      },
+      {
+        id: 'divine-mercy',
+        title: 'Divine Mercy Chaplet',
+        description: 'Prayer for mercy through Christ\'s passion',
+        prayers: [
+          'Opening: You expired, Jesus, but the source of life gushed forth for souls, and the ocean of mercy opened up for the whole world. O Fount of Life, unfathomable Divine Mercy, envelop the whole world and empty Yourself out upon us.',
+          'Eternal Father (10x): Eternal Father, I offer you the Body and Blood, Soul and Divinity of Your dearly beloved Son, Our Lord Jesus Christ, in atonement for our sins and those of the whole world.',
+          'For the sake of His sorrowful Passion, have mercy on us and on the whole world (10x)',
+          'Holy God: Holy God, Holy Mighty One, Holy Immortal One, have mercy on us and on the whole world (3x)',
+          'Closing: O Blood and Water, which gushed forth from the Heart of Jesus as a fount of mercy for us, I trust in You.'
+        ],
+        catechism: 'Devotion to God\'s infinite mercy revealed to St. Faustina.',
+        scripture: 'Psalm 136, Ephesians 2:4-5'
+      },
+      {
+        id: 'holy-spirit-prayer',
+        title: 'Prayer to the Holy Spirit',
+        description: 'Invocation of the Holy Spirit',
+        prayers: ['Come Holy Spirit, fill the hearts of your faithful and kindle in them the fire of your love. Send forth your Spirit and they shall be created. And You shall renew the face of the earth. O, God, who by the light of the Holy Spirit did instruct the hearts of the faithful, grant that by the same Holy Spirit we may be truly wise and ever enjoy His consolations, Through Christ Our Lord, Amen.'],
+        catechism: 'A prayer invoking the Holy Spirit for guidance and wisdom.',
+        scripture: 'John 14:15-17, Acts 2:1-4'
+      },
+      {
+        id: 'sacred-heart',
+        title: 'Prayer to the Sacred Heart',
+        description: 'Devotion to Jesus\' heart of love',
+        prayers: ['O most holy Heart of Jesus, full of compassion and love, I give you my heart. Receive it, O Sacred Heart, and fill it with your holy love. Make me love you more each day. Jesus, meek and humble of heart, make my heart like yours. Amen.'],
+        catechism: 'Devotion to the Sacred Heart of Jesus, emphasizing His love and mercy.',
+        scripture: 'John 19:34, Ephesians 3:17-19'
+      },
+      {
+        id: 'immaculate-heart',
+        title: 'Prayer to Immaculate Heart',
+        description: 'Devotion to Mary\'s pure heart',
+        prayers: ['O Immaculate Heart of Mary, full of love for God and mankind, accept my consecration. Be my mother and guide. Teach me to love Jesus as you love Him. Make my heart pure like yours. Amen.'],
+        catechism: 'Devotion to Mary\'s Immaculate Heart and her maternal care.',
+        scripture: 'Luke 2:19, Luke 2:51'
+      },
+      {
+        id: 'holy-hour',
+        title: 'Holy Hour Prayer',
+        description: 'Hour of adoration before the Blessed Sacrament',
+        prayers: [
+          'Opening: My Lord Jesus Christ, I believe that you are truly present in the Blessed Sacrament.',
+          'Act of Adoration: I adore you, O my God, with all my heart.',
+          'Act of Love: O Jesus, I love you with my whole heart.',
+          'Act of Thanksgiving: Thank you, Lord, for this time of prayer.',
+          'Act of Contrition: I am sorry for my sins.',
+          'Act of Offering: I offer you my life, my work, my prayers.',
+          'Closing: Stay with me, Lord, for it is evening and the day is far spent.'
+        ],
+        catechism: 'A Holy Hour is an hour of prayer and meditation on Christ\'s presence.',
+        scripture: 'Matthew 26:36-46'
       }
     ]
   },
