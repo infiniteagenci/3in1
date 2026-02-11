@@ -417,25 +417,31 @@ const catholicContent = {
         id: 'mary',
         title: 'Blessed Virgin Mary',
         description: 'Mother of God and Queen of Saints',
-        image: 'https://images.unsplash.com/photo-1548407260-da850faa41e3?w=400&h=400&fit=crop',
+        story: 'Mary was a young Jewish girl from Nazareth when the angel Gabriel appeared to her and announced that she would conceive God\'s Son by the Holy Spirit. She gave her humble "fiat" - let it be done to me. Despite the risk of being stoned, she trusted God. She gave birth to Jesus in a stable, raised Him, followed Him to the cross, and was present at Pentecost. She was assumed body and soul into heaven and crowned Queen of Heaven.',
+        novena: 'Memorare Novena: For nine days, pray: "Remember, O most gracious Virgin Mary, that never was it known that anyone who fled to your protection, implored your help or sought your intercession was left unaided. Inspired by this confidence, I fly to you, O Virgin of virgins, my Mother. To you I come, before you I stand, sinful and sorrowful. O Mother of the Word Incarnate, despise not my petitions, but in your mercy hear and answer me. Amen."',
         prayers: [
-          'Hail Holy Queen: "Hail, holy Queen, Mother of mercy, our life, our sweetness and our hope..."',
-          'Memorare: "Remember, O most gracious Virgin Mary..."',
-          'Magnificat: "My soul proclaims the greatness of the Lord..."'
+          'Hail Holy Queen: Hail, holy Queen, Mother of mercy, our life, our sweetness and our hope. To you do we cry, poor banished children of Eve. To you do we send up our sighs, mourning and weeping in this valley of tears. Turn then, most gracious Advocate, your eyes of mercy toward us, and after this our exile, show unto us the blessed fruit of your womb, Jesus O clement, O loving, O sweet Virgin Mary.',
+          'The Rosary: Pray the Rosary daily, meditating on the Joyful, Sorrowful, Glorious, and Luminous mysteries.',
+          'The Angelus: The Angel of the Lord declared unto Mary, and she conceived by the Holy Spirit.',
+          'Sub Tuum: We fly to thy patronage, O Holy Mother of God; despise not our petitions in our necessities, but deliver us always from all dangers, O glorious and blessed Virgin.',
+          'Magnificat: My soul proclaims the greatness of the Lord, and my spirit rejoices in God my Savior.'
         ],
-        catechism: 'Mary is the Mother of God, Mother of the Church, and our spiritual mother.',
+        catechism: 'Mary is the Mother of God (Theotokos), Mother of the Church, and our spiritual mother.',
         scripture: 'Luke 1:26-55, Luke 2:6-7'
       },
       {
         id: 'joseph',
         title: 'St. Joseph',
         description: 'Guardian of the Holy Family',
-        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop',
+        story: 'A carpenter from Nazareth engaged to Mary when she was found with child. Being a righteous man, he planned to divorce her quietly until an angel appeared in a dream explaining the Holy Spirit\'s work. Joseph obeyed, married Mary, and became the foster father of Jesus. He protected the family by fleeing to Egypt to escape Herod\'s massacre. He taught Jesus his trade and was a faithful provider. Joseph is the patron of workers, fathers, and the universal Church.',
+        novena: 'St. Joseph Novena (March 10-18): For nine days, pray for his intercession as: "O glorious St. Joseph, foster father of Jesus, who by your submission to the divine will and your devotion to the Holy Family, became worthy to be called the savior of the Holy Family. Pray for us, that we may be faithful like you in serving God\'s plan for our lives. Through Christ our Lord. Amen."',
         prayers: [
-          'Prayer to St. Joseph: "O blessed Joseph, faithful guardian of Jesus..."',
-          'Litany of St. Joseph: "St. Joseph, renowned offspring of David..."'
+          'Prayer to St. Joseph: O blessed Joseph, faithful guardian of Jesus, chosen by God to be the husband of Mary and foster father of Jesus. You watched over Him and provided for Him. We ask your intercession to protect our families and provide for our needs. Help us to be faithful to God\'s will as you were.',
+          'Litany of St. Joseph: St. Joseph, renowned offspring of David, light of patriarchs, spouse of the Mother of God, chaste guardian of the Virgin, foster father of Jesus, diligent protector of Christ, head of the Holy Family, Joseph most just, Joseph most chaste, Joseph most prudent, Joseph most strong, Joseph most obedient, Joseph most faithful, mirror of patience, lover of poverty, model of workers, ornament of domestic life, solace of the afflicted, hope of the sick, patron of the dying, terror of demons, protector of Holy Church, pray for us.',
+          'Prayer for Workers: St. Joseph, you worked hard with your hands to provide for the Holy Family. Help me to do my work well and for God\'s glory. Help all workers to receive fair wages and respect.',
+          'Prayer for Fathers: St. Joseph, you protected the Holy Family. Bless and guide all fathers to be strong, loving, and holy.'
         ],
-        catechism: 'Joseph is the model father, protector of the Church, and patron of workers.',
+        catechism: 'Joseph is the model father, protector of the Church, and patron of workers, fathers, and the dying.',
         scripture: 'Matthew 1:18-25, Matthew 2:13-15'
       },
       {
