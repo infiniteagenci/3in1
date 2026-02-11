@@ -23,7 +23,11 @@ import Layout from '../layouts/Layout.astro'
     }
 
     .goog-te-combo {
-      display: none !important;
+      position: absolute !important;
+      left: -9999px !important;
+      top: -9999px !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
     }
 
     body {
@@ -187,9 +191,7 @@ import Layout from '../layouts/Layout.astro'
         </div>
 
         <!-- Auth Buttons -->
-        <div id="nav-logged-out" class="flex items-center gap-4">
-          <a href="/login" class="px-5 py-2.5 text-white/90 hover:text-white transition-colors font-geist font-medium">Login</a>
-          <a href="/login" class="px-6 py-2.5 bg-white text-purple-600 rounded-full font-geist font-medium hover:shadow-lg hover:scale-105 transition-all duration-200">Join Community</a>
+        <div id="nav-logged-out" class="hidden">
         </div>
         <div id="nav-logged-in" class="hidden flex items-center gap-4">
           <a href="/chat" class="px-6 py-2.5 bg-white text-purple-600 rounded-full font-geist font-medium hover:shadow-lg hover:scale-105 transition-all duration-200">Continue Your Journey</a>

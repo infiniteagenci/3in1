@@ -580,7 +580,11 @@ import Layout from '../layouts/Layout.astro'
     }
 
     .goog-te-combo {
-      display: none !important;
+      position: absolute !important;
+      left: -9999px !important;
+      top: -9999px !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
     }
 
     body {
