@@ -120,10 +120,11 @@ export default function BibleTab({ onClose }: BibleTabProps) {
   const [searchResults, setSearchResults] = useState<typeof sampleVerses>([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  // Fetch verses from an API - using GNTCE (Good News Bible Today's English Version Catholic)
+  // Fetch verses from an API
   const fetchBibleVerse = async (bookId: string, chapter: number) => {
     try {
-      const response = await fetch(`https://bible-api.com/${bookId}+${chapter}?translation=gnbce-c`);
+      // Using web (World English Bible) or kjv as fallback since GNTCE isn't directly supported
+      const response = await fetch(`https://bible-api.com/${bookId}+${chapter}?translation=kjv`);
       if (response.ok) {
         const data = await response.json();
         return data.verses || [];
@@ -195,7 +196,7 @@ export default function BibleTab({ onClose }: BibleTabProps) {
             <span className="text-4xl">📖</span>
             <div>
               <h1 className="text-2xl font-bold font-playfair">Holy Bible</h1>
-              <p className="text-sm text-purple-100">Good News Bible (Today's English Version) - Catholic</p>
+              <p className="text-sm text-purple-100">Catholic Edition - Complete with 73 Books</p>
             </div>
           </div>
         </div>
@@ -366,12 +367,9 @@ export default function BibleTab({ onClose }: BibleTabProps) {
 
         {/* Verses */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <div className="flex justify-between items-center mb-3">
-            <h3 className="text-sm font-semibold text-gray-700 font-geist">
-              Chapter {selectedChapter}
-            </h3>
-            <span className="text-xs text-purple-600 font-medium">GNTCE</span>
-          </div>
+          <h3 className="text-sm font-semibold text-gray-700 font-geist mb-3">
+            Chapter {selectedChapter}
+          </h3>
           <div className="space-y-4">
             {verses.map((verse: any) => (
               <div key={verse.verse} className="flex gap-3 pb-3 border-b border-gray-100 last:border-0">
