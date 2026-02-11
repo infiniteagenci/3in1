@@ -3,6 +3,7 @@ import StudyPlans from './bible-chat/StudyPlans';
 import BiblicalCharacters from './bible-chat/BiblicalCharacters';
 import VerseWallpaper from './bible-chat/VerseWallpaper';
 import RosaryTab from './RosaryTab';
+import BibleTab from './BibleTab';
 import { useState } from 'react';
 
 interface SacredLibraryTabProps {
@@ -15,6 +16,7 @@ export default function SacredLibraryTab({ onSelectItem }: SacredLibraryTabProps
   const [showBiblicalCharacters, setShowBiblicalCharacters] = useState(false);
   const [showVerseWallpaper, setShowVerseWallpaper] = useState(false);
   const [showRosary, setShowRosary] = useState(false);
+  const [showBible, setShowBible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const handleCategorySelect = (category: string) => {
@@ -32,6 +34,10 @@ export default function SacredLibraryTab({ onSelectItem }: SacredLibraryTabProps
     }
     if (category === 'rosary') {
       setShowRosary(true);
+      return;
+    }
+    if (category === 'bible') {
+      setShowBible(true);
       return;
     }
     setSelectedCategory(category);
@@ -87,11 +93,7 @@ export default function SacredLibraryTab({ onSelectItem }: SacredLibraryTabProps
           <span className="font-medium">Back to Library</span>
         </button>
         <div className="flex-1 overflow-y-auto p-4">
-          <StudyPlans onLessonSelect={(planId, lessonId) => {
-            // Handle lesson selection - could trigger a chat about the lesson
-            onSelectItem('study-plans', { planId, lessonId });
-            setShowStudyPlans(false);
-          }} />
+          <StudyPlans />
         </div>
       </div>
     );
@@ -123,6 +125,10 @@ export default function SacredLibraryTab({ onSelectItem }: SacredLibraryTabProps
 
   if (showRosary) {
     return <RosaryTab onClose={() => setShowRosary(false)} />;
+  }
+
+  if (showBible) {
+    return <BibleTab onClose={() => setShowBible(false)} />;
   }
 
   if (showMenu && selectedCategory) {

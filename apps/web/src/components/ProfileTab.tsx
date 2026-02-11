@@ -3,6 +3,7 @@ import SpiritualJournal from './bible-chat/SpiritualJournal';
 import PrayerReminders from './bible-chat/PrayerReminders';
 import LanguageSelector from './LanguageSelector';
 import { useState, useEffect, useRef } from 'react';
+import { getAllStudyPlans, getStudyProgress, type StudyPlan, type StudyLesson } from '../data/bible-study-plans';
 
 export default function ProfileTab() {
   const [prayerProgress, setPrayerProgress] = useState<any>(null);
@@ -12,6 +13,7 @@ export default function ProfileTab() {
   const [ageGroup, setAgeGroup] = useState<string>('');
   const [showJournal, setShowJournal] = useState(false);
   const [showReminders, setShowReminders] = useState(false);
+  const [showStudyProgress, setShowStudyProgress] = useState(false);
   const [showAccountSettings, setShowAccountSettings] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
@@ -19,6 +21,7 @@ export default function ProfileTab() {
     }
     return 'light';
   });
+  const [studyNotes, setStudyNotes] = useState<Record<string, { lesson: StudyLesson; plan: StudyPlan; notes: string; questionNotes: Record<string, string> }>>({});
 
   // Account settings form states
   const [editUsername, setEditUsername] = useState('');
@@ -81,6 +84,34 @@ export default function ProfileTab() {
           const data = await progressResponse.json();
           setPrayerProgress(data);
         }
+
+        // Load study notes from localStorage
+        const allPlans = getAllStudyPlans();
+        const loadedNotes: Record<string, { lesson: StudyLesson; plan: StudyPlan; notes: string; questionNotes: Record<string, string> }> = {};
+
+        allPlans.forEach(plan => {
+          const progress = getStudyProgress(plan.id);
+          const completedLessons = progress?.completed || [];
+
+          completedLessons.forEach((lessonId: string) => {
+            const lesson = plan.lessons.find(l => l.id === lessonId);
+            if (lesson) {
+              const storageKey = `study_notes_${plan.id}_${lessonId}`;
+              const savedData = localStorage.getItem(storageKey);
+              if (savedData) {
+                const parsed = JSON.parse(savedData);
+                loadedNotes[`${plan.id}_${lessonId}`] = {
+                  lesson,
+                  plan,
+                  notes: parsed.personal || '',
+                  questionNotes: parsed.questionNotes || {}
+                };
+              }
+            }
+          });
+        });
+
+        setStudyNotes(loadedNotes);
       } catch (error) {
         console.error('Failed to load user data:', error);
       }
@@ -399,6 +430,73 @@ export default function ProfileTab() {
     return <PrayerReminders onClose={() => setShowReminders(false)} />;
   }
 
+  // Study Progress view
+  if (showStudyProgress) {
+    return (
+      <div className="h-full overflow-y-auto pb-20 bg-[var(--color-stone-50)]">
+        <button
+          onClick={() => setShowStudyProgress(false)}
+          className="flex items-center gap-2 px-4 py-3 bg-white border-b border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          <span className="font-medium">Back to Profile</span>
+        </button>
+        <div className="p-4">
+          <h2 className="text-xl font-bold font-playfair text-gray-900 mb-4">📚 My Study Progress</h2>
+
+          {Object.keys(studyNotes).length === 0 ? (
+            <div className="bg-white rounded-xl p-8 text-center shadow-sm border border-gray-100">
+              <div className="text-4xl mb-3">📖</div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">No completed lessons yet</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Complete lessons in Study Plans to track your progress and notes here.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {Object.entries(studyNotes).map(([key, data]) => (
+                <div key={key} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 text-white">
+                    <h3 className="font-semibold font-playfair">{data.lesson.title}</h3>
+                    <p className="text-xs text-indigo-100">{data.plan.title}</p>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    {/* Personal Notes */}
+                    {data.notes && (
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">📝 Your Notes:</h4>
+                        <p className="text-sm text-gray-600 italic bg-gray-50 p-3 rounded-lg">{data.notes}</p>
+                      </div>
+                    )}
+
+                    {/* Question Notes */}
+                    {Object.keys(data.questionNotes).length > 0 && (
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">💭 Your Answers:</h4>
+                        <div className="space-y-2">
+                          {data.lesson.questions.map((question, idx) => (
+                            data.questionNotes[idx] ? (
+                              <div key={idx} className="bg-blue-50 p-3 rounded-lg">
+                                <p className="text-xs text-gray-600 mb-1">{question}</p>
+                                <p className="text-sm text-gray-700 italic">{data.questionNotes[idx]}</p>
+                              </div>
+                            ) : null
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   // Account Settings view
   if (showAccountSettings) {
     return (
@@ -706,6 +804,25 @@ export default function ProfileTab() {
               <div className="text-left">
                 <h3 className="font-semibold">Spiritual Journal</h3>
                 <p className="text-xs text-purple-100">Record your walk with God</p>
+              </div>
+            </div>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </button>
+
+        {/* Study Progress Button */}
+        <button
+          onClick={() => setShowStudyProgress(true)}
+          className="w-full bg-gradient-to-r from-blue-500 to-cyan-600 text-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">📚</span>
+              <div className="text-left">
+                <h3 className="font-semibold">My Study Progress</h3>
+                <p className="text-xs text-blue-100">{Object.keys(studyNotes).length} completed lessons</p>
               </div>
             </div>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

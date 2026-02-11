@@ -67,6 +67,8 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
   const [selectedPlan, setSelectedPlan] = useState<StudyPlan | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<StudyLesson | null>(null);
   const [progressData, setProgressData] = useState<Record<string, any>>({});
+  const [personalNotes, setPersonalNotes] = useState<string>('');
+  const [selectedQuestionNotes, setSelectedQuestionNotes] = useState<Record<string, string>>({});
 
   useEffect(() => {
     // Load progress for all plans
@@ -75,7 +77,18 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
       allProgress[plan.id] = getStudyProgress(plan.id);
     });
     setProgressData(allProgress);
-  }, [plans]);
+
+    // Load saved notes for the current lesson
+    if (selectedLesson && selectedPlan) {
+      const storageKey = `study_notes_${selectedPlan.id}_${selectedLesson.id}`;
+      const savedNotes = localStorage.getItem(storageKey);
+      if (savedNotes) {
+        const parsed = JSON.parse(savedNotes);
+        setPersonalNotes(parsed.personal || '');
+        setSelectedQuestionNotes(parsed.questionNotes || {});
+      }
+    }
+  }, [plans, selectedLesson, selectedPlan]);
 
   const handlePlanSelect = (plan: StudyPlan) => {
     setSelectedPlan(plan);
@@ -100,9 +113,16 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
 
     setSelectedLesson(lesson);
 
-    // Notify parent if callback provided
-    if (onLessonSelect) {
-      onLessonSelect(selectedPlan.id, lesson.id);
+    // Load saved notes for this lesson
+    const storageKey = `study_notes_${selectedPlan.id}_${lesson.id}`;
+    const savedNotes = localStorage.getItem(storageKey);
+    if (savedNotes) {
+      const parsed = JSON.parse(savedNotes);
+      setPersonalNotes(parsed.personal || '');
+      setSelectedQuestionNotes(parsed.questionNotes || {});
+    } else {
+      setPersonalNotes('');
+      setSelectedQuestionNotes({});
     }
   };
 
@@ -119,6 +139,15 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
   const handleMarkComplete = () => {
     if (!selectedPlan || !selectedLesson) return;
 
+    // Save notes before marking complete
+    const storageKey = `study_notes_${selectedPlan.id}_${selectedLesson.id}`;
+    const notesData = {
+      personal: personalNotes,
+      questionNotes: selectedQuestionNotes,
+      completedAt: new Date().toISOString()
+    };
+    localStorage.setItem(storageKey, JSON.stringify(notesData));
+
     saveLessonProgress(selectedPlan.id, selectedLesson.id);
 
     // Update local state
@@ -131,6 +160,25 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
     }));
 
     setSelectedLesson(null);
+  };
+
+  const handleSaveNotes = () => {
+    if (!selectedPlan || !selectedLesson) return;
+
+    const storageKey = `study_notes_${selectedPlan.id}_${selectedLesson.id}`;
+    const notesData = {
+      personal: personalNotes,
+      questionNotes: selectedQuestionNotes,
+      lastSaved: new Date().toISOString()
+    };
+    localStorage.setItem(storageKey, JSON.stringify(notesData));
+  };
+
+  const handleQuestionNoteChange = (questionIndex: number, note: string) => {
+    setSelectedQuestionNotes(prev => ({
+      ...prev,
+      [questionIndex]: note
+    }));
   };
 
   const filteredPlans = selectedCategory
@@ -446,6 +494,49 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
           </h4>
           <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-4">
             <p className="text-sm text-gray-700 font-geist font-light leading-relaxed">{selectedLesson.reflection}</p>
+          </div>
+        </div>
+
+        {/* Personal Notes Section - NEW */}
+        <div>
+          <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 font-geist">
+            <span>📝</span> Your Personal Notes
+          </h4>
+          <div className="bg-purple-50 border border-purple-100 rounded-lg p-4 space-y-3">
+            <textarea
+              value={personalNotes}
+              onChange={(e) => setPersonalNotes(e.target.value)}
+              placeholder="Write your personal thoughts, insights, or reflections here..."
+              className="w-full px-3 py-2 border border-purple-200 rounded-lg text-sm text-gray-700 focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+              rows={4}
+            />
+            <button
+              onClick={handleSaveNotes}
+              className="w-full py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors"
+            >
+              Save Notes
+            </button>
+          </div>
+        </div>
+
+        {/* Question Notes Section - NEW */}
+        <div>
+          <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 font-geist">
+            <span>💭</span> Your Answers to Questions
+          </h4>
+          <div className="space-y-3">
+            {selectedLesson.questions.map((question, index) => (
+              <div key={index} className="bg-blue-50 border border-blue-100 rounded-lg p-3">
+                <p className="text-sm text-gray-700 mb-2 font-medium">{question}</p>
+                <textarea
+                  value={selectedQuestionNotes[index] || ''}
+                  onChange={(e) => handleQuestionNoteChange(index, e.target.value)}
+                  placeholder="Write your answer or thoughts..."
+                  className="w-full px-3 py-2 border border-blue-200 rounded-lg text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  rows={2}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>
