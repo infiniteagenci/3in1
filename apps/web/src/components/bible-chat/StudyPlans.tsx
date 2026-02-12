@@ -5,6 +5,7 @@ import {
   getStudyProgress,
   saveLessonProgress,
   saveLessonInProgress,
+  getUnlockedLessonCount,
   type StudyPlan,
   type StudyLesson
 } from '../../data/bible-study-plans';
@@ -185,11 +186,16 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
     ? getStudyPlansByCategory(selectedCategory as StudyPlan['category'])
     : plans;
 
-  const getLessonStatus = (lessonId: string) => {
+  const getLessonStatus = (lessonId: string, lessonIndex: number) => {
     if (!selectedPlan) return 'locked';
     const progress = progressData[selectedPlan.id];
     if (progress?.completed?.includes(lessonId)) return 'completed';
     if (progress?.inProgress?.includes(lessonId) || progress?.current === lessonId) return 'in-progress';
+
+    // Check if lesson is unlocked based on days elapsed
+    const unlockedCount = getUnlockedLessonCount(selectedPlan.id, selectedPlan.lessons.length);
+    if (lessonIndex < unlockedCount) return 'available';
+
     return 'locked';
   };
 
@@ -354,9 +360,9 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
           <h3 className="text-lg font-semibold text-gray-900 mb-4 font-geist">Lessons</h3>
           <div className="space-y-3">
             {selectedPlan.lessons.map((lesson, index) => {
-              const status = getLessonStatus(lesson.id);
-              const isLocked = status === 'locked' && index > 0;
-              const prevLessonCompleted = index > 0 && progress?.completed?.includes(selectedPlan.lessons[index - 1].id);
+              const status = getLessonStatus(lesson.id, index);
+              const isLocked = status === 'locked';
+              const unlockedCount = getUnlockedLessonCount(selectedPlan.id, selectedPlan.lessons.length);
 
               return (
                 <button
@@ -410,6 +416,11 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
                         <span>•</span>
                         <span>{lesson.questions.length} questions</span>
                       </div>
+                      {isLocked && (
+                        <p className="text-xs text-gray-500 mt-2">
+                          🔒 Unlocks in {index + 1 - unlockedCount} day{index + 1 - unlockedCount > 1 ? 's' : ''}
+                        </p>
+                      )}
                     </div>
 
                     {/* Arrow (if not locked) */}
@@ -422,6 +433,11 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
                 </button>
               );
             })}
+          </div>
+          <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <p className="text-xs text-blue-700">
+              ℹ️ Lessons unlock one per day. You have access to {unlockedCount} of {selectedPlan.lessons.length} lessons.
+            </p>
           </div>
         </div>
       </div>

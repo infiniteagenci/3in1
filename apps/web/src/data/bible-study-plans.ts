@@ -733,3 +733,22 @@ export function saveLessonInProgress(planId: string, lessonId: string) {
   progress.current = lessonId;
   localStorage.setItem(`study-progress-${planId}`, JSON.stringify(progress));
 }
+
+// Get or set the start date for a study plan
+export function getPlanStartDate(planId: string): string {
+  let startDate = localStorage.getItem(`study-start-${planId}`);
+  if (!startDate) {
+    startDate = new Date().toISOString();
+    localStorage.setItem(`study-start-${planId}`, startDate);
+  }
+  return startDate;
+}
+
+// Get the number of unlocked lessons based on days elapsed
+export function getUnlockedLessonCount(planId: string, totalLessons: number): number {
+  const startDate = new Date(getPlanStartDate(planId));
+  const now = new Date();
+  const daysElapsed = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+  // Unlock one lesson per day, starting with day 0 = lesson 1 unlocked
+  return Math.min(daysElapsed + 1, totalLessons);
+}

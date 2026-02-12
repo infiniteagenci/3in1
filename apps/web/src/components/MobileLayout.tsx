@@ -27,11 +27,6 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
     // No longer redirects to chat
   }, []);
 
-  const handleCheckinComplete = useCallback((data: any) => {
-    // Check-in completed - stay on prayers tab
-    // No longer redirects to chat
-  }, []);
-
   // Auto-rotate background images every 30 seconds
   useEffect(() => {
     const interval = setInterval(() => {
@@ -55,7 +50,7 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
       case 'calendar':
         return <LiturgicalCalendarTab key={activeTab} />;
       case 'prayers':
-        return <PrayersTab key={activeTab} onPrayerSelect={handlePrayerSelect} onCheckinComplete={handleCheckinComplete} />;
+        return <PrayersTab key={activeTab} onPrayerSelect={handlePrayerSelect} />;
       case 'profile':
         return <ProfileTab key={activeTab} />;
       default:

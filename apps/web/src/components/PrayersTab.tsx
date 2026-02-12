@@ -1,31 +1,10 @@
-import DailyCheckin from './DailyCheckin';
 import StayFocused from './bible-chat/StayFocused';
-import { useState, useEffect } from 'react';
 
 interface PrayersTabProps {
-  onPrayerSelect: (prayerId: string) => void;
-  onCheckinComplete: (data: any) => void;
+  onPrayerSelect?: (prayerId: string) => void;
 }
 
-export default function PrayersTab({ onPrayerSelect, onCheckinComplete }: PrayersTabProps) {
-  const [showDailyCheckin, setShowDailyCheckin] = useState(false);
-
-  useEffect(() => {
-    // Check if we need to show daily check-in
-    const lastCheckin = localStorage.getItem('last_checkin_date');
-    const today = new Date().toISOString().split('T')[0];
-
-    if (lastCheckin !== today) {
-      setShowDailyCheckin(true);
-    }
-  }, []);
-
-  const handleCheckinComplete = (data: any) => {
-    onCheckinComplete(data);
-    setShowDailyCheckin(false);
-    localStorage.setItem('last_checkin_date', new Date().toISOString().split('T')[0]);
-  };
-
+export default function PrayersTab({ onPrayerSelect }: PrayersTabProps) {
   return (
     <div className="h-full overflow-y-auto pb-20 bg-[var(--color-stone-50)]">
       {/* Header */}
@@ -36,12 +15,7 @@ export default function PrayersTab({ onPrayerSelect, onCheckinComplete }: Prayer
 
       {/* Content */}
       <div className="p-4">
-        {/* Daily Check-in */}
-        {showDailyCheckin ? (
-          <DailyCheckin onComplete={handleCheckinComplete} />
-        ) : (
-          <StayFocused />
-        )}
+        <StayFocused />
       </div>
     </div>
   );
