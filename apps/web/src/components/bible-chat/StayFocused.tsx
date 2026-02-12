@@ -1,4 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
+import {
+  getFocusSessionsFromAPI,
+  saveFocusSessionToAPI,
+  deleteFocusSessionFromAPI,
+  getFocusStatsFromAPI,
+  getAchievementsFromAPI,
+  saveAchievementsToAPI
+} from '../../lib/api';
 
 interface StayFocusedProps {
   className?: string;
@@ -166,13 +174,22 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentMusicUrl, setCurrentMusicUrl] = useState<string>('');
   const [showMusicSelector, setShowMusicSelector] = useState(false);
+  const [weeklyStats, setWeeklyStats] = useState({ sessions: 0, minutes: 0 });
+  const [totalFocusHours, setTotalFocusHours] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     loadSessions();
     loadAchievements();
     checkActiveSession();
+    loadStats();
   }, []);
+
+  const loadStats = async () => {
+    const stats = await getFocusStatsFromAPI();
+    setWeeklyStats({ sessions: stats.weekSessions, minutes: stats.weekMinutes });
+    setTotalFocusHours(Math.floor(stats.totalSeconds / 3600));
+  };
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -186,28 +203,50 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
     return () => clearInterval(interval);
   }, [activeSession]);
 
-  const loadSessions = () => {
-    const saved = localStorage.getItem('focus_sessions');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      parsed.sort((a: FocusSession, b: FocusSession) =>
-        new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
-      );
-      setSessions(parsed);
+  const loadSessions = async () => {
+    try {
+      const loadedSessions = await getFocusSessionsFromAPI();
+      // Convert API format to component format
+      const formattedSessions = loadedSessions.map((s: any) => ({
+        id: s.id,
+        startTime: s.start_time,
+        endTime: s.end_time,
+        duration: s.duration,
+        completed: s.completed,
+        notes: s.notes,
+        selectedMusic: s.selected_music
+      }));
+      setSessions(formattedSessions);
+    } catch (error) {
+      console.error('Error loading sessions:', error);
     }
   };
 
-  const loadAchievements = () => {
-    const saved = localStorage.getItem('user_achievements');
-    if (saved) {
-      setUserAchievements(JSON.parse(saved));
-    } else {
-      // Calculate achievements from sessions
-      calculateAchievements();
+  const loadAchievements = async () => {
+    try {
+      const loadedAchievements = await getAchievementsFromAPI();
+      if (loadedAchievements.length > 0) {
+        // Merge API achievements with default achievements
+        const updated = achievements.map(ach => {
+          const apiAch = loadedAchievements.find((a: any) => a.achievementId === ach.id);
+          if (apiAch) {
+            return {
+              ...ach,
+              current: apiAch.current,
+              unlocked: apiAch.unlocked,
+              unlockedAt: apiAch.unlockedAt
+            };
+          }
+          return ach;
+        });
+        setUserAchievements(updated);
+      }
+    } catch (error) {
+      console.error('Error loading achievements:', error);
     }
   };
 
-  const calculateAchievements = () => {
+  const calculateAchievements = async () => {
     const allSessions = [...sessions];
     if (activeSession) {
       allSessions.push(activeSession);
@@ -238,15 +277,24 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
       }
     });
 
-    // Unlock new achievements
-    updated.forEach(ach => {
+    // Unlock new achievements and save to API
+    for (const ach of updated) {
       if (ach.unlocked && !userAchievements.find(a => a.id === ach.id)?.unlocked) {
         ach.unlockedAt = new Date().toISOString();
       }
-    });
+    }
 
     setUserAchievements(updated);
-    localStorage.setItem('user_achievements', JSON.stringify(updated));
+
+    // Save to API
+    const achievementsToSave = updated.map(a => ({
+      id: a.id,
+      current: a.current,
+      requirement: a.requirement,
+      unlocked: a.unlocked,
+      unlockedAt: a.unlockedAt
+    }));
+    await saveAchievementsToAPI(achievementsToSave);
   };
 
   const checkActiveSession = () => {
@@ -314,23 +362,26 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
     setCurrentMusicUrl('');
   };
 
-  const completeSession = (notes?: string) => {
+  const completeSession = async (notes?: string) => {
     if (!activeSession) return;
 
     const now = new Date();
     const actualDuration = Math.floor((now.getTime() - new Date(activeSession.startTime).getTime()) / 1000);
 
-    const completedSession: FocusSession = {
-      ...activeSession,
+    // Save to API
+    await saveFocusSessionToAPI({
+      startTime: activeSession.startTime,
       endTime: now.toISOString(),
       duration: actualDuration,
       completed: true,
-      notes: notes || sessionNotes
-    };
+      notes: notes || sessionNotes,
+      selectedMusic: activeSession.selectedMusic
+    });
 
-    const updatedSessions = [completedSession, ...sessions];
-    setSessions(updatedSessions);
-    localStorage.setItem('focus_sessions', JSON.stringify(updatedSessions));
+    // Reload sessions and stats from API
+    await loadSessions();
+    await loadStats();
+
     localStorage.removeItem('active_focus_session');
 
     setActiveSession(null);
@@ -347,11 +398,11 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
     setElapsedTime(0);
   };
 
-  const deleteSession = (sessionId: string) => {
+  const deleteSession = async (sessionId: string) => {
     if (confirm('Delete this session?')) {
-      const updated = sessions.filter(s => s.id !== sessionId);
-      setSessions(updated);
-      localStorage.setItem('focus_sessions', JSON.stringify(updated));
+      await deleteFocusSessionFromAPI(sessionId);
+      await loadSessions();
+      await loadStats();
       calculateAchievements();
     }
   };
@@ -362,19 +413,17 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const getTotalFocusTime = () => {
-    return sessions.reduce((sum, s) => sum + s.duration, 0);
+  const getTotalFocusTime = async () => {
+    const stats = await getFocusStatsFromAPI();
+    return stats.totalSeconds;
   };
 
-  const getWeeklyStats = () => {
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-    const weekSessions = sessions.filter(s => new Date(s.startTime) >= oneWeekAgo);
+  const getWeeklyStats = async () => {
+    const stats = await getFocusStatsFromAPI();
     return {
-      sessions: weekSessions.length,
-      minutes: Math.floor(weekSessions.reduce((sum, s) => sum + s.duration, 0) / 60),
-      completed: weekSessions.filter(s => s.completed).length
+      sessions: stats.weekSessions,
+      minutes: stats.weekMinutes,
+      completed: stats.weekSessions
     };
   };
 
@@ -764,8 +813,6 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
   }
 
   // Main view
-  const weeklyStats = getWeeklyStats();
-
   return (
     <div className={`bg-white rounded-2xl border border-gray-200 overflow-hidden ${className}`}>
       {/* Header */}
@@ -800,7 +847,7 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
             <div className="text-xs text-green-100">Minutes</div>
           </div>
           <div className="flex-1 bg-white/10 rounded-lg p-3 text-center">
-            <div className="text-2xl font-bold">{Math.floor(getTotalFocusTime() / 60)}</div>
+            <div className="text-2xl font-bold">{totalFocusHours}</div>
             <div className="text-xs text-green-100">Total Hours</div>
           </div>
         </div>

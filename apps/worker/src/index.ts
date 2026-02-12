@@ -1,10 +1,13 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
+import admin from './routes/admin';
 import auth from './routes/auth';
 import chat from './routes/chat';
 import conversations from './routes/conversations';
+import focus from './routes/focus';
 import notes from './routes/notes';
+import study from './routes/study';
 import suggestions from './routes/suggestions';
 import user from './routes/user';
 
@@ -15,6 +18,7 @@ type Bindings = {
   ENVIRONMENT: string;
   OPENAI_API_KEY: string;
   ANTHROPIC_API_KEY?: string;
+  SUPERADMIN_EMAIL: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -45,9 +49,12 @@ app.get('/health', (c) => {
 app.route('/auth', auth);
 
 // API routes
+app.route('/api/admin', admin);
 app.route('/api/chat', chat);
 app.route('/api/conversations', conversations);
+app.route('/api/focus', focus);
 app.route('/api/notes', notes);
+app.route('/api/study', study);
 app.route('/api/suggestions', suggestions);
 app.route('/api/user', user);
 

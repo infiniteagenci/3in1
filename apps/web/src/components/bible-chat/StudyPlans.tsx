@@ -2,13 +2,17 @@ import { useState, useEffect } from 'react';
 import {
   getAllStudyPlans,
   getStudyPlansByCategory,
-  getStudyProgress,
-  saveLessonProgress,
-  saveLessonInProgress,
   getUnlockedLessonCount,
   type StudyPlan,
   type StudyLesson
 } from '../../data/bible-study-plans';
+import {
+  getStudyProgressFromAPI,
+  saveStudyProgressToAPI,
+  getStudyNotesFromAPI,
+  saveStudyNotesToAPI,
+  getAllStudyDataFromAPI
+} from '../../lib/api';
 
 interface StudyPlansProps {
   onLessonSelect?: (planId: string, lessonId: string) => void;
@@ -72,23 +76,24 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
   const [selectedQuestionNotes, setSelectedQuestionNotes] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    // Load progress for all plans
-    const allProgress: Record<string, any> = {};
-    plans.forEach(plan => {
-      allProgress[plan.id] = getStudyProgress(plan.id);
-    });
-    setProgressData(allProgress);
+    // Load progress for all plans from API
+    const loadProgress = async () => {
+      try {
+        const data = await getAllStudyDataFromAPI();
+        setProgressData(data.progress || {});
 
-    // Load saved notes for the current lesson
-    if (selectedLesson && selectedPlan) {
-      const storageKey = `study_notes_${selectedPlan.id}_${selectedLesson.id}`;
-      const savedNotes = localStorage.getItem(storageKey);
-      if (savedNotes) {
-        const parsed = JSON.parse(savedNotes);
-        setPersonalNotes(parsed.personal || '');
-        setSelectedQuestionNotes(parsed.questionNotes || {});
+        // Load saved notes for the current lesson
+        if (selectedLesson && selectedPlan) {
+          const notes = await getStudyNotesFromAPI(selectedPlan.id, selectedLesson.id);
+          setPersonalNotes(notes.personal || '');
+          setSelectedQuestionNotes(notes.questionNotes || {});
+        }
+      } catch (error) {
+        console.error('Error loading progress:', error);
       }
-    }
+    };
+
+    loadProgress();
   }, [plans, selectedLesson, selectedPlan]);
 
   const handlePlanSelect = (plan: StudyPlan) => {
@@ -96,11 +101,18 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
     setSelectedLesson(null);
   };
 
-  const handleLessonSelect = (lesson: StudyLesson) => {
+  const handleLessonSelect = async (lesson: StudyLesson) => {
     if (!selectedPlan) return;
 
-    // Mark lesson as in progress
-    saveLessonInProgress(selectedPlan.id, lesson.id);
+    // Mark lesson as in progress via API
+    const currentProgress = progressData[selectedPlan.id] || { inProgress: [], completed: [] };
+    const updatedInProgress = [...new Set([...currentProgress.inProgress, lesson.id])];
+
+    await saveStudyProgressToAPI(selectedPlan.id, {
+      completed: currentProgress.completed,
+      inProgress: updatedInProgress,
+      current: lesson.id
+    });
 
     // Update local state
     setProgressData(prev => ({
@@ -108,23 +120,16 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
       [selectedPlan.id]: {
         ...prev[selectedPlan.id],
         current: lesson.id,
-        inProgress: [...(prev[selectedPlan.id]?.inProgress || []), lesson.id]
+        inProgress: updatedInProgress
       }
     }));
 
     setSelectedLesson(lesson);
 
-    // Load saved notes for this lesson
-    const storageKey = `study_notes_${selectedPlan.id}_${lesson.id}`;
-    const savedNotes = localStorage.getItem(storageKey);
-    if (savedNotes) {
-      const parsed = JSON.parse(savedNotes);
-      setPersonalNotes(parsed.personal || '');
-      setSelectedQuestionNotes(parsed.questionNotes || {});
-    } else {
-      setPersonalNotes('');
-      setSelectedQuestionNotes({});
-    }
+    // Load saved notes for this lesson from API
+    const notes = await getStudyNotesFromAPI(selectedPlan.id, lesson.id);
+    setPersonalNotes(notes.personal || '');
+    setSelectedQuestionNotes(notes.questionNotes || {});
   };
 
   const handleBackToPlans = () => {
@@ -137,42 +142,46 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
     }
   };
 
-  const handleMarkComplete = () => {
+  const handleMarkComplete = async () => {
     if (!selectedPlan || !selectedLesson) return;
 
-    // Save notes before marking complete
-    const storageKey = `study_notes_${selectedPlan.id}_${selectedLesson.id}`;
-    const notesData = {
+    // Save notes before marking complete via API
+    await saveStudyNotesToAPI(selectedPlan.id, selectedLesson.id, {
       personal: personalNotes,
       questionNotes: selectedQuestionNotes,
-      completedAt: new Date().toISOString()
-    };
-    localStorage.setItem(storageKey, JSON.stringify(notesData));
+      completed: true
+    });
 
-    saveLessonProgress(selectedPlan.id, selectedLesson.id);
+    // Save progress via API
+    const currentProgress = progressData[selectedPlan.id] || { inProgress: [], completed: [] };
+    const updatedCompleted = [...new Set([...currentProgress.completed, selectedLesson.id])];
+
+    await saveStudyProgressToAPI(selectedPlan.id, {
+      completed: updatedCompleted,
+      inProgress: currentProgress.inProgress,
+      current: null
+    });
 
     // Update local state
     setProgressData(prev => ({
       ...prev,
       [selectedPlan.id]: {
         ...prev[selectedPlan.id],
-        completed: [...(prev[selectedPlan.id]?.completed || []), selectedLesson.id]
+        completed: updatedCompleted,
+        current: null
       }
     }));
 
     setSelectedLesson(null);
   };
 
-  const handleSaveNotes = () => {
+  const handleSaveNotes = async () => {
     if (!selectedPlan || !selectedLesson) return;
 
-    const storageKey = `study_notes_${selectedPlan.id}_${selectedLesson.id}`;
-    const notesData = {
+    await saveStudyNotesToAPI(selectedPlan.id, selectedLesson.id, {
       personal: personalNotes,
-      questionNotes: selectedQuestionNotes,
-      lastSaved: new Date().toISOString()
-    };
-    localStorage.setItem(storageKey, JSON.stringify(notesData));
+      questionNotes: selectedQuestionNotes
+    });
   };
 
   const handleQuestionNoteChange = (questionIndex: number, note: string) => {

@@ -7,6 +7,7 @@ compatibility_flags = ["nodejs_compat","enable_nodejs_process_v2"]
 GOOGLE_OAUTH_CLIENT_ID="296576517620-sur4nmf89q803b5h83f1e4m930vrp3tc.apps.googleusercontent.com"
 BASE_API_URL="https://3in1-worker.ailabs-hq.workers.dev"
 BASE_APP_URL="https://3in1.ai-labs.pro"
+SUPERADMIN_EMAIL="infinite.agenci@gmail.com"
 
 # Production environment configuration
 [env.production]

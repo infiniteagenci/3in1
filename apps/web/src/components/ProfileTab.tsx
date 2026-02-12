@@ -1,8 +1,11 @@
 import PrayerProgress from './PrayerProgress';
 import SpiritualJournal from './bible-chat/SpiritualJournal';
 import PrayerReminders from './bible-chat/PrayerReminders';
+import AdminDashboard from './AdminDashboard';
 import { useState, useEffect, useRef } from 'react';
 import { getAllStudyPlans, getStudyProgress, type StudyPlan, type StudyLesson } from '../data/bible-study-plans';
+
+const SUPERADMIN_EMAIL = 'infinite.agenci@gmail.com';
 
 export default function ProfileTab() {
   const [prayerProgress, setPrayerProgress] = useState<any>(null);
@@ -14,6 +17,7 @@ export default function ProfileTab() {
   const [showReminders, setShowReminders] = useState(false);
   const [showStudyProgress, setShowStudyProgress] = useState(false);
   const [showAccountSettings, setShowAccountSettings] = useState(false);
+  const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
       return (localStorage.getItem('theme') as 'light' | 'dark') || 'light';
@@ -765,6 +769,16 @@ export default function ProfileTab() {
     );
   }
 
+  // Admin Dashboard view
+  if (showAdminDashboard) {
+    return (
+      <AdminDashboard
+        onClose={() => setShowAdminDashboard(false)}
+        userEmail={userEmail}
+      />
+    );
+  }
+
   return (
     <div className="h-full overflow-y-auto pb-20 bg-[var(--color-stone-50)]">
       {/* Header */}
@@ -847,6 +861,22 @@ export default function ProfileTab() {
         {/* Settings Menu */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <h3 className="text-lg font-semibold text-gray-800 p-4 border-b border-gray-100">Settings</h3>
+
+          {/* Admin Dashboard - Only show for superadmin */}
+          {userEmail === SUPERADMIN_EMAIL && (
+            <button
+              onClick={() => setShowAdminDashboard(true)}
+              className="w-full flex items-center justify-between px-4 py-3 hover:bg-purple-50 transition-colors border-b border-gray-100 bg-gradient-to-r from-purple-50 to-blue-50"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-xl">👑</span>
+                <span className="text-sm font-semibold text-purple-700">Admin Dashboard</span>
+              </div>
+              <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          )}
 
           <button
             onClick={() => setShowAccountSettings(true)}
