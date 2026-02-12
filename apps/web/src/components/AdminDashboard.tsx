@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+const SUPERADMIN_EMAILS = ['infinite.agenci@gmail.com', 'rainavinci@gmail.com'];
+
 interface Analytics {
   users: {
     total: number;

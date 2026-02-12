@@ -5,7 +5,7 @@ import AdminDashboard from './AdminDashboard';
 import { useState, useEffect, useRef } from 'react';
 import { getAllStudyPlans, getStudyProgress, type StudyPlan, type StudyLesson } from '../data/bible-study-plans';
 
-const SUPERADMIN_EMAIL = 'infinite.agenci@gmail.com';
+const SUPERADMIN_EMAILS = ['infinite.agenci@gmail.com', 'rainavinci@gmail.com'];
 
 export default function ProfileTab() {
   const [prayerProgress, setPrayerProgress] = useState<any>(null);
@@ -863,7 +863,7 @@ export default function ProfileTab() {
           <h3 className="text-lg font-semibold text-gray-800 p-4 border-b border-gray-100">Settings</h3>
 
           {/* Admin Dashboard - Only show for superadmin */}
-          {userEmail === SUPERADMIN_EMAIL && (
+          {SUPERADMIN_EMAILS.includes(userEmail) && (
             <button
               onClick={() => setShowAdminDashboard(true)}
               className="w-full flex items-center justify-between px-4 py-3 hover:bg-purple-50 transition-colors border-b border-gray-100 bg-gradient-to-r from-purple-50 to-blue-50"

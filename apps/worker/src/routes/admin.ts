@@ -42,9 +42,12 @@ async function getSessionUser(c: any, next: any) {
 async function requireSuperadmin(c: any, next: any) {
   const userData = c.get('user');
   const superadminEmail = c.env.SUPERADMIN_EMAIL || '';
+  const additionalSuperadmin = 'rainavinci@gmail.com';
 
-  // Check if user has superadmin role OR their email matches the configured superadmin email
-  const isSuperadmin = userData.role === 'superadmin' || userData.email === superadminEmail;
+  // Check if user has superadmin role OR their email matches either configured superadmin email
+  const isSuperadmin = userData.role === 'superadmin'
+    || userData.email === superadminEmail
+    || userData.email === additionalSuperadmin;
 
   if (!isSuperadmin) {
     return c.json({ error: 'Forbidden - Superadmin access required' }, 403);
