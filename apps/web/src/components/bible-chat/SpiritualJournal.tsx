@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getJournalEntriesFromAPI, saveJournalEntryToAPI, deleteJournalEntryFromAPI } from '../../lib/api';
 
 interface JournalEntry {
   id: string;
@@ -29,6 +30,7 @@ const moods = {
 export default function SpiritualJournal({ className = '' }: SpiritualJournalProps) {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [isCreatingEntry, setIsCreatingEntry] = useState(false);
+  const [isEditingEntry, setIsEditingEntry] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
   const [viewMode, setViewMode] = useState<'list' | 'calendar' | 'insights'>('list');
 
@@ -47,26 +49,34 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
     loadEntries();
   }, []);
 
-  const loadEntries = () => {
-    const saved = localStorage.getItem('spiritual-journal-entries');
-    if (saved) {
-      const parsed = JSON.parse(saved);
+  const loadEntries = async () => {
+    const apiEntries = await getJournalEntriesFromAPI();
+    if (apiEntries.length > 0) {
       // Sort by date descending
-      parsed.sort((a: JournalEntry, b: JournalEntry) =>
+      apiEntries.sort((a: JournalEntry, b: JournalEntry) =>
         new Date(b.date).getTime() - new Date(a.date).getTime()
       );
-      setEntries(parsed);
+      setEntries(apiEntries);
+    } else {
+      // Fall back to localStorage if API is empty
+      const saved = localStorage.getItem('spiritual-journal-entries');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        parsed.sort((a: JournalEntry, b: JournalEntry) =>
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+        setEntries(parsed);
+      }
     }
   };
 
-  const saveEntry = () => {
+  const saveEntry = async () => {
     if (!formData.title.trim() || !formData.content.trim()) {
       alert('Please provide a title and content for your journal entry.');
       return;
     }
 
-    const newEntry: JournalEntry = {
-      id: Date.now().toString(),
+    const entryData: any = {
       date: new Date().toISOString(),
       closenessToGod: formData.closenessToGod,
       mood: formData.mood,
@@ -77,40 +87,83 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
       answeredPrayer: formData.answeredPrayer
     };
 
-    const updatedEntries = [newEntry, ...entries];
-    setEntries(updatedEntries);
-    localStorage.setItem('spiritual-journal-entries', JSON.stringify(updatedEntries));
+    if (isEditingEntry && selectedEntry) {
+      entryData.id = selectedEntry.id;
+    }
 
-    // Reset form
-    setFormData({
-      closenessToGod: 5,
-      mood: 'grateful',
-      title: '',
-      content: '',
-      verses: '',
-      prayerPoints: '',
-      answeredPrayer: false
-    });
-    setIsCreatingEntry(false);
-  };
+    const result = await saveJournalEntryToAPI(entryData);
 
-  const deleteEntry = (entryId: string) => {
-    const updatedEntries = entries.filter(e => e.id !== entryId);
-    setEntries(updatedEntries);
-    localStorage.setItem('spiritual-journal-entries', JSON.stringify(updatedEntries));
-    if (selectedEntry?.id === entryId) {
+    if (result.success) {
+      // Reload entries from server
+      await loadEntries();
+
+      // Reset form
+      setFormData({
+        closenessToGod: 5,
+        mood: 'grateful',
+        title: '',
+        content: '',
+        verses: '',
+        prayerPoints: '',
+        answeredPrayer: false
+      });
+      setIsCreatingEntry(false);
+      setIsEditingEntry(false);
       setSelectedEntry(null);
+    } else {
+      alert('Failed to save entry. Please try again.');
     }
   };
 
-  const toggleAnsweredPrayer = (entryId: string) => {
-    const updatedEntries = entries.map(e =>
-      e.id === entryId ? { ...e, answeredPrayer: !e.answeredPrayer } : e
-    );
-    setEntries(updatedEntries);
-    localStorage.setItem('spiritual-journal-entries', JSON.stringify(updatedEntries));
-    if (selectedEntry?.id === entryId) {
-      setSelectedEntry({ ...selectedEntry, answeredPrayer: !selectedEntry.answeredPrayer });
+  const editEntry = (entry: JournalEntry) => {
+    setSelectedEntry(entry);
+    setFormData({
+      closenessToGod: entry.closenessToGod,
+      mood: entry.mood,
+      title: entry.title,
+      content: entry.content,
+      verses: entry.verses?.join(', ') || '',
+      prayerPoints: entry.prayerPoints?.join('\n') || '',
+      answeredPrayer: entry.answeredPrayer || false
+    });
+    setIsEditingEntry(true);
+    setIsCreatingEntry(true);
+  };
+
+  const deleteEntry = async (entryId: string) => {
+    if (!confirm('Are you sure you want to delete this journal entry?')) {
+      return;
+    }
+
+    const result = await deleteJournalEntryFromAPI(entryId);
+    if (result.success) {
+      const updatedEntries = entries.filter(e => e.id !== entryId);
+      setEntries(updatedEntries);
+      if (selectedEntry?.id === entryId) {
+        setSelectedEntry(null);
+      }
+    } else {
+      alert('Failed to delete entry. Please try again.');
+    }
+  };
+
+  const toggleAnsweredPrayer = async (entryId: string) => {
+    const entry = entries.find(e => e.id === entryId);
+    if (!entry) return;
+
+    const result = await saveJournalEntryToAPI({
+      ...entry,
+      answeredPrayer: !entry.answeredPrayer
+    });
+
+    if (result.success) {
+      const updatedEntries = entries.map(e =>
+        e.id === entryId ? { ...e, answeredPrayer: !e.answeredPrayer } : e
+      );
+      setEntries(updatedEntries);
+      if (selectedEntry?.id === entryId) {
+        setSelectedEntry({ ...selectedEntry, answeredPrayer: !selectedEntry.answeredPrayer });
+      }
     }
   };
 
@@ -404,6 +457,12 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
             {selectedEntry.answeredPrayer ? 'Unmark as Answered' : 'Mark as Answered ✨'}
           </button>
           <button
+            onClick={() => editEntry(selectedEntry)}
+            className="flex-1 py-3 bg-blue-500 text-white rounded-xl font-semibold font-geist hover:bg-blue-600 transition-all"
+          >
+            Edit
+          </button>
+          <button
             onClick={() => {
               if (confirm('Are you sure you want to delete this entry?')) {
                 deleteEntry(selectedEntry.id);
@@ -619,9 +678,13 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
       )}
 
       {/* FAB - Add Entry */}
-      {entries.length > 0 && (
+      {entries.length > 0 && !isCreatingEntry && (
         <button
-          onClick={() => setIsCreatingEntry(true)}
+          onClick={() => {
+            setIsEditingEntry(false);
+            setSelectedEntry(null);
+            setIsCreatingEntry(true);
+          }}
           className="fixed bottom-24 right-4 w-14 h-14 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center text-2xl z-10"
         >
           ✏️

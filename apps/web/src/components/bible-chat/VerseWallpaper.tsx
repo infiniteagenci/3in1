@@ -218,7 +218,7 @@ export default function VerseWallpaper({ className = '' }: VerseWallpaperProps) 
           </div>
 
           {showCustomize && (
-            <div className="space-y-6 overflow-y-auto max-h-[600px] pb-4">
+            <div className="space-y-6 overflow-y-auto max-h-[70vh] pb-4">
               {/* Backgrounds */}
               <div>
                 <h4 className="text-sm font-medium text-gray-700 mb-3 font-geist">Background</h4>

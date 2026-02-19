@@ -51,7 +51,7 @@ import MobileLayout from '../components/MobileLayout.tsx'
     </div>
 
     <!-- Floating Heart Icon for Feeling Check-in -->
-    <div id="floating-heart" class="fixed bottom-24 right-4 w-14 h-14 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-full shadow-xl flex items-center justify-center text-2xl cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 z-50 hover:shadow-2xl select-none touch-none">
+    <div id="floating-heart" class="fixed left-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-full shadow-xl flex items-center justify-center text-2xl cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 z-50 hover:shadow-2xl select-none touch-none">
       ❤️
     </div>
 
@@ -116,9 +116,14 @@ import MobileLayout from '../components/MobileLayout.tsx'
               <p id="prayer-text" class="text-sm text-gray-700"></p>
             </div>
 
-            <button id="back-to-emojis" class="mt-4 w-full py-3 px-4 bg-gradient-to-r from-purple-200 to-blue-200 hover:from-purple-300 hover:to-blue-300 text-purple-800 rounded-xl text-sm font-medium transition-all shadow-md hover:shadow-lg">
-              ← Choose another feeling
-            </button>
+            <div class="flex gap-2 mt-4">
+              <button id="back-to-emojis" class="flex-1 py-3 px-4 bg-gradient-to-r from-purple-200 to-blue-200 hover:from-purple-300 hover:to-blue-300 text-purple-800 rounded-xl text-sm font-medium transition-all shadow-md hover:shadow-lg">
+                ← Choose another feeling
+              </button>
+              <button id="done-feeling" class="flex-1 py-3 px-4 bg-gradient-to-r from-green-200 to-emerald-200 hover:from-green-300 hover:to-emerald-300 text-green-800 rounded-xl text-sm font-medium transition-all shadow-md hover:shadow-lg">
+                Done ✓
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -606,6 +611,12 @@ import MobileLayout from '../components/MobileLayout.tsx'
     // Back to emojis button
     if (backToEmojisBtn) {
       backToEmojisBtn.addEventListener('click', showEmojis);
+    }
+
+    // Done feeling button
+    const doneFeelingBtn = document.getElementById('done-feeling');
+    if (doneFeelingBtn) {
+      doneFeelingBtn.addEventListener('click', closeModal);
     }
 
     // Close modal when clicking outside

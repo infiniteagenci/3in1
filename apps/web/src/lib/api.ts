@@ -242,3 +242,71 @@ export async function saveAchievementsToAPI(achievements: Array<{
     return { success: false };
   }
 }
+
+// ==================== SPIRITUAL JOURNAL ====================
+
+export async function getJournalEntriesFromAPI() {
+  try {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${API_BASE_URL}/api/journal/entries`, {
+      headers
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.entries || [];
+    }
+    return [];
+  } catch (error) {
+    console.error('Error fetching journal entries:', error);
+    return [];
+  }
+}
+
+export async function saveJournalEntryToAPI(entry: {
+  id?: string;
+  date: string;
+  closenessToGod: number;
+  mood: string;
+  title: string;
+  content: string;
+  verses?: string[];
+  prayerPoints?: string[];
+  answeredPrayer?: boolean;
+}) {
+  try {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${API_BASE_URL}/api/journal/entries`, {
+      method: entry.id ? 'PATCH' : 'POST',
+      headers,
+      body: JSON.stringify(entry)
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return { success: true, entry: data.entry };
+    }
+    return { success: false };
+  } catch (error) {
+    console.error('Error saving journal entry:', error);
+    return { success: false };
+  }
+}
+
+export async function deleteJournalEntryFromAPI(entryId: string) {
+  try {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${API_BASE_URL}/api/journal/entries/${entryId}`, {
+      method: 'DELETE',
+      headers
+    });
+
+    if (response.ok) {
+      return { success: true };
+    }
+    return { success: false };
+  } catch (error) {
+    console.error('Error deleting journal entry:', error);
+    return { success: false };
+  }
+}

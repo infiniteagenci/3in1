@@ -1304,10 +1304,9 @@ const categories = {
 
 interface BiblicalCharactersProps {
   className?: string;
-  onCharacterSelect?: (characterId: string) => void;
 }
 
-export default function BiblicalCharacters({ className = '', onCharacterSelect }: BiblicalCharactersProps) {
+export default function BiblicalCharacters({ className = '' }: BiblicalCharactersProps) {
   const [selectedCharacter, setSelectedCharacter] = useState<BiblicalCharacter | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -1355,7 +1354,7 @@ export default function BiblicalCharacters({ className = '', onCharacterSelect }
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6 max-h-[60vh] overflow-y-auto">
+        <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
           {/* Story */}
           <div>
             <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2 font-geist">
@@ -1522,18 +1521,13 @@ export default function BiblicalCharacters({ className = '', onCharacterSelect }
       </div>
 
       {/* Characters Grid */}
-      <div className="p-4 grid grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto">
+      <div className="p-4 grid grid-cols-2 gap-3 max-h-[70vh] overflow-y-auto">
         {filteredCharacters.map((character) => {
           const category = categories[character.category];
           return (
             <button
               key={character.id}
-              onClick={() => {
-                setSelectedCharacter(character);
-                if (onCharacterSelect) {
-                  onCharacterSelect(character.id);
-                }
-              }}
+              onClick={() => setSelectedCharacter(character)}
               className="bg-gray-50 rounded-xl p-4 text-left hover:bg-gray-100 transition-colors border-2 border-gray-200 hover:border-gray-300"
             >
               <div className="flex items-center gap-3">

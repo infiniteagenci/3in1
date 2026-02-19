@@ -113,10 +113,7 @@ export default function SacredLibraryTab({ onSelectItem }: SacredLibraryTabProps
           <span className="font-medium">Back to Library</span>
         </button>
         <div className="flex-1 overflow-y-auto p-4">
-          <BiblicalCharacters onCharacterSelect={(characterId) => {
-            // Handle character selection - could trigger a chat about the character
-            onSelectItem('biblical-characters', { characterId });
-          }} />
+          <BiblicalCharacters />
         </div>
       </div>
     );

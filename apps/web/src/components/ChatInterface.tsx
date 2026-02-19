@@ -12,7 +12,6 @@ import { Loader } from './ai-elements/loader';
 import { Suggestions, Suggestion } from './ai-elements/suggestion';
 import CatholicMenu from './CatholicMenu';
 import DailyCheckin from './DailyCheckin';
-import QuickPrayers from './QuickPrayers';
 import PrayerProgress from './PrayerProgress';
 import DailyVerse from './bible-chat/DailyVerse';
 
@@ -79,7 +78,6 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
   const [showCatholicMenu, setShowCatholicMenu] = useState(false);
   const [showDailyCheckin, setShowDailyCheckin] = useState(false);
   const [showDailyVerse, setShowDailyVerse] = useState(true);
-  const [showQuickPrayers, setShowQuickPrayers] = useState(false);
   const [prayerProgress, setPrayerProgress] = useState<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -316,7 +314,13 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
   const handleSuggestionClick = useCallback((suggestion: string) => {
     setInput(suggestion);
     setShowSuggestions(false);
-  }, []);
+    // Auto-submit the suggestion
+    setTimeout(() => {
+      const syntheticEvent = new Event('submit', { cancelable: true }) as any;
+      syntheticEvent.preventDefault = () => {};
+      handleSubmit(syntheticEvent);
+    }, 100);
+  }, [handleSubmit]);
 
   const handleAgeSelection = useCallback(async (ageGroupId: string, label: string) => {
     // Save to localStorage
@@ -327,8 +331,6 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
       (window as any).updateAgeBanner();
     }
 
-    // Set the input for user to review and send
-    setInput(label);
     setShowAgePrompt(false);
     setHasCollectedAge(true);
 
@@ -348,7 +350,18 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
     } catch (error) {
       console.error('Failed to save age group:', error);
     }
-  }, [PUBLIC_BASE_API_URL]);
+
+    // Auto-send a message to Spirit acknowledging the age group
+    const greeting = `Hi! I'm ${label.split('!')[0].trim()}. I'm excited to explore faith with you!`;
+    setInput(greeting);
+
+    // Auto-submit after a short delay
+    setTimeout(() => {
+      const syntheticEvent = new Event('submit', { cancelable: true }) as any;
+      syntheticEvent.preventDefault = () => {};
+      handleSubmit(syntheticEvent);
+    }, 500);
+  }, [PUBLIC_BASE_API_URL, handleSubmit]);
 
   const toggleSuggestions = useCallback(() => {
     setShowSuggestions(prev => !prev);
@@ -384,27 +397,6 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
     localStorage.setItem('last_checkin_date', new Date().toISOString().split('T')[0]);
   }, []);
 
-  // Handle quick prayer selection
-  const handleQuickPrayer = useCallback((prayerId: string) => {
-    const prompts: Record<string, string> = {
-      rosary: 'I want to pray the Rosary',
-      examen: 'I want to do a Daily Examen',
-      morning: 'I want to pray Morning Prayer',
-      evening: 'I want to pray Evening Prayer',
-      breath: 'I want to do a Breath Prayer',
-      meditation: 'I want to do a Guided Meditation',
-      readings: 'What are today\'s readings?',
-      saint: 'Who is the saint of today?',
-      novena: 'Show me my active novenas',
-      'divine-office': 'I want to pray the Divine Office',
-    };
-
-    const prompt = prompts[prayerId];
-    if (prompt) {
-      setInput(prompt);
-      setShowQuickPrayers(false);
-    }
-  }, []);
 
   return (
     <div id='chatbox' className="flex flex-col h-full bg-gradient-to-br from-purple-50/60 via-pink-50/50 to-amber-50/60 relative">
@@ -416,7 +408,7 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
         <div className="absolute bottom-40 left-16 w-1.5 h-1.5 bg-rose-400/30 rounded-full animate-twinkle" style={{ animationDelay: '1.5s' }}></div>
         <div className="absolute bottom-20 right-24 w-2 h-2 bg-purple-400/30 rounded-full animate-twinkle" style={{ animationDelay: '2s' }}></div>
       </div>
-      <Conversation className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4 pb-20">
+      <Conversation className="flex-1 min-h-0 overflow-y-auto p-4 space-y-3">
         <ConversationContent>
           {/* Daily Check-in - shown at the top when no messages */}
           {messages.length === 0 && showDailyCheckin && (

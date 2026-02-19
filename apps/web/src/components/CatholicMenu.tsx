@@ -2030,27 +2030,186 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
   };
 
   const handleSelectItem = (categoryKey: string, item: any) => {
-    setSelectedItem(item);
-    onSelectItem(categoryKey, item);
-    onClose();
+    setSelectedItem({ ...item, categoryKey });
+  };
+
+  const handleBackToItems = () => {
+    setSelectedItem(null);
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold font-geist">Sacred Library</h2>
-            <button
-              onClick={onClose}
-              className="w-8 h-8 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 flex items-center justify-center transition-all"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+        {selectedItem ? (
+          // Detail View
+          <>
+            {/* Header */}
+            <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6">
+              <div className="flex items-center gap-3 mb-2">
+                <button
+                  onClick={handleBackToItems}
+                  className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                  <span className="text-sm font-medium">Back</span>
+                </button>
+              </div>
+              <div className="flex items-center gap-4">
+                {selectedItem.image ? (
+                  <img
+                    src={selectedItem.image}
+                    alt={selectedItem.title}
+                    className="w-16 h-16 rounded-xl object-cover"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-xl bg-white/20 flex items-center justify-center text-3xl">
+                    {selectedItem.icon}
+                  </div>
+                )}
+                <div>
+                  <h2 className="text-2xl font-bold font-playfair">{selectedItem.title}</h2>
+                  <p className="text-white/90 text-sm">{selectedItem.description}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Detail Content */}
+            <div className="overflow-y-auto p-6 max-h-[70vh] space-y-6">
+              {/* Story/Overview */}
+              {selectedItem.story && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2 font-geist">
+                    <span>📖</span> Story
+                  </h3>
+                  <p className="text-gray-700 leading-relaxed font-geist bg-purple-50 p-4 rounded-xl border border-purple-100">
+                    {selectedItem.story}
+                  </p>
+                </div>
+              )}
+
+              {/* Novena */}
+              {selectedItem.novena && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2 font-geist">
+                    <span>🙏</span> Novena
+                  </h3>
+                  <p className="text-gray-700 leading-relaxed font-geist bg-rose-50 p-4 rounded-xl border border-rose-100">
+                    {selectedItem.novena}
+                  </p>
+                </div>
+              )}
+
+              {/* Prayers */}
+              {selectedItem.prayers && selectedItem.prayers.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 font-geist">
+                    <span>🙏</span> Prayers
+                  </h3>
+                  <div className="space-y-3">
+                    {selectedItem.prayers.map((prayer: string, index: number) => (
+                      <div key={index} className="bg-blue-50 border border-blue-100 rounded-xl p-4">
+                        <p className="text-gray-700 font-geist whitespace-pre-line">{prayer}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Catechism */}
+              {selectedItem.catechism && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2 font-geist">
+                    <span>📚</span> Catechism
+                  </h3>
+                  <p className="text-gray-700 leading-relaxed font-geist bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    {selectedItem.catechism}
+                  </p>
+                </div>
+              )}
+
+              {/* Scripture References */}
+              {selectedItem.scripture && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2 font-geist">
+                    <span>📜</span> Scripture
+                  </h3>
+                  <div className="bg-amber-50 border border-amber-100 rounded-xl p-4">
+                    <p className="text-gray-700 font-geist whitespace-pre-line">{selectedItem.scripture}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Key Verses */}
+              {selectedItem.keyVerses && selectedItem.keyVerses.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 font-geist">
+                    <span>✝️</span> Key Verses
+                  </h3>
+                  <div className="space-y-2">
+                    {selectedItem.keyVerses.map((verse: string, index: number) => (
+                      <div key={index} className="bg-indigo-50 border border-indigo-100 rounded-lg p-3">
+                        <p className="text-sm text-gray-700 font-crimson italic">{verse}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Lessons */}
+              {selectedItem.lessons && selectedItem.lessons.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 font-geist">
+                    <span>💡</span> Lessons
+                  </h3>
+                  <div className="space-y-2">
+                    {selectedItem.lessons.map((lesson: string, index: number) => (
+                      <div key={index} className="flex items-start gap-3 bg-green-50 border border-green-100 rounded-lg p-3">
+                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-green-200 text-green-700 flex items-center justify-center text-xs font-bold">
+                          {index + 1}
+                        </span>
+                        <p className="text-sm text-gray-700 pt-0.5 font-geist">{lesson}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Age-specific content */}
+              {selectedItem.byAgeGroup && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 font-geist">
+                    <span>👥</span> For Different Ages
+                  </h3>
+                  <div className="space-y-3">
+                    {Object.entries(selectedItem.byAgeGroup).map(([age, content]: [string, any]) => (
+                      <div key={age} className="bg-purple-50 border border-purple-100 rounded-lg p-4">
+                        <h4 className="font-medium text-purple-800 capitalize mb-2">{age}</h4>
+                        <p className="text-sm text-gray-700 font-geist">{content}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          // Main Menu View
+          <>
+            {/* Header */}
+            <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold font-geist">Sacred Library</h2>
+                <button
+                  onClick={onClose}
+                  className="w-8 h-8 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 flex items-center justify-center transition-all"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
 
           {/* Search Bar */}
           <div className="relative">
@@ -2224,6 +2383,8 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
             </div>
           )}
         </div>
+          </>
+        )}
       </div>
     </div>
   );
