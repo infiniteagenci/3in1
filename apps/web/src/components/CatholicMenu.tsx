@@ -19,12 +19,48 @@ const catholicContent = {
           adults: 'Adults enter the Rite of Christian Initiation for Adults (RCIA). This is a months-long process of learning about the Catholic faith, culminating in receiving Baptism, Confirmation, and First Eucharist at the Easter Vigil.'
         },
         prayers: [
-          'Prayer for Baptism: "Almighty God, you have given new birth through water and the Holy Spirit..."',
-          'Baptismal Promises: "Do you reject Satan? And all his works? And all his empty show?"',
-          'Renewal of Baptismal Promises: "I reject Satan; and all his works; and all his empty show..."'
+          `Prayer for Baptism:
+
+Almighty, ever-living God, Your only-begotten Son has shared in our humanity, and in so doing, has united us in His body. We pray that by Your grace, we may be made one with Him in body and spirit, and share in His divine life. Through Christ our Lord. Amen.`,
+          `Baptismal Promises:
+
+Do you reject Satan? And all his works? And all his empty show?
+
+I do.
+
+Do you reject Satan, and all his works, and all his empty promises?
+
+I do.
+
+Do you believe in God, the Father Almighty, Creator of heaven and earth?
+
+I do.
+
+Do you believe in Jesus Christ, the only Son of God, our Lord, who was born of the Virgin Mary, suffered death, and was buried, rose again from the dead, and is now seated at the right hand of the Father?
+
+I do.
+
+Do you believe in the Holy Spirit, the holy Catholic Church, the communion of saints, the forgiveness of sins, the resurrection of the body, and life everlasting?
+
+I do.`,
+          `Renewal of Baptismal Promises:
+
+I reject Satan; and all his works; and all his empty show.
+
+I believe in God, the Father Almighty, Creator of heaven and earth.
+
+I believe in Jesus Christ, His only Son, our Lord, who was conceived by the Holy Spirit, born of the Virgin Mary, suffered under Pontius Pilate, was crucified, died, and was buried. He descended into hell; the third day He rose again from the dead; He ascended into heaven, and is seated at the right hand of God the Father Almighty; from there He will come to judge the living and the dead.
+
+I believe in the Holy Spirit, the holy Catholic Church, the communion of saints, the forgiveness of sins, the resurrection of the body, and life everlasting. Amen.`
         ],
-        catechism: 'Baptism is the first sacrament of initiation, freeing us from original sin and making us members of the Church.',
-        scripture: 'Matthew 28:19, Romans 6:4'
+        catechism: 'Baptism is the first sacrament of initiation, freeing us from original sin and making us members of the Church. Through Baptism, we are reborn as children of God and made sharers in the Church\'s mission.',
+        scripture: `Matthew 28:19
+
+"Go therefore and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit."
+
+Romans 6:4
+
+"We were buried therefore with him by baptism into death, in order that, just as Christ was raised from the dead by the glory of the Father, we too might walk in newness of life."`
       },
       {
         id: 'eucharist',
@@ -38,13 +74,41 @@ const catholicContent = {
           adults: 'Adults are obligated to attend Mass and receive Communion at least once a year (Easter Duty), though the Church encourages weekly reception. Adults must fast for one hour before receiving.'
         },
         prayers: [
-          'Prayer before Communion: "Lord Jesus Christ, with faith in your love and mercy..."',
-          'Prayer after Communion: "Lord, I am not worthy that you should enter under my roof..."',
-          'Act of Spiritual Communion: "My Jesus, I believe that you are present in the Holy Sacrament..."',
-          'Anima Christi: "Soul of Christ, sanctify me. Body of Christ, save me..."'
+          `Prayer before Communion:
+
+Lord Jesus Christ, with faith in your love and mercy, I approach the table of Your most sacred banquet. I cannot receive You in Holy Communion. Come spiritually into my heart. cleanse me from all sin, and let me never be separated from You. Amen.`,
+          `Prayer after Communion:
+
+Lord, I am not worthy that you should enter under my roof, but only say the word and my soul shall be healed. (3 times)
+
+Lord Jesus Christ, You gave Your life for me. May I love You and serve You all the days of my life. Amen.`,
+          `Act of Spiritual Communion:
+
+My Jesus, I believe that You are present in the Holy Sacrament. I love You above all things, and I long to receive You into my soul. Since I cannot now receive You sacramentally, come at least spiritually into my heart. I embrace You as if You were already there, and I unite myself wholly to You. Amen.`,
+          `Anima Christi:
+
+Soul of Christ, sanctify me.
+Body of Christ, save me.
+Blood of Christ, inebriate me.
+Water from the side of Christ, wash me.
+Passion of Christ, strengthen me.
+O good Jesus, hear me.
+Within Your wounds, hide me.
+Permit me not to be separated from You.
+From the wicked enemy, defend me.
+At the hour of my death, call me.
+And bid me come to You,
+That with Your saints I may praise You
+Forever and ever. Amen.`
         ],
-        catechism: 'The Eucharist is the memorial of Christ\'s Passover, the source and summit of Christian life, containing the whole spiritual good of the Church.',
-        scripture: 'John 6:53-58, 1 Corinthians 11:23-29'
+        catechism: 'The Eucharist is the memorial of Christ\'s Passover, the source and summit of Christian life, containing the whole spiritual good of the Church. In the Eucharist, Christ Himself is truly present - Body, Blood, Soul, and Divinity under the appearances of bread and wine.',
+        scripture: `John 6:53-58
+
+Jesus said to them, "Truly, truly, I say to you, unless you eat the flesh of the Son of Man and drink his blood, you have no life in you. Whoever feeds on my flesh and drinks my blood has eternal life, and I will raise him on the last day. For my flesh is true food, and my blood is true drink. Whoever eats my flesh and drinks my blood remains in me and I in him."
+
+1 Corinthians 11:23-29
+
+For I received from the Lord what I also handed on to you, that the Lord Jesus, on the night he was handed over, took bread, and after he had given thanks, broke it and said, "This is my body that is for you. Do this in memory of me." In the same way also the cup, after supper, saying, "This cup is the new covenant in my blood. Do this, as often as you drink it, in memory of me." For as often as you eat this bread and drink the cup, you proclaim the death of the Lord until he comes.`
       },
       {
         id: 'confirmation',
@@ -76,12 +140,34 @@ const catholicContent = {
           adults: 'Adults should confess at least once a year (preferably during Lent or Advent). Many find monthly confession helpful for spiritual growth. All serious sins must be confessed.'
         },
         prayers: [
-          'Act of Contrition: "Oh my God, because you are so good..."',
-          'Examination of Conscience Prayer: "Holy Spirit, enlighten my mind..."',
-          'Prayer for Forgiveness: "Lord Jesus Christ, you are the mercy of the Father..."'
+          `Act of Contrition:
+
+Oh my God, because you are so good,
+I am very sorry that I have sinned against you,
+and with the help of your grace,
+I will not sin again. Amen.
+
+Traditional version:
+Oh my God, I am heartily sorry for having offended Thee, and I detest all my sins because of thy just punishments, but most of all because they offend Thee, my God, who art all good and deserving of all my love. I firmly resolve, with the help of Thy grace, to sin no more and to avoid the near occasions of sin. Amen.`,
+          `Examination of Conscience Prayer:
+
+Come Holy Spirit, fill the hearts of your faithful and kindle in them the fire of your love. Send forth your Spirit and they shall be created. And you shall renew the face of the earth.
+
+Lord, help me to see my sins as You see them. Give me the courage to confess them sincerely, the grace to amend my life, and the strength to follow Your holy will. Amen.`,
+          `Prayer for Forgiveness:
+
+Lord Jesus Christ, You are the mercy of the Father. I ask You to forgive me all my sins and the wrong I have done. I ask for Your mercy and Your love. I desire to sin no more and to live according to Your holy will. Amen.`
         ],
-        catechism: 'Penance reconciles us with God and the Church, forgiving sins committed after Baptism.',
-        scripture: 'John 20:22-23, 2 Corinthians 5:18-20'
+        catechism: 'Penance reconciles us with God and the Church, forgiving sins committed after Baptism. Through this sacrament, we are reconciled with God and with the Church community. The priest acts in the person of Christ (in persona Christi), granting absolution in Jesus\' name.',
+        scripture: `John 20:22-23
+
+Jesus breathed on them and said to them, "Receive the Holy Spirit. Whose sins you forgive are forgiven them, and whose sins you retain are retained."
+
+2 Corinthians 5:18-20
+
+All this is from God, who has reconciled us to himself through Christ and given us the ministry of reconciliation... God was reconciling the world to himself in Christ, not counting people's sins against them. And he has committed to us the message of reconciliation.
+
+We are therefore Christ's ambassadors, as though God were making his appeal through us.`
       },
       {
         id: 'anointing',
@@ -469,16 +555,65 @@ const catholicContent = {
         title: 'Blessed Virgin Mary',
         description: 'Mother of God and Queen of Saints',
         story: 'Mary was a young Jewish girl from Nazareth when the angel Gabriel appeared to her and announced that she would conceive God\'s Son by the Holy Spirit. She gave her humble "fiat" - let it be done to me. Despite the risk of being stoned, she trusted God. She gave birth to Jesus in a stable, raised Him, followed Him to the cross, and was present at Pentecost. She was assumed body and soul into heaven and crowned Queen of Heaven.',
-        novena: 'Memorare Novena: For nine days, pray: "Remember, O most gracious Virgin Mary, that never was it known that anyone who fled to your protection, implored your help or sought your intercession was left unaided. Inspired by this confidence, I fly to you, O Virgin of virgins, my Mother. To you I come, before you I stand, sinful and sorrowful. O Mother of the Word Incarnate, despise not my petitions, but in your mercy hear and answer me. Amen."',
+        novena: `Memorare Novena:
+
+For nine days, pray:
+
+"Remember, O most gracious Virgin Mary, that never was it known that anyone who fled to your protection, implored your help or sought your intercession was left unaided. Inspired by this confidence, I fly to you, O Virgin of virgins, my Mother. To you I come, before you I stand, sinful and sorrowful. O Mother of the Word Incarnate, despise not my petitions, but in your mercy hear and answer me. Amen."`,
         prayers: [
-          'Hail Holy Queen: Hail, holy Queen, Mother of mercy, our life, our sweetness and our hope. To you do we cry, poor banished children of Eve. To you do we send up our sighs, mourning and weeping in this valley of tears. Turn then, most gracious Advocate, your eyes of mercy toward us, and after this our exile, show unto us the blessed fruit of your womb, Jesus O clement, O loving, O sweet Virgin Mary.',
-          'The Rosary: Pray the Rosary daily, meditating on the Joyful, Sorrowful, Glorious, and Luminous mysteries.',
-          'The Angelus: The Angel of the Lord declared unto Mary, and she conceived by the Holy Spirit.',
-          'Sub Tuum: We fly to thy patronage, O Holy Mother of God; despise not our petitions in our necessities, but deliver us always from all dangers, O glorious and blessed Virgin.',
-          'Magnificat: My soul proclaims the greatness of the Lord, and my spirit rejoices in God my Savior.'
+          `Hail Holy Queen:
+
+Hail, holy Queen, Mother of mercy, our life, our sweetness and our hope. To you do we cry, poor banished children of Eve. To you do we send up our sighs, mourning and weeping in this valley of tears. Turn then, most gracious Advocate, thine eyes of mercy toward us, and after this our exile, show unto us the blessed fruit of thy womb, Jesus. O clement, O loving, O sweet Virgin Mary.
+
+Pray for us, O holy Mother of God, that we may be made worthy of the promises of Christ.`,
+          `The Rosary:
+
+The Rosary is a powerful prayer devotion consisting of meditations on the life of Christ. Pray one Our Father, ten Hail Marys, and one Glory Be for each mystery.
+
+Joyful Mysteries (Monday & Saturday): The Annunciation, Visitation, Nativity, Presentation, Finding in the Temple
+Sorrowful Mysteries (Tuesday & Friday): Agony in the Garden, Scourging, Crowning with Thorns, Carrying the Cross, Crucifixion
+Glorious Mysteries (Wednesday & Sunday): Resurrection, Ascension, Descent of Holy Spirit, Assumption, Coronation of Mary
+Luminous Mysteries (Thursday): Baptism, Wedding at Cana, Proclamation of Kingdom, Transfiguration, Institution of Eucharist`,
+          `The Angelus:
+
+V. The Angel of the Lord declared unto Mary,
+R. And she conceived by the Holy Spirit.
+
+Hail Mary...
+
+V. Behold the handmaid of the Lord,
+R. Be it done to me according to your word.
+
+Hail Mary...
+
+V. And the Word was made flesh,
+R. And dwelt among us.
+
+Hail Mary...
+
+V. Pray for us, O holy Mother of God,
+R. That we may be made worthy of the promises of Christ.
+
+Let us pray: Pour forth, we beseech you, O Lord, your grace into our hearts, that we to whom the Incarnation of Christ your Son was made known by the message of an angel, may by his Passion and Cross be brought to the glory of his Resurrection. Through the same Christ our Lord. Amen.`,
+          `Sub Tuum:
+
+We fly to thy patronage, O Holy Mother of God; despise not our petitions in our necessities, but deliver us always from all dangers, O glorious and blessed Virgin. Amen.`,
+          `Magnificat:
+
+My soul proclaims the greatness of the Lord, and my spirit rejoices in God my Savior, for he has looked with favor on his lowly servant. From this day all generations will call me blessed: the Almighty has done great things for me, and holy is his Name. He has mercy on those who fear him in every generation. He has shown the strength of his arm, he has scattered the proud in their conceit. He has cast down the mighty from their thrones, and has lifted up the lowly. He has filled the hungry with good things, and the rich he has sent away empty. He has come to the help of his servant Israel, for he has remembered his promise of mercy, The promise he made to our fathers, to Abraham and his children forever.`
         ],
-        catechism: 'Mary is the Mother of God (Theotokos), Mother of the Church, and our spiritual mother.',
-        scripture: 'Luke 1:26-55, Luke 2:6-7'
+        catechism: 'Mary is the Mother of God (Theotokos), Mother of the Church, and our spiritual mother. She is the greatest of all saints, having been preserved from all sin from the first moment of her existence (Immaculate Conception), assumed body and soul into heaven, and crowned as Queen of Heaven and Earth.',
+        scripture: `Luke 1:26-38 (The Annunciation)
+
+In the sixth month, the angel Gabriel was sent from God to a town of Galilee called Nazareth, to a virgin betrothed to a man named Joseph, of the house of David, and the virgin's name was Mary. And coming to her, he said, "Hail, full of grace! The Lord is with you." But she was greatly troubled at the saying, and considered in her mind what sort of greeting this might be. And the angel said to her, "Do not be afraid, Mary, for you have found favor with God. And behold, you will conceive in your womb and bear a son, and you shall call his name Jesus. He will be great, and will be called the Son of the Most High; and the Lord God will give to him the throne of his father David, and he will reign over the house of Jacob forever; and of his kingdom there will be no end."
+
+And Mary said to the angel, "How can this be, since I have no husband?" And the angel said to her, "The Holy Spirit will come upon you, and the power of the Most High will overshadow you; therefore the child to be born will be called holy, the Son of God."
+
+And Mary said, "Behold, I am the handmaid of the Lord; let it be to me according to your word." And the angel departed from her.
+
+Luke 1:46-55 (The Magnificat)
+
+And Mary said, "My soul magnifies the Lord, and my spirit rejoices in God my Savior, for he has regarded the low estate of his handmaiden. For behold, henceforth all generations will call me blessed; for he who is mighty has done great things for me, and holy is his name."`
       },
       {
         id: 'joseph',
