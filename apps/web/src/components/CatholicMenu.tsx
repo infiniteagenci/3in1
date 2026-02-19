@@ -2174,7 +2174,7 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
+      <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[95vh] flex flex-col shadow-2xl">
         {selectedItem ? (
           // Detail View
           <>
@@ -2211,7 +2211,7 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
             </div>
 
             {/* Detail Content */}
-            <div className="overflow-y-auto p-6 max-h-[70vh] space-y-6">
+            <div className="overflow-y-auto p-6 max-h-[80vh] space-y-6">
               {/* Story/Overview */}
               {selectedItem.story && (
                 <div>
@@ -2372,7 +2372,7 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
         </div>
 
         {/* Content */}
-        <div className="overflow-y-auto p-6 max-h-[60vh]">
+        <div className="overflow-y-auto p-6 max-h-[80vh]">
           {searchQuery ? (
             // Enhanced Search Results
             <div>

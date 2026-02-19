@@ -59,7 +59,7 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
   };
 
   return (
-    <div className="flex flex-col h-screen relative overflow-hidden">
+    <div className="flex flex-col h-[100dvh] relative overflow-hidden">
       {/* Full-screen background images */}
       <div className="absolute inset-0">
         {backgroundImages.map((bg, index) => (

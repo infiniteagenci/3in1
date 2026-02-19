@@ -1354,7 +1354,7 @@ export default function BiblicalCharacters({ className = '' }: BiblicalCharacter
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+        <div className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
           {/* Story */}
           <div>
             <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2 font-geist">
@@ -1521,7 +1521,7 @@ export default function BiblicalCharacters({ className = '' }: BiblicalCharacter
       </div>
 
       {/* Characters Grid */}
-      <div className="p-4 grid grid-cols-2 gap-3 max-h-[70vh] overflow-y-auto">
+      <div className="p-4 grid grid-cols-2 gap-3 max-h-[80vh] overflow-y-auto">
         {filteredCharacters.map((character) => {
           const category = categories[character.category];
           return (
