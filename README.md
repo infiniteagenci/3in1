@@ -1,355 +1,263 @@
-# Base 42
+# 3in1 — Reviving Catholic Faith in Teens & Young Adults
 
-Base 42 is a modern, full-stack starter codebase designed to help you quickly launch web applications on Cloudflare's global infrastructure. It combines the best tools and practices to create a fast, scalable, and type-safe development experience.
+3in1 is a spiritual companion app designed to help teenagers and young adults deepen their Catholic faith through meaningful conversations with the Holy Spirit. Using AI technology guided by Scripture and Church teachings, the app provides a safe space to explore life questions, receive biblical guidance, and grow spiritually in a language that resonates with Gen Z.
 
-## 🚀 What is Base 42?
+---
 
-Base 42 provides everything you need to build and deploy modern web applications:
+## ✨ Why 3in1?
 
-- **Full-Stack TypeScript**: End-to-end type safety from the database to the frontend
-- **Lightning Fast Performance**: Built with Astro for optimal performance and minimal JavaScript
-- **Modern Authentication**: Google OAuth integration with secure session management
-- **Global Deployment**: Deploy instantly to Cloudflare's global network
-- **Developer Experience**: Hot reload, TypeScript support, and modern tooling
+Young Catholics today face unique challenges — questions about purpose, relationships, identity, and faith. Traditional answers don't always connect. 3in1 bridges that gap by:
 
-## 📁 Project Structure
+- **Personalized spiritual guidance** — The Spirit agent learns about each user (name, age, life situation) to provide tailored, relevant answers rooted in Catholic teaching
+- **Biblically grounded responses** — All guidance is drawn from Scripture, Catechism, and the wisdom of the Saints
+- **Modern, mobile-first experience** — Clean, mystical design with purples and blues that feels at home on any device
+- **Private and secure** — Google OAuth login, encrypted notes, and user data never shared
+- **Always accessible** — Available 24/7 for whenever questions arise
+
+Our mission: **Help the next generation experience the living Word of God in a way that transforms their daily lives.**
+
+---
+
+## 🎯 Who Is This For?
+
+- **Teenagers (14–19)** navigating faith in high school, family, and early discernment
+- **Young adults (20–35)** exploring vocation, relationships, and Catholic identity in a secular world
+- **Catholic youth ministers** looking for conversation starters or supplemental resources
+- **Any Catholic** seeking deeper scriptural understanding through dialogue
+
+---
+
+## 🌟 Features
+
+### Chat with the Spirit
+
+- **Conversational AI** that feels like talking to a wise, compassionate mentor
+- **Notes system**: Spirit records key insights, prayers, and progress in a personal notes file
+- **Scriptural references**: Answers often include Bible verses and Catechism references
+- **Non-judgmental space**: Ask anything — no question is too small or too difficult
+
+### Faith-Revision Content
+
+The app helps users **revisit and revive** core Catholic beliefs:
+
+- **Sacramental life** — Understanding Mass, Reconciliation, and Eucharist
+- **Prayer habits** — Developing personal prayer, Lectio Divina, and devotions
+- **Moral discernment** — Applying Catholic ethics to relationships, career, and decisions
+- **Community** — Connecting with parish, finding authentic Catholic friendships
+- **Vocation** — Discerning God's call in single life, marriage, religious life, or priesthood
+
+### Technical Power
+
+- **Mastra agent** for sophisticated conversation flow
+- **Vercel AI Gateway + AISDK** for reliable, scalable LLM calls
+- **Cloudflare Workers & D1** — fast, global, edge-native infrastructure
+- **Mobile-first responsive UI** — beautiful on phones, tablets, and desktops
+- **Authentic Catholic content** — responses shaped by Jesuit spirituality and Thomistic theology
+
+---
+
+## 🏗️ Project Structure
 
 ```
-base42/
+3in1/
 ├── apps/
-│   ├── worker/          # Hono API server with D1 database
-│   │   ├── src/         # API source code
-│   │   ├── db/          # Database schemas and migrations
-│   │   └── wrangler.toml # Cloudflare Worker config
-│   └── web/             # Astro web app with Tailwind CSS
+│   ├── worker/          # Hono API server (backend)
+│   │   ├── src/
+│   │   │   ├── routes/     # API endpoints (/api/chat, /api/auth, etc.)
+│   │   │   ├── agents/     # Spirit AI agent logic
+│   │   │   └── db/         # D1 database schemas & migrations
+│   │   ├── db/
+│   │   │   └── schema.sql  # Users, sessions, notes tables
+│   │   └── wrangler.toml   # Cloudflare Worker configuration
+│   └── web/             # Astro + React + Shadcn frontend
 │       ├── src/
-│       │   ├── pages/   # Astro pages
-│       │   ├── layouts/ # Page layouts
-│       │   └── styles/  # Global styles
-│       ├── public/      # Static assets
-│       └── astro.config.mjs # Astro configuration
-├── packages/            # Shared packages (future)
-├── scripts/             # Development and deployment scripts
+│       │   ├── components/  # UI components (ChatBox, MessageList, etc.)
+│       │   ├── pages/      # Astro pages
+│       │   └── lib/        # Utilities, API clients
+│       ├── public/         # Static assets
+│       └── astro.config.mjs
+├── scripts/             # Dev, build, deploy helpers
 ├── prd.md              # Product Requirements Document
-├── tasks.md            # Implementation tasks
-└── README.md           # This file
+├── DEPLOYMENT.md       # Step-by-step deployment guide
+├── README.md           # This file
+└── timesheet.md        # Development log
 ```
+
+---
 
 ## 🛠️ Technology Stack
 
 ### Backend
-- **[Hono](https://hono.dev/)**: Fast and lightweight web framework
-- **[Cloudflare Workers](https://workers.cloudflare.com/)**: Serverless compute platform
+- **[Hono](https://hono.dev/)**: Lightning-fast API framework
+- **[Cloudflare Workers](https://workers.cloudflare.com/)**: Serverless edge compute
 - **[Cloudflare D1](https://developers.cloudflare.com/d1/)**: SQLite database at the edge
-- **[TypeScript](https://www.typescriptlang.org/)**: Type-safe development
+- **[Mastra](https://mastra.ai/)**: AI agent framework for conversational agents
+- **[Vercel AI SDK](https://sdk.vercel.ai/)**: Unified LLM interface
+- **Vercel AI Gateway**: Reliable, cached LLM routing (OpenAI/Anthropic/etc.)
 
 ### Frontend
-- **[Astro](https://astro.build/)**: Modern static site builder with island architecture
-- **[Tailwind CSS](https://tailwindcss.com/)**: Utility-first CSS framework
-- **[TypeScript](https://www.typescriptlang.org/)**: Type-safe frontend development
+- **[Astro](https://astro.build/)**: Fast, content-focused framework with island architecture
+- **React** + **[Shadcn/ui](https://ui.shadcn.com/)**: Modern, accessible components
+- **[Tailwind CSS](https://tailwindcss.com/)**: Utility-first styling for rapid UI development
+- **TypeScript**: End-to-end type safety
 
-### DevOps & Deployment
-- **[Bun](https://bun.sh/)**: All-in-one JavaScript runtime and package manager
+### DevOps
+- **[Bun](https://bun.sh/)**: All-in-one runtime & package manager (fast!)
 - **[Turbo](https://turbo.build/)**: Monorepo build system
-- **[Cloudflare Pages](https://pages.cloudflare.com/)**: Static site hosting with CI/CD
+- **[Wrangler](https://developers.cloudflare.com/workers/wrangler/)**: Cloudflare CLI
+- **GitHub**: Source control & CI/CD (Cloudflare Pages)
 
 ### Authentication
-- **Google OAuth 2.0**: Secure third-party authentication
-- **JWT-based Sessions**: Secure token-based session management
+- **Google OAuth 2.0**: Secure, familiar login for users
+
+---
 
 ## 🏁 Quick Start
 
 ### Prerequisites
 
-Before you begin, ensure you have:
+- **[Bun](https://bun.sh/)** installed (or Node.js 20+)
+- **[Wrangler](https://developers.cloudflare.com/workers/wrangler/install/)** CLI: `npm install -g wrangler`
+- A **Cloudflare account** (free tier works)
+- **Google OAuth credentials** (Client ID & Secret)
+- **OpenAI API key** (or other LLM provider through Vercel AI Gateway)
 
-1. **[Bun](https://bun.sh/)** installed (recommended) or Node.js 24+
-   ```bash
-   curl -fsSL https://bun.sh/install | bash
-   ```
-
-2. **[Cloudflare CLI](https://developers.cloudflare.com/workers/wrangler/install/)** (Wrangler)
-   ```bash
-   bunx wrangler login
-   ```
-
-3. A **[Cloudflare account](https://cloudflare.com/)**
-
-### Step 1: Clone and Install
+### Installation
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd base42
+# Clone the repo
+git clone https://github.com/infiniteagenci/3in1.git
+cd 3in1
 
-# Install all dependencies
+# Install dependencies
 bun install
 ```
 
-### Step 2: Environment Setup
+### Environment Setup
 
 ```bash
-# Create environment file from template
+# Copy environment templates
 cp .env.example .env
+cp apps/worker/.dev.vars.example apps/worker/.dev.vars
 ```
 
-Edit the `.env` file and add your configuration:
+Edit both files with your API keys and OAuth credentials.
 
-```env
-# Google OAuth (get from Google Cloud Console)
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-
-# URLs (adjust if needed)
-FRONTEND_URL=http://localhost:4321
-WORKER_URL=http://localhost:8787
-```
-
-### Step 3: Set up Google OAuth
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select existing one
-3. Enable Google+ API
-4. Create OAuth 2.0 credentials
-5. Add these authorized redirect URIs:
-   - `http://localhost:8787/auth/google/callback` (development)
-   - `https://your-worker-url.workers.dev/auth/google/callback` (production)
-
-### Step 4: Database Setup
+### Database Setup
 
 ```bash
-# Create development database
+cd apps/worker
 bun run db:create
-
-# Run database migrations
 bun run db:migrate
-
-# (Optional) Seed with sample data
-bun run db:seed
 ```
 
-### Step 5: Run the Application
+### Run Locally
 
 ```bash
-# Start both API and web app
+# From repo root — starts both backend and frontend
 bun run dev
 
-# Or start individually
-bun run dev:worker  # API server on http://localhost:8787
-bun run dev:web     # Web app on http://localhost:4321
+# Or separately:
+bun run dev:worker   # API on http://localhost:8787
+bun run dev:web      # Frontend on http://localhost:4321
 ```
 
-Visit http://localhost:4321 to see your application!
-
-## 📝 Available Scripts
-
-### Development
-
-```bash
-bun run dev              # Start all apps with Turbo
-bun run dev:all          # Start all apps with concurrently
-bun run dev:worker       # Start Worker API only (port 8787)
-bun run dev:web          # Start Web app only (port 4321)
-
-# Using helper script
-./scripts/dev.sh all     # Start all services
-./scripts/dev.sh worker  # Start API only
-./scripts/dev.sh web     # Start web app only
-```
-
-### Build & Deploy
-
-```bash
-# Build for production
-bun run build            # Build all apps
-bun run build:worker     # Build Worker API
-bun run build:web        # Build web app
-
-# Deploy
-bun run deploy           # Deploy to production
-bun run deploy:worker    # Deploy Worker API
-bun run deploy:web       # Deploy web app (manual setup required)
-```
-
-### Code Quality
-
-```bash
-bun run lint             # Lint all apps
-bun run lint:fix         # Auto-fix linting issues
-bun run type-check       # Type check all apps
-```
-
-### Database Management
-
-```bash
-bun run db:create        # Create development database
-bun run db:migrate       # Run database migrations
-bun run db:seed          # Seed database with sample data
-bun run db:reset         # Reset database (migrate + seed)
-
-# Production database
-bun run db:create:prod   # Create production database
-bun run db:migrate:prod  # Migrate production database
-```
-
-### Utilities
-
-```bash
-bun run clean:build      # Clean build artifacts
-bun run preview:web      # Preview built web app locally
-bun run setup            # First-time setup helper
-```
-
-## 🌍 Deployment Guide
-
-### Option 1: Automated Deployment Script (Recommended)
-
-The easiest way to deploy is using the provided deployment script:
-
-```bash
-# Deploy to staging
-./scripts/deploy.sh staging
-
-# Deploy to production
-./scripts/deploy.sh production
-```
-
-### Option 2: Manual Deployment
-
-#### Deploying the Worker API
-
-1. **Development/Staging**:
-   ```bash
-   bun run deploy:worker:staging
-   ```
-
-2. **Production**:
-   ```bash
-   bun run deploy:worker
-   ```
-
-#### Deploying the Web App
-
-1. Go to [Cloudflare Pages](https://dash.cloudflare.com/pages)
-2. Click "Create a project"
-3. Connect your Git repository
-4. Configure build settings:
-   - **Build command**: `cd apps/web && bun run build`
-   - **Build output directory**: `apps/web/dist`
-   - **Root directory**: `/`
-5. Set environment variables in Cloudflare Pages dashboard:
-   - `PUBLIC_WORKER_API_URL`: Your deployed Worker URL
-6. Deploy on push to main branch
-
-#### Environment Variables
-
-Before deploying, make sure to set these environment variables:
-
-**For Worker API** (in Cloudflare Workers dashboard):
-- `GOOGLE_CLIENT_ID`
-- `GOOGLE_CLIENT_SECRET`
-- `FRONTEND_URL`
-- `WORKER_URL`
-
-**For Web App** (in Cloudflare Pages dashboard):
-- `PUBLIC_WORKER_API_URL`
-
-## 🚦 API Documentation
-
-### Authentication Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/auth/google/url` | Generate Google OAuth URL |
-| POST | `/auth/google/callback` | Handle OAuth callback |
-| GET | `/auth/validate` | Validate session token |
-| POST | `/auth/logout` | Logout user |
-
-### Protected Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/me` | Get current user profile |
-| GET | `/api/health` | Health check (protected) |
-
-### Public Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/` | API information |
-| GET | `/health` | Public health check |
-
-## 🎨 Features
-
-### ✅ Authentication System
-- Google OAuth 2.0 integration
-- Secure JWT-based session management
-- Protected routes with middleware
-- Automatic token refresh
-
-### ✅ Modern Frontend
-- Astro with island architecture for optimal performance
-- Tailwind CSS for beautiful, responsive designs
-- TypeScript for type-safe development
-- SEO-friendly static site generation
-
-### ✅ Backend API
-- Hono framework for fast API development
-- Cloudflare D1 database at the edge
-- Type-safe API routes with TypeScript
-- CORS enabled for frontend integration
-
-### ✅ Developer Experience
-- Hot reload during development
-- Type checking and linting
-- Monorepo with shared configurations
-- Comprehensive deployment scripts
-
-## 🔧 Configuration
-
-### Database Schema
-
-The application uses the following main tables:
-
-- **`users`**: User accounts linked to Google OAuth
-- **`sessions`**: Active authentication sessions
-- **`profiles`**: Extended user profile information
-
-### Customization
-
-You can easily customize:
-
-1. **Styling**: Modify Tailwind configuration in `apps/web/tailwind.config.mjs`
-2. **API Routes**: Add new routes in `apps/worker/src/`
-3. **Pages**: Create new Astro pages in `apps/web/src/pages/`
-4. **Database Schema**: Update `apps/worker/db/schema.sql`
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Make your changes and test thoroughly
-4. Ensure all linting and type checks pass:
-   ```bash
-   bun run lint
-   bun run type-check
-   ```
-5. Commit your changes: `git commit -m 'Add amazing feature'`
-6. Push to the branch: `git push origin feature/amazing-feature`
-7. Open a pull request with a clear description
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 💬 Support
-
-- **Issues**: [Open an issue on GitHub](https://github.com/yourusername/base42/issues)
-- **Discussions**: [Join our GitHub Discussions](https://github.com/yourusername/base42/discussions)
-- **Email**: support@base42.dev
+Open http://localhost:4321 and click **"Login with Google"** to start chatting with the Spirit.
 
 ---
 
-Made with ❤️ by the Base 42 team
+## 📖 How It Works
+
+1. **User logs in** with Google OAuth → Account created in D1 database
+2. **Spirit greets** the user by name and begins asking gentle, intimate questions to understand their life context
+3. **Notes are saved** — Spirit records key points (age, job, struggles, joys) in the user's notes file
+4. **User asks questions** about faith, life, relationships, or discernment
+5. **Spirit responds** with:
+   - A **biblically-rooted answer** (with Scripture references when relevant)
+   - **Gentle encouragement** and **practical next steps**
+   - **Updates to notes** tracking insights, prayers, and progress
+6. **Conversation continues** — Spirit builds on previous context, helping the user grow spiritually over time
+
+### Example Conversations
+
+- _» "I'm struggling with my parents. We argue about everything."_
+- _Spirit: "That's so hard. Let's look at what Jesus said about honoring parents... [from Ephesians 6:1–3]... Would you like to try a prayer for patience tonight?"_
+
+- _» "I don't feel like going to Mass anymore. It feels like a chore."_
+- _Spirit: "Many faithful people go through seasons like that... [shares story of St. Augustine]... Want to explore what might be draining the joy from your worship?"_
+
+---
+
+## 🚢 Deployment
+
+Deploy to **Cloudflare Workers** (backend) and **Cloudflare Pages** (frontend) in minutes.
+
+See the full guide: **[DEPLOYMENT.md](./DEPLOYMENT.md)**
+
+Quick deploy:
+
+```bash
+# Backend
+cd apps/worker
+bun run deploy
+
+# Frontend (to Cloudflare Pages)
+cd apps/web
+bun run deploy:pages:production
+```
+
+Set these **environment secrets** in Cloudflare Workers dashboard:
+
+- `OPENAI_API_KEY` (or your LLM provider key)
+- `GOOGLE_OAUTH_CLIENT_ID`
+- `GOOGLE_OAUTH_CLIENT_SECRET`
+- `FRONTEND_URL` (your deployed Pages URL)
+- `ENVIRONMENT=production`
+
+Set **Pages environment variable**:
+
+- `PUBLIC_WORKER_API_URL` → your deployed Worker URL
+
+---
+
+## 🧭 Faith Content Guidelines
+
+All AI responses should align with **Catholic Church teaching** as expressed in:
+
+- **Sacred Scripture** (especially the Gospels and Epistles)
+- **Catechism of the Catholic Church** (CCC)
+- **Magisterial documents** (encyclicals, apostolic letters, council decrees)
+- **Writings of the Doctors of the Church** (especially Augustine, Teresa of Ávila, John of the Cross, Thérèse of Lisieux)
+- **Spiritual classics** (_The Imitation of Christ_, _Introduction to the Devout Life_, etc.)
+
+**Never** provide content that contradicts defined Catholic doctrine. When in doubt, respond with humility and suggest the user speak with a priest or spiritual director.
+
+---
+
+## 🤝 Contributing
+
+We believe in the power of community to build something that serves the Church.
+
+**Areas where you can help:**
+- 🎨 UI/UX improvements for a more engaging youth-friendly experience
+- 📚 Adding faith content, devotional prompts, and Scripture references
+- 🔧 Backend features (note organization, conversation history, export)
+- 🧪 Testing on real teens and young adults
+- 📖 Documentation and translation (Spanish, Portuguese, French coming soon)
+- 🛡️ Security and privacy hardening
+- 🧠 Fine-tuning prompt templates for more accurate theological responses
+
+Please open issues and PRs — all contributions are welcome.
+
+---
+
+## 🙏 Our Prayer
+
+> _Lord, send His Spirit into the hearts of all who use this app, that they may come to know You more fully, love You more deeply, and serve You more faithfully. May this technology be an instrument of Your grace, bringing light to darkness and hope to despair._  
+> — _Inspired by John 14:26_
+
+---
+
+## 📄 License
+
+MIT © 2025 Infinite Agency
