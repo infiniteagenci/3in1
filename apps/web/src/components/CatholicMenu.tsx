@@ -2272,6 +2272,18 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                   </h3>
                   <div className="bg-amber-50 border border-amber-100 rounded-xl p-4">
                     <p className="text-gray-700 font-geist whitespace-pre-line">{selectedItem.scripture}</p>
+                    <a
+                      href="https://www.biblegateway.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                    >
+                      <span>📖</span>
+                      <span>Open in Bible</span>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
                   </div>
                 </div>
               )}
@@ -2411,36 +2423,48 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
 
                           {/* Show what's included */}
                           {(item.prayers && item.prayers.length > 0) && (
-                            <div className="mt-3 p-2 bg-green-50 rounded-lg border border-green-200">
-                              <p className="text-xs font-semibold text-green-700 mb-1 font-geist">✨ Includes {item.prayers.length} {item.prayers.length === 1 ? 'prayer' : 'prayers'}:</p>
-                              <p className="text-xs text-green-600 font-geist line-clamp-2">{item.prayers[0].substring(0, 150)}...</p>
+                            <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                              <p className="text-xs font-semibold text-green-700 mb-2 font-geist">✨ Includes {item.prayers.length} {item.prayers.length === 1 ? 'prayer' : 'prayers'}:</p>
+                              <p className="text-xs text-green-700 font-geist whitespace-pre-line">{item.prayers[0]}</p>
+                              {item.prayers.length > 1 && (
+                                <p className="text-xs text-green-600 italic mt-1">+ {item.prayers.length - 1} more {item.prayers.length - 1 === 1 ? 'prayer' : 'prayers'}</p>
+                              )}
                             </div>
                           )}
 
                           {item.story && (
-                            <div className="mt-2 p-2 bg-purple-50 rounded-lg border border-purple-200">
+                            <div className="mt-2 p-3 bg-purple-50 rounded-lg border border-purple-200">
                               <p className="text-xs font-semibold text-purple-700 mb-1 font-geist">📖 Story:</p>
-                              <p className="text-xs text-purple-600 font-geist line-clamp-2">{item.story.substring(0, 150)}...</p>
+                              <p className="text-xs text-purple-700 font-geist line-clamp-3">{item.story}</p>
                             </div>
                           )}
 
                           {item.novena && (
-                            <div className="mt-2 p-2 bg-rose-50 rounded-lg border border-rose-200">
+                            <div className="mt-2 p-3 bg-rose-50 rounded-lg border border-rose-200">
                               <p className="text-xs font-semibold text-rose-700 mb-1 font-geist">🙏 Novena:</p>
-                              <p className="text-xs text-rose-600 font-geist line-clamp-2">{item.novena.substring(0, 150)}...</p>
+                              <p className="text-xs text-rose-700 font-geist line-clamp-3">{item.novena}</p>
                             </div>
                           )}
 
                           {item.catechism && (
-                            <div className="mt-2 p-2 bg-blue-50 rounded-lg border border-blue-200">
+                            <div className="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
                               <p className="text-xs font-semibold text-blue-700 mb-1 font-geist">📚 Teaching:</p>
-                              <p className="text-xs text-blue-600 font-geist line-clamp-2">{item.catechism.substring(0, 150)}...</p>
+                              <p className="text-xs text-blue-700 font-geist line-clamp-3">{item.catechism}</p>
                             </div>
                           )}
 
                           {item.scripture && (
-                            <div className="mt-2 p-2 bg-amber-50 rounded-lg border border-amber-200">
-                              <p className="text-xs font-semibold text-amber-700 mb-1 font-geist">📜 Scripture: {item.scripture}</p>
+                            <div className="mt-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                              <p className="text-xs font-semibold text-amber-700 mb-1 font-geist">📜 Scripture:</p>
+                              <p className="text-xs text-amber-800 font-geist">{item.scripture}</p>
+                              <a
+                                href="https://www.biblegateway.com"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 mt-2 text-xs text-purple-600 hover:text-purple-800 font-medium"
+                              >
+                                Open in Bible →
+                              </a>
                             </div>
                           )}
                         </div>

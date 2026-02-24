@@ -65,6 +65,8 @@ export default function ProfileTab() {
           if (profile.ageGroup) {
             setAgeGroup(profile.ageGroup);
             setEditAgeGroup(profile.ageGroup);
+            // Store in localStorage for immediate access by other components
+            localStorage.setItem('user_age_group', profile.ageGroup);
           }
         }
 
@@ -185,58 +187,35 @@ export default function ProfileTab() {
       return;
     }
 
+    setIsLoading(true);
     setUploadProgress(10);
     try {
       const token = getToken();
-      const formData = new FormData();
-      formData.append('photo', file);
 
-      // First, try the dedicated photo upload endpoint
-      let response = await fetch(`${getApiUrl()}/api/user/photo`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        body: formData,
+      // Convert file to base64 for more reliable upload
+      const reader = new FileReader();
+      const base64Promise = new Promise<string>((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(new Error('Failed to read file'));
+        reader.readAsDataURL(file);
       });
 
-      // If photo endpoint doesn't exist, try the profile update endpoint
-      if (!response.ok && response.status === 404) {
-        // Convert file to base64
-        const reader = new FileReader();
-        reader.onload = async () => {
-          const base64 = reader.result as string;
-          setUploadProgress(50);
-
-          response = await fetch(`${getApiUrl()}/api/user/profile`, {
-            method: 'PATCH',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ avatar_url: base64 }),
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            setAvatarUrl(data.avatar_url || base64);
-            setUploadProgress(100);
-            showMessage('success', '✓ Photo uploaded successfully!');
-          } else {
-            const data = await response.json();
-            showMessage('error', data.error || 'Failed to upload photo');
-            setUploadProgress(0);
-          }
-        };
-        reader.readAsDataURL(file);
-        return;
-      }
-
+      const base64 = await base64Promise;
       setUploadProgress(50);
+
+      // Try the profile update endpoint with base64
+      const response = await fetch(`${getApiUrl()}/api/user/profile`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ avatar_url: base64 }),
+      });
 
       if (response.ok) {
         const data = await response.json();
-        setAvatarUrl(data.avatar_url);
+        setAvatarUrl(data.avatar_url || base64);
         setUploadProgress(100);
         showMessage('success', '✓ Photo uploaded successfully!');
       } else {
@@ -304,7 +283,12 @@ export default function ProfileTab() {
       });
 
       if (response.ok) {
+        const data = await response.json();
         setAgeGroup(editAgeGroup);
+        // Store in localStorage for immediate access by other components
+        localStorage.setItem('user_age_group', editAgeGroup);
+        // Trigger custom event for other components to listen to
+        window.dispatchEvent(new CustomEvent('ageGroupChange', { detail: { ageGroup: editAgeGroup } }));
         showMessage('success', '✓ Age group saved successfully!');
       } else {
         const data = await response.json();

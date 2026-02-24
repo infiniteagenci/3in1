@@ -59,7 +59,7 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
   };
 
   return (
-    <div className="flex flex-col h-[100dvh] relative overflow-hidden">
+    <div className="flex flex-col h-[100dvh] relative">
       {/* Full-screen background images */}
       <div className="absolute inset-0">
         {backgroundImages.map((bg, index) => (
@@ -114,7 +114,7 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-hidden relative z-10">
+      <div className="flex-1 min-h-0 relative z-10">
         {renderTab()}
       </div>
 

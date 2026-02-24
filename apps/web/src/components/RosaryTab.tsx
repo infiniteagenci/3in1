@@ -207,7 +207,7 @@ export default function RosaryTab({ onClose }: { onClose: () => void }) {
                   : 'bg-red-400/30 text-white hover:bg-red-400/50'
               }`}
             >
-              📿 Holy Rosary
+              🙏 Holy Rosary
             </button>
             <button
               onClick={() => setActiveSection('divine-mercy')}

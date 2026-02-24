@@ -158,6 +158,118 @@ const worshipMusic: WorshipMusic[] = [
     url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Holy-Holy-Holy-Instrumental.mp3',
     duration: '4:20',
     category: 'hymns'
+  },
+  {
+    id: 'be-thou-my-vision',
+    title: 'Be Thou My Vision',
+    artist: 'Traditional Irish Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Be-Thou-My-Vision-Instrumental.mp3',
+    duration: '4:45',
+    category: 'hymns'
+  },
+  {
+    id: 'come-thou-fount',
+    title: 'Come Thou Fount',
+    artist: 'Traditional Protestant Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Come-Thou-Fount-Instrumental.mp3',
+    duration: '4:10',
+    category: 'hymns'
+  },
+  {
+    id: 'it-is-well',
+    title: 'It Is Well With My Soul',
+    artist: 'Traditional Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/It-Is-Well-Instrumental.mp3',
+    duration: '5:00',
+    category: 'hymns'
+  },
+  {
+    id: 'how-great-thou-art',
+    title: 'How Great Thou Art',
+    artist: 'Traditional Christian Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/How-Great-Thou-Art-Instrumental.mp3',
+    duration: '4:30',
+    category: 'hymns'
+  },
+  {
+    id: 'behold-the-lamb',
+    title: 'Behold the Lamb',
+    artist: 'Contemporary Worship',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Behold-The-Lamb-Instrumental.mp3',
+    duration: '5:15',
+    category: 'instrumental'
+  },
+  {
+    id: 'agnus-dei',
+    title: 'Agnus Dei',
+    artist: 'Michael W. Smith Instrumental',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Agnus-Dei-Instrumental.mp3',
+    duration: '5:30',
+    category: 'instrumental'
+  },
+  {
+    id: 'here-i-am-to-worship',
+    title: 'Here I Am to Worship',
+    artist: 'Tim Hughes Instrumental',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Here-I-Am-To-Worship-Instrumental.mp3',
+    duration: '4:50',
+    category: 'praise'
+  },
+  {
+    id: 'heart-of-worship',
+    title: 'Heart of Worship',
+    artist: 'Matt Redman Instrumental',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Heart-Of-Worship-Instrumental.mp3',
+    duration: '4:20',
+    category: 'praise'
+  },
+  {
+    id: 'beautiful-savior',
+    title: 'Beautiful Savior',
+    artist: 'Instrumental Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Beautiful-Savior-Instrumental.mp3',
+    duration: '3:55',
+    category: 'hymns'
+  },
+  {
+    id: 'crown-him',
+    title: 'Crown Him with Many Crowns',
+    artist: 'Traditional Easter Hymn',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Crown-Him-Instrumental.mp3',
+    duration: '4:15',
+    category: 'hymns'
+  },
+  {
+    id: 'piano-hymns-mix',
+    title: 'Piano Hymns Collection',
+    artist: 'Peaceful Piano Worship',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Piano-Hymns-Mix-Instrumental.mp3',
+    duration: '10:00',
+    category: 'ambient'
+  },
+  {
+    id: 'classical-guitar-worship',
+    title: 'Classical Guitar Worship',
+    artist: 'Acoustic Instrumental',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Classical-Guitar-Worship-Instrumental.mp3',
+    duration: '6:30',
+    category: 'instrumental'
+  },
+  {
+    id: 'meditative-strings',
+    title: 'Meditative Strings',
+    artist: 'Peaceful String Ensemble',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Meditative-Strings-Instrumental.mp3',
+    duration: '8:00',
+    category: 'ambient'
+  },
+  {
+    id: 'soft-piano-praise',
+    title: 'Soft Piano Praise',
+    artist: 'Gentle Piano Worship',
+    url: 'https://www.churchservices.org/wp-content/uploads/2023/02/Soft-Piano-Praise-Instrumental.mp3',
+    duration: '7:00',
+    category: 'ambient'
   }
 ];
 

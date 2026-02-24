@@ -1,5 +1,5 @@
 const quickPrayers = [
-  { id: 'rosary', icon: '📿', label: 'Pray Rosary', description: 'Step-by-step guided Rosary' },
+  { id: 'rosary', icon: '🙏', label: 'Pray Rosary', description: 'Step-by-step guided Rosary' },
   { id: 'examen', icon: '✨', label: 'Daily Examen', description: 'Reflect on your day with God' },
   { id: 'morning', icon: '🌅', label: 'Morning Prayer', description: 'Start your day with God' },
   { id: 'evening', icon: '🌙', label: 'Evening Prayer', description: 'End your day in gratitude' },
