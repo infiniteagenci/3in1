@@ -84,12 +84,17 @@ user.get('/profile', getSessionUser, async (c) => {
   const userData = c.get('user');
 
   try {
-    const profile = await c.env.DB.prepare(
+    const userProfile = await c.env.DB.prepare(
       'SELECT age_group, created_at, updated_at FROM user_profiles WHERE user_id = ?'
     ).bind(userData.id).first();
 
+    // Return combined user data and profile
     return c.json({
-      profile: profile || { ageGroup: null }
+      name: userData.name,
+      email: userData.email,
+      avatar_url: userData.avatar_url,
+      ageGroup: userProfile?.age_group || null,
+      profile: userProfile || { ageGroup: null }
     });
   } catch (error) {
     console.error('Error fetching profile:', error);

@@ -273,7 +273,17 @@ export default function ProfileTab() {
     setIsLoading(true);
     try {
       const token = getToken();
-      const response = await fetch(`${getApiUrl()}/api/user/profile`, {
+      const apiUrl = getApiUrl();
+
+      if (!token) {
+        showMessage('error', 'Please log in first');
+        setIsLoading(false);
+        return;
+      }
+
+      console.log('Saving age group:', { apiUrl, ageGroup: editAgeGroup });
+
+      const response = await fetch(`${apiUrl}/api/user/profile`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -292,9 +302,11 @@ export default function ProfileTab() {
         showMessage('success', '✓ Age group saved successfully!');
       } else {
         const data = await response.json();
+        console.error('Server error:', data);
         showMessage('error', data.error || 'Failed to update age group');
       }
     } catch (error) {
+      console.error('Network error:', error);
       showMessage('error', 'Network error. Please try again.');
     } finally {
       setIsLoading(false);
