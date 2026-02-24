@@ -97,4 +97,52 @@ user.get('/profile', getSessionUser, async (c) => {
   }
 });
 
+// Update user photo/avatar
+user.post('/photo', getSessionUser, async (c) => {
+  const userData = c.get('user');
+  const body = await c.req.json() as { avatar_url?: string };
+
+  const { avatar_url } = body;
+
+  if (!avatar_url) {
+    return c.json({ error: 'avatar_url is required' }, 400);
+  }
+
+  try {
+    // Update user's avatar_url in users table
+    await c.env.DB.prepare(`
+      UPDATE users SET avatar_url = ? WHERE id = ?
+    `).bind(avatar_url, userData.id).run();
+
+    return c.json({
+      success: true,
+      message: 'Photo updated successfully',
+      avatar_url
+    });
+  } catch (error) {
+    console.error('Error updating photo:', error);
+    return c.json({ error: 'Failed to update photo' }, 500);
+  }
+});
+
+// Delete user photo
+user.delete('/photo', getSessionUser, async (c) => {
+  const userData = c.get('user');
+
+  try {
+    // Remove user's avatar_url
+    await c.env.DB.prepare(`
+      UPDATE users SET avatar_url = NULL WHERE id = ?
+    `).bind(userData.id).run();
+
+    return c.json({
+      success: true,
+      message: 'Photo removed successfully'
+    });
+  } catch (error) {
+    console.error('Error removing photo:', error);
+    return c.json({ error: 'Failed to remove photo' }, 500);
+  }
+});
+
 export default user;

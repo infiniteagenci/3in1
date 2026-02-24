@@ -203,9 +203,9 @@ export default function ProfileTab() {
       const base64 = await base64Promise;
       setUploadProgress(50);
 
-      // Try the profile update endpoint with base64
-      const response = await fetch(`${getApiUrl()}/api/user/profile`, {
-        method: 'PATCH',
+      // Upload photo using the dedicated photo endpoint
+      const response = await fetch(`${getApiUrl()}/api/user/photo`, {
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -274,7 +274,7 @@ export default function ProfileTab() {
     try {
       const token = getToken();
       const response = await fetch(`${getApiUrl()}/api/user/profile`, {
-        method: 'PATCH',
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
