@@ -105,19 +105,28 @@ user.get('/profile', getSessionUser, async (c) => {
 // Update user photo/avatar
 user.post('/photo', getSessionUser, async (c) => {
   const userData = c.get('user');
-  const body = await c.req.json() as { avatar_url?: string };
-
-  const { avatar_url } = body;
-
-  if (!avatar_url) {
-    return c.json({ error: 'avatar_url is required' }, 400);
-  }
 
   try {
+    const body = await c.req.json() as { avatar_url?: string };
+    const { avatar_url } = body;
+
+    if (!avatar_url) {
+      return c.json({ error: 'avatar_url is required' }, 400);
+    }
+
+    // Check if avatar_url is too large (D1 has limits on TEXT columns)
+    if (avatar_url.length > 1_000_000) {
+      return c.json({ error: 'Image is too large. Please use a smaller image (max 1MB).' }, 400);
+    }
+
+    console.log(`Updating photo for user ${userData.id}, base64 length: ${avatar_url.length}`);
+
     // Update user's avatar_url in users table
-    await c.env.DB.prepare(`
+    const result = await c.env.DB.prepare(`
       UPDATE users SET avatar_url = ? WHERE id = ?
     `).bind(avatar_url, userData.id).run();
+
+    console.log(`Photo update result: ${result.meta.changes} rows changed`);
 
     return c.json({
       success: true,
@@ -126,7 +135,7 @@ user.post('/photo', getSessionUser, async (c) => {
     });
   } catch (error) {
     console.error('Error updating photo:', error);
-    return c.json({ error: 'Failed to update photo' }, 500);
+    return c.json({ error: 'Failed to update photo: ' + (error as Error).message }, 500);
   }
 });
 

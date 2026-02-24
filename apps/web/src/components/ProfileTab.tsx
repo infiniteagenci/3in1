@@ -171,6 +171,65 @@ export default function ProfileTab() {
   // Password change removed - only keeping age group and photo upload
   // const handleChangePassword = async () => { ... }
 
+  // Resize image to reduce file size
+  const resizeImage = (file: File, maxSizeKB: number = 500): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDimension = 800; // Max width or height
+
+          // Calculate new dimensions
+          if (width > height) {
+            if (width > maxDimension) {
+              height = Math.round((height * maxDimension) / width);
+              width = maxDimension;
+            }
+          } else {
+            if (height > maxDimension) {
+              width = Math.round((width * maxDimension) / height);
+              height = maxDimension;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Failed to get canvas context'));
+            return;
+          }
+
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Try to compress until under size limit
+          let quality = 0.9;
+          const tryCompress = () => {
+            const dataUrl = canvas.toDataURL('image/jpeg', quality);
+            const sizeKB = (dataUrl.length * 3) / 4 / 1024; // Approx base64 size in KB
+
+            if (sizeKB <= maxSizeKB || quality <= 0.5) {
+              resolve(dataUrl);
+            } else {
+              quality -= 0.1;
+              tryCompress();
+            }
+          };
+          tryCompress();
+        };
+        img.onerror = () => reject(new Error('Failed to load image'));
+      };
+      reader.onerror = () => reject(new Error('Failed to read file'));
+    });
+  };
+
   // Handle photo upload
   const handlePhotoUpload = async (file: File) => {
     if (!file) return;
@@ -181,7 +240,7 @@ export default function ProfileTab() {
       return;
     }
 
-    // Validate file size (max 5MB)
+    // Validate file size (max 5MB original)
     if (file.size > 5 * 1024 * 1024) {
       showMessage('error', 'Photo must be less than 5MB');
       return;
@@ -191,20 +250,24 @@ export default function ProfileTab() {
     setUploadProgress(10);
     try {
       const token = getToken();
+      const apiUrl = getApiUrl();
 
-      // Convert file to base64 for more reliable upload
-      const reader = new FileReader();
-      const base64Promise = new Promise<string>((resolve, reject) => {
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = () => reject(new Error('Failed to read file'));
-        reader.readAsDataURL(file);
-      });
+      if (!token) {
+        showMessage('error', 'Please log in first');
+        setIsLoading(false);
+        setUploadProgress(0);
+        return;
+      }
 
-      const base64 = await base64Promise;
+      // Resize and compress image
+      setUploadProgress(30);
+      const base64 = await resizeImage(file, 500); // Target 500KB max
       setUploadProgress(50);
 
+      console.log('Uploading photo, base64 length:', base64.length);
+
       // Upload photo using the dedicated photo endpoint
-      const response = await fetch(`${getApiUrl()}/api/user/photo`, {
+      const response = await fetch(`${apiUrl}/api/user/photo`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -213,14 +276,29 @@ export default function ProfileTab() {
         body: JSON.stringify({ avatar_url: base64 }),
       });
 
+      console.log('Photo upload response status:', response.status);
+
       if (response.ok) {
         const data = await response.json();
         setAvatarUrl(data.avatar_url || base64);
         setUploadProgress(100);
         showMessage('success', '✓ Photo uploaded successfully!');
       } else {
-        const data = await response.json();
-        showMessage('error', data.error || 'Failed to upload photo');
+        // Safely parse error response
+        let errorMessage = 'Failed to upload photo';
+        try {
+          const errorText = await response.text();
+          console.error('Error response:', errorText);
+          try {
+            const data = JSON.parse(errorText);
+            errorMessage = data.error || errorMessage;
+          } catch {
+            errorMessage = errorText || errorMessage;
+          }
+        } catch (e) {
+          console.error('Failed to read error response:', e);
+        }
+        showMessage('error', errorMessage);
         setUploadProgress(0);
       }
     } catch (error) {
