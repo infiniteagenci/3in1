@@ -51,7 +51,7 @@ import MobileLayout from '../components/MobileLayout.tsx'
     </div>
 
     <!-- Floating Heart Icon for Feeling Check-in -->
-    <div id="floating-heart" class="fixed left-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-full shadow-xl flex items-center justify-center text-2xl cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 z-50 hover:shadow-2xl select-none touch-none">
+    <div id="floating-heart" class="fixed left-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-full shadow-xl flex items-center justify-center text-2xl cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 z-50 hover:shadow-2xl select-none touch-none animate-heartbeat">
       ❤️
     </div>
 
@@ -770,6 +770,29 @@ import MobileLayout from '../components/MobileLayout.tsx'
         opacity: 1;
         transform: scale(1);
       }
+    }
+
+    /* Heartbeat animation */
+    @keyframes heartbeat {
+      0%, 100% {
+        transform: scale(1);
+      }
+      14% {
+        transform: scale(1.15);
+      }
+      28% {
+        transform: scale(1);
+      }
+      42% {
+        transform: scale(1.15);
+      }
+      70% {
+        transform: scale(1);
+      }
+    }
+
+    .animate-heartbeat {
+      animation: heartbeat 1.5s ease-in-out infinite;
     }
 
     .animate-scale-in {
