@@ -56,18 +56,18 @@ user.post('/profile', getSessionUser, async (c) => {
   try {
     // Update or insert user profile
     await c.env.DB.prepare(`
-      INSERT INTO user_profiles (user_id, age_group, updated_at)
-      VALUES (?, ?, datetime("now"))
+      INSERT INTO user_profiles (id, user_id, age_group, updated_at)
+      VALUES (?, ?, ?, datetime("now"))
       ON CONFLICT(user_id) DO UPDATE SET
         age_group = ?,
         updated_at = datetime("now")
-    `).bind(userData.id, ageGroup, ageGroup).run();
+    `).bind(crypto.randomUUID(), userData.id, ageGroup, ageGroup).run();
 
     // Also save to notes for the AI agent to see
     await c.env.DB.prepare(`
-      INSERT INTO notes (user_id, content, created_at)
-      VALUES (?, ?, datetime("now"))
-    `).bind(userData.id, JSON.stringify({ ageGroup })).run();
+      INSERT INTO notes (id, user_id, content, created_at)
+      VALUES (?, ?, ?, datetime("now"))
+    `).bind(crypto.randomUUID(), userData.id, `Age group: ${ageGroup} (user selected this)`).run();
 
     return c.json({
       success: true,
