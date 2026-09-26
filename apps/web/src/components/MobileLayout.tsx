@@ -1,10 +1,6 @@
-import { useState, useCallback, useEffect } from 'react';
-import { type Message } from '@ai-sdk/react';
+import { useState, useEffect } from 'react';
 import BottomTabBar from './BottomTabBar';
 import ChatInterface from './ChatInterface';
-import SacredLibraryTab from './SacredLibraryTab';
-import LiturgicalCalendarTab from './LiturgicalCalendarTab';
-import PrayersTab from './PrayersTab';
 import ProfileTab from './ProfileTab';
 
 interface MobileLayoutProps {
@@ -13,19 +9,7 @@ interface MobileLayoutProps {
 
 export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
   const [activeTab, setActiveTab] = useState('chat');
-  const [chatMessages, setChatMessages] = useState<Message[]>([]);
-  const [triggerPrayerChat, setTriggerPrayerChat] = useState<{ prayerId: string } | null>(null);
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
-
-  const handleLibraryItemSelect = useCallback((category: string, item: any) => {
-    // Library item selected - stay on library tab, just for tracking if needed
-    // No longer redirects to chat
-  }, []);
-
-  const handlePrayerSelect = useCallback((prayerId: string) => {
-    // Prayer selected - stay on prayers tab, just for tracking if needed
-    // No longer redirects to chat
-  }, []);
 
   // Auto-rotate background images every 30 seconds
   useEffect(() => {
@@ -38,19 +22,7 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
   const renderTab = () => {
     switch (activeTab) {
       case 'chat':
-        return (
-          <ChatInterface
-            key={`chat-${activeTab}`}
-            triggerPrayer={triggerPrayerChat}
-            onPrayerHandled={() => setTriggerPrayerChat(null)}
-          />
-        );
-      case 'library':
-        return <SacredLibraryTab key={activeTab} onSelectItem={handleLibraryItemSelect} />;
-      case 'calendar':
-        return <LiturgicalCalendarTab key={activeTab} />;
-      case 'prayers':
-        return <PrayersTab key={activeTab} onPrayerSelect={handlePrayerSelect} />;
+        return <ChatInterface key={`chat-${activeTab}`} />;
       case 'profile':
         return <ProfileTab key={activeTab} />;
       default:

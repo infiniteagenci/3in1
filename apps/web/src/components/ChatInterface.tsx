@@ -10,15 +10,7 @@ import { Message as MessageComponent, MessageContent } from './ai-elements/messa
 import { Conversation, ConversationContent } from './ai-elements/conversation';
 import { Loader } from './ai-elements/loader';
 import { Suggestions, Suggestion } from './ai-elements/suggestion';
-import CatholicMenu from './CatholicMenu';
-import DailyCheckin from './DailyCheckin';
-import PrayerProgress from './PrayerProgress';
 import DailyVerse from './bible-chat/DailyVerse';
-
-interface ChatInterfaceProps {
-  triggerPrayer?: { prayerId: string } | null;
-  onPrayerHandled?: () => void;
-}
 
 // Icons
 const SendIcon = () => (
@@ -34,14 +26,6 @@ const SpinnerIcon = () => (
   </svg>
 );
 
-
-const MenuIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="3" y1="12" x2="21" y2="12" />
-    <line x1="3" y1="6" x2="21" y2="6" />
-    <line x1="3" y1="18" x2="21" y2="18" />
-  </svg>
-);
 
 // Default suggestions for new users
 const defaultSuggestions = [
@@ -63,7 +47,7 @@ const ageOptions = [
   { id: 'senior', label: "Golden years 💫", icon: '👴' },
 ];
 
-export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatInterfaceProps) {
+export default function ChatInterface() {
   const PUBLIC_BASE_API_URL = typeof window !== 'undefined'
     ? (window as any).PUBLIC_BASE_API_URL || 'http://localhost:8787'
     : 'http://localhost:8787';
@@ -75,10 +59,7 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
   const [status, setStatus] = useState<'idle' | 'submitted' | 'streaming' | 'ready'>('idle');
   const [showAgePrompt, setShowAgePrompt] = useState(false);
   const [hasCollectedAge, setHasCollectedAge] = useState(false);
-  const [showCatholicMenu, setShowCatholicMenu] = useState(false);
-  const [showDailyCheckin, setShowDailyCheckin] = useState(false);
   const [showDailyVerse, setShowDailyVerse] = useState(true);
-  const [prayerProgress, setPrayerProgress] = useState<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -110,23 +91,6 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
     checkAgeCollection();
   }, [messages.length]);
 
-  // Check for daily check-in - show every time on app load when no messages
-  // DISABLED - Using floating heart instead
-  /*
-  useEffect(() => {
-    const checkDailyCheckin = () => {
-      // Show compact check-in every time when there are no messages
-      if (messages.length === 0) {
-        setTimeout(() => {
-          setShowDailyCheckin(true);
-        }, 300);
-      }
-    };
-
-    checkDailyCheckin();
-  }, []);
-  */
-
   // Fetch personalized suggestions on mount and after messages change
   useEffect(() => {
     const fetchPersonalizedSuggestions = async () => {
@@ -157,44 +121,6 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
       fetchPersonalizedSuggestions();
     }
   }, [messages.length, PUBLIC_BASE_API_URL]);
-
-  // Handle triggerPrayer prop
-  useEffect(() => {
-    if (triggerPrayer) {
-      const { prayerId } = triggerPrayer;
-
-      if (prayerId.startsWith('library:')) {
-        // Handle library item selection
-        const [, category, title] = prayerId.split(':');
-        const query = `Tell me about ${title}`;
-        setInput(query);
-      } else if (prayerId.startsWith('checkin:')) {
-        // Handle check-in completion - just dismiss, don't auto-send
-        // The user will send their message manually
-        setShowDailyCheckin(false);
-      } else {
-        // Handle prayer selection
-        const prompts: Record<string, string> = {
-          rosary: 'I want to pray the Rosary',
-          examen: 'I want to do a Daily Examen',
-          morning: 'I want to pray Morning Prayer',
-          evening: 'I want to pray Evening Prayer',
-          breath: 'I want to do a Breath Prayer',
-          meditation: 'I want to do a Guided Meditation',
-          readings: 'What are today\'s readings?',
-          saint: 'Who is the saint of today?',
-          novena: 'Show me my active novenas',
-          'divine-office': 'I want to pray the Divine Office',
-        };
-        setInput(prompts[prayerId] || prayerId);
-      }
-
-      // Notify parent that prayer was handled
-      if (onPrayerHandled) {
-        onPrayerHandled();
-      }
-    }
-  }, [triggerPrayer, onPrayerHandled]);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -367,59 +293,19 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
     setShowSuggestions(prev => !prev);
   }, []);
 
-  const handleCatholicMenuItemSelection = useCallback((category: string, item: any) => {
-    // Create a query about the selected item
-    const query = `Tell me about ${item.title}${item.description ? ` - ${item.description}` : ''}`;
-
-    // If there are prayers, add them to the content
-    let fullContent = query;
-    if (item.prayers && item.prayers.length > 0) {
-      fullContent = `${query}\n\nPrayers:\n${item.prayers.join('\n\n')}`;
-    }
-
-    // Set the input for user to review and send
-    setInput(fullContent);
-    setShowSuggestions(false);
-  }, []);
-
-  // Handle daily check-in dismiss
-  const handleCheckinDismiss = useCallback(() => {
-    setShowDailyCheckin(false);
-  }, []);
-
-  // Handle daily check-in completion
-  const handleCheckinComplete = useCallback((data: any) => {
-    // Check-in is automatically registered, no message shown in chat
-    setShowDailyCheckin(false);
-    setShowSuggestions(false);
-
-    // Save check-in date to localStorage
-    localStorage.setItem('last_checkin_date', new Date().toISOString().split('T')[0]);
-  }, []);
-
-
   return (
     <div id='chatbox' className="flex flex-col h-full relative bg-transparent">
       <Conversation className="flex-1 min-h-0 overflow-y-auto p-4 space-y-3">
         <ConversationContent>
-          {/* Daily Check-in - shown at the top when no messages */}
-          {messages.length === 0 && showDailyCheckin && (
-            <DailyCheckin
-              onComplete={handleCheckinComplete}
-              onDismiss={handleCheckinDismiss}
-              compact={true}
-            />
-          )}
-
           {/* Daily Verse - shown when no messages */}
-          {messages.length === 0 && !showAgePrompt && !showDailyCheckin && showDailyVerse && (
+          {messages.length === 0 && !showAgePrompt && showDailyVerse && (
             <div className="mb-6">
               <DailyVerse onClose={() => setShowDailyVerse(false)} />
             </div>
           )}
 
           {/* Welcome message when no messages */}
-          {messages.length === 0 && !showAgePrompt && !showDailyCheckin && (
+          {messages.length === 0 && !showAgePrompt && (
             <div className="text-center py-8">
               <h3 className="font-playfair text-2xl text-gray-800 mb-2">Welcome, friend!</h3>
               <p className="font-geist text-gray-600">Share what's on your heart. I'm here to listen and help you grow in faith.</p>
