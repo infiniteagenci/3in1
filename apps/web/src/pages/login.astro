@@ -45,9 +45,17 @@ import Layout from '../layouts/Layout.astro'
           Continue with Google
         </button>
 
+        <!-- Divider -->
+        <div class="login-divider"><span>or</span></div>
+
+        <!-- Guest login button -->
+        <button id="guest-login-btn" class="guest-btn">
+          Continue as Guest
+        </button>
+
         <!-- Info text -->
         <p class="auth-info-text">
-          Sign in to access your personalized spiritual companion
+          Sign in to access your personalized spiritual companion. Guests can chat too, but their conversations aren't linked to a Google account.
         </p>
       </div>
 
@@ -84,6 +92,7 @@ import Layout from '../layouts/Layout.astro'
       authCard: document.getElementById('auth-card'),
       userCard: document.getElementById('user-card'),
       googleLoginBtn: document.getElementById('google-login-btn'),
+      guestLoginBtn: document.getElementById('guest-login-btn'),
       logoutBtn: document.getElementById('logout-btn'),
       avatar: document.getElementById('avatar'),
       welcomeText: document.getElementById('welcome-text'),
@@ -183,6 +192,29 @@ import Layout from '../layouts/Layout.astro'
         }
       },
 
+      async guestLogin() {
+        try {
+          const response = await fetch(`${API_URL}/auth/guest`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+          });
+
+          if (!response.ok) {
+            console.error('Guest login failed:', response.status);
+            return;
+          }
+
+          const data = await response.json();
+
+          if (data.session_token) {
+            this.setToken(data.session_token);
+            window.location.href = '/chat';
+          }
+        } catch (error) {
+          console.error('Error with guest login:', error);
+        }
+      },
+
       async handleCallback(code: string): Promise<boolean> {
         try {
           const response = await fetch(`${API_URL}/auth/google/callback`, {
@@ -230,6 +262,7 @@ import Layout from '../layouts/Layout.astro'
 
     // ===== Event Listeners =====
     elements.googleLoginBtn?.addEventListener('click', () => auth.initiateLogin());
+    elements.guestLoginBtn?.addEventListener('click', () => auth.guestLogin());
     elements.logoutBtn?.addEventListener('click', () => auth.logout());
 
     // ===== Initialization =====
@@ -338,6 +371,51 @@ import Layout from '../layouts/Layout.astro'
     .google-icon {
       width: 24px;
       height: 24px;
+    }
+
+    /* Divider between login methods */
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 18px 0;
+      color: #9ca3af;
+      font-size: 13px;
+    }
+
+    .login-divider::before,
+    .login-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    /* Guest button - quiet secondary option */
+    .guest-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 24px;
+      background: transparent;
+      border: 2px dashed #c4b5fd;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #7c3aed;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .guest-btn:hover {
+      background: rgba(124, 58, 237, 0.06);
+      border-color: #a78bfa;
+      transform: translateY(-1px);
+    }
+
+    .guest-btn:active {
+      transform: translateY(0);
     }
 
     /* User card styles */

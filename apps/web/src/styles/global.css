@@ -820,6 +820,11 @@ body {
   position: fixed;
 }
 
+/* ...and the aurora orb itself stays absolutely positioned */
+.aurora-bg > .aurora-orb {
+  position: absolute;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .aurora-bg::before,
   .aurora-bg::after,

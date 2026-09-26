@@ -308,6 +308,38 @@ auth.post('/logout', async (c) => {
   return c.json({ message: 'Logged out successfully' });
 });
 
+// Guest login endpoint - creates a temporary guest account (no Google account required)
+auth.post('/guest', async (c) => {
+  try {
+    const guestId = crypto.randomUUID();
+    const guestEmail = `guest-${guestId}@guest.local`;
+
+    const result = await c.env.DB
+      .prepare('INSERT INTO users (id, email, name, avatar_url, google_id) VALUES (?, ?, ?, ?, ?)')
+      .bind(guestId, guestEmail, 'Friend', null, `guest_${guestId}`)
+      .run();
+
+    if (!result.success) {
+      return c.json({ error: 'Failed to create guest account' }, 500);
+    }
+
+    const session = await createSession(c.env.DB, guestId);
+
+    return c.json({
+      user: {
+        id: guestId,
+        email: guestEmail,
+        name: 'Friend',
+        avatar_url: null,
+      },
+      session_token: session.token,
+    });
+  } catch (error) {
+    console.error('Guest login error:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
+
 // Dev login endpoint (only works in development)
 auth.post('/dev-login', async (c) => {
   // Only allow in development
