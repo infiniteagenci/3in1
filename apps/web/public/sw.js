@@ -1,4 +1,4 @@
-const CACHE_NAME = '3in1-v1';
+const CACHE_NAME = '3in1-v2';
 const urlsToCache = [
   '/',
   '/manifest.json',
@@ -20,10 +20,32 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Fetch event - serve from cache, fall back to network
+// Fetch event - network-first for page navigations, cache-first for assets
 self.addEventListener('fetch', (event) => {
+  const { request } = event;
+
+  // HTML navigations: always try the network first so users get fresh
+  // content after deploys; fall back to the cache only when offline.
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.status === 200 && response.type === 'basic') {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, responseToCache);
+            });
+          }
+          return response;
+        })
+        .catch(() => caches.match(request).then((cached) => cached || caches.match('/')))
+    );
+    return;
+  }
+
+  // Other requests (hashed assets, fonts, etc.): serve from cache, fall back to network
   event.respondWith(
-    caches.match(event.request)
+    caches.match(request)
       .then((response) => {
         // Cache hit - return response
         if (response) {
@@ -31,7 +53,7 @@ self.addEventListener('fetch', (event) => {
         }
 
         // Clone the request
-        const fetchRequest = event.request.clone();
+        const fetchRequest = request.clone();
 
         return fetch(fetchRequest).then((response) => {
           // Check if valid response
@@ -44,7 +66,7 @@ self.addEventListener('fetch', (event) => {
 
           caches.open(CACHE_NAME)
             .then((cache) => {
-              cache.put(event.request, responseToCache);
+              cache.put(request, responseToCache);
             });
 
           return response;
