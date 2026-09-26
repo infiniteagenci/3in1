@@ -47,6 +47,40 @@ const ageOptions = [
   { id: 'senior', label: "Golden years 💫", icon: '👴' },
 ];
 
+interface ConversationMeta {
+  id: string;
+  title: string;
+  updated_at: string;
+}
+
+// Groups a conversation's update time into ChatGPT-style buckets
+function conversationGroup(iso: string): string {
+  const t = new Date(iso).getTime();
+  if (isNaN(t)) return 'Older';
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const day = 86400000;
+  const start = startOfToday.getTime();
+  if (t >= start) return 'Today';
+  if (t >= start - day) return 'Yesterday';
+  if (t >= start - 7 * day) return 'Previous 7 days';
+  if (t >= start - 30 * day) return 'Previous 30 days';
+  return 'Older';
+}
+
+function relativeTime(iso: string): string {
+  const t = new Date(iso).getTime();
+  if (isNaN(t)) return '';
+  const mins = Math.floor((Date.now() - t) / 60000);
+  if (mins < 1) return 'Just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return new Date(t).toLocaleDateString();
+}
+
 export default function ChatInterface() {
   const PUBLIC_BASE_API_URL = typeof window !== 'undefined'
     ? (window as any).PUBLIC_BASE_API_URL || 'http://localhost:8787'
@@ -60,6 +94,10 @@ export default function ChatInterface() {
   const [showAgePrompt, setShowAgePrompt] = useState(false);
   const [hasCollectedAge, setHasCollectedAge] = useState(false);
   const [showDailyVerse, setShowDailyVerse] = useState(true);
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [conversationList, setConversationList] = useState<ConversationMeta[]>([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loadingConversation, setLoadingConversation] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -122,6 +160,116 @@ export default function ChatInterface() {
     }
   }, [messages.length, PUBLIC_BASE_API_URL]);
 
+  // Fetch the user's saved chats for the history drawer
+  const fetchConversations = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('session_token');
+      if (!token) return;
+
+      const response = await fetch(`${PUBLIC_BASE_API_URL}/api/conversations`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setConversationList(data.conversations || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch conversations:', error);
+    }
+  }, [PUBLIC_BASE_API_URL]);
+
+  useEffect(() => {
+    fetchConversations();
+  }, [fetchConversations]);
+
+  // Header history button toggles the drawer (via custom event from chat.astro)
+  useEffect(() => {
+    const toggle = () => {
+      setSidebarOpen((open) => {
+        if (!open) fetchConversations();
+        return !open;
+      });
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSidebarOpen(false);
+    };
+    window.addEventListener('toggle-chat-sidebar', toggle);
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('toggle-chat-sidebar', toggle);
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [fetchConversations]);
+
+  // Open a saved chat
+  const loadConversation = useCallback(async (id: string) => {
+    setLoadingConversation(true);
+    try {
+      const token = localStorage.getItem('session_token');
+      if (!token) return;
+
+      const response = await fetch(`${PUBLIC_BASE_API_URL}/api/conversations/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (!response.ok) return;
+
+      const data = await response.json();
+      const loaded: Message[] = (data.conversation?.messages || []).map((m: any, i: number) => {
+        const text = m.content || m.parts?.[0]?.text || '';
+        return {
+          id: `${id}-${i}`,
+          role: m.role === 'user' ? ('user' as const) : ('assistant' as const),
+          content: text,
+          parts: m.parts?.length ? m.parts : [{ type: 'text' as const, text }],
+        };
+      });
+
+      setMessages(loaded);
+      setConversationId(id);
+      setShowAgePrompt(false);
+      setShowSuggestions(false);
+      setSidebarOpen(false);
+    } catch (error) {
+      console.error('Failed to load conversation:', error);
+    } finally {
+      setLoadingConversation(false);
+    }
+  }, [PUBLIC_BASE_API_URL]);
+
+  // Start a fresh chat
+  const newChat = useCallback(() => {
+    setMessages([]);
+    setConversationId(null);
+    setShowAgePrompt(false);
+    setShowSuggestions(false);
+    setShowDailyVerse(true);
+    setSidebarOpen(false);
+  }, []);
+
+  // Delete a saved chat
+  const deleteConversation = useCallback(async (id: string) => {
+    try {
+      const token = localStorage.getItem('session_token');
+      if (!token) return;
+
+      await fetch(`${PUBLIC_BASE_API_URL}/api/conversations/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      setConversationList((prev) => prev.filter((c) => c.id !== id));
+      if (id === conversationId) {
+        setMessages([]);
+        setConversationId(null);
+        setShowDailyVerse(true);
+      }
+    } catch (error) {
+      console.error('Failed to delete conversation:', error);
+    }
+  }, [PUBLIC_BASE_API_URL, conversationId]);
+
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || status === 'streaming') return;
@@ -155,6 +303,14 @@ export default function ChatInterface() {
         parts: msg.parts,
       }));
 
+      // Reuse the open conversation, or start one with a client-generated id
+      // that the backend upserts on first save
+      let convId = conversationId;
+      if (!convId) {
+        convId = crypto.randomUUID();
+        setConversationId(convId);
+      }
+
       const response = await fetch(`${PUBLIC_BASE_API_URL}/api/chat`, {
         method: 'POST',
         headers: {
@@ -163,6 +319,7 @@ export default function ChatInterface() {
         },
         body: JSON.stringify({
           messages: messagesPayload,
+          conversationId: convId,
         }),
       });
 
@@ -231,11 +388,12 @@ export default function ChatInterface() {
       }
 
       setStatus('ready');
+      fetchConversations();
     } catch (error) {
       console.error('Error sending message:', error);
       setStatus('ready');
     }
-  }, [input, status, messages, PUBLIC_BASE_API_URL]);
+  }, [input, status, messages, conversationId, fetchConversations, PUBLIC_BASE_API_URL]);
 
   const handleSuggestionClick = useCallback((suggestion: string) => {
     setInput(suggestion);
@@ -444,6 +602,83 @@ export default function ChatInterface() {
             {status === 'streaming' ? <SpinnerIcon /> : <SendIcon />}
           </button>
         </form>
+      </div>
+
+      {/* Saved-chats drawer (ChatGPT-style history) */}
+      <div className={`fixed inset-0 z-[60] ${sidebarOpen ? '' : 'pointer-events-none'}`}>
+        <div
+          className={`absolute inset-0 bg-black/30 transition-opacity duration-200 ${sidebarOpen ? 'opacity-100' : 'opacity-0'}`}
+          onClick={() => setSidebarOpen(false)}
+        />
+        <div
+          className={`absolute inset-y-0 left-0 w-80 max-w-[85vw] bg-white/95 backdrop-blur-xl border-r border-gray-200/70 shadow-2xl flex flex-col transform transition-transform duration-300 ease-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        >
+          {/* Drawer header */}
+          <div className="flex items-center justify-between px-4 pt-5 pb-2">
+            <h2 className="font-playfair text-lg text-gray-800">Your chats</h2>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-all"
+              aria-label="Close chat history"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* New chat */}
+          <div className="px-3 pb-1">
+            <button
+              onClick={newChat}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-400 to-indigo-500 text-white text-sm font-medium shadow-md hover:shadow-lg hover:scale-[1.01] transition-all font-geist"
+            >
+              ✨ New chat
+            </button>
+          </div>
+
+          {/* Conversation list */}
+          <div className="flex-1 overflow-y-auto px-3 pb-6">
+            {conversationList.length === 0 ? (
+              <p className="text-sm text-gray-400 px-2 pt-6 text-center font-geist">
+                No saved chats yet. Your conversations will appear here. 🕊️
+              </p>
+            ) : (
+              ['Today', 'Yesterday', 'Previous 7 days', 'Previous 30 days', 'Older'].map((group) => {
+                const items = conversationList.filter((c) => conversationGroup(c.updated_at) === group);
+                if (items.length === 0) return null;
+                return (
+                  <div key={group} className="mt-3">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-2 mb-1 font-geist">
+                      {group}
+                    </p>
+                    {items.map((c) => (
+                      <div
+                        key={c.id}
+                        onClick={() => loadConversation(c.id)}
+                        className={`group flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl cursor-pointer transition-all ${
+                          c.id === conversationId ? 'bg-violet-100/80' : 'hover:bg-gray-100/80'
+                        }`}
+                      >
+                        <div className="min-w-0">
+                          <p className={`text-sm truncate font-geist ${c.id === conversationId ? 'text-violet-800 font-medium' : 'text-gray-700'}`}>
+                            {c.title || 'New conversation'}
+                          </p>
+                          <p className="text-[11px] text-gray-400 font-geist">{relativeTime(c.updated_at)}</p>
+                        </div>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); deleteConversation(c.id); }}
+                          className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                          aria-label="Delete chat"
+                        >
+                          🗑
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
