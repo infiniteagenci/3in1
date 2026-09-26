@@ -45,11 +45,11 @@ const MenuIcon = () => (
 
 // Default suggestions for new users
 const defaultSuggestions = [
-  "What's something encouraging in the Bible?",
-  "How do I make prayer feel more meaningful?",
-  "Teach me about the Catechism",
-  "Stories of the Saints that inspire me",
-  "Prayers for peace and trust",
+  "What does Jesus say about worry?",
+  "Help me pray when I don't have words",
+  "A verse for when I feel alone",
+  "What's a simple prayer for today?",
+  "I'm stressed and could use some encouragement",
   "Help me understand God's love for me",
 ];
 
@@ -525,8 +525,8 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
             <div className="px-4 pb-4">
               <Suggestions className="justify-center">
                 {(messages.length === 0 ? personalizedSuggestions : [
-                  "Explore the Catechism with me",
-                  "Tell me about inspiring Saints",
+                  "What does the Bible say about my situation?",
+                  "Help me pray about what's on my mind",
                   ...personalizedSuggestions.slice(0, 4)
                 ]).map((question) => (
                   <Suggestion

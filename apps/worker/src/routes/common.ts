@@ -8,6 +8,8 @@ export type Bindings = {
   OPENAI_API_KEY: string;
   ANTHROPIC_API_KEY?: string;
   AI_GATEWAY_API_KEY?: string;
+  // Optional override for the chat model via AI Gateway (e.g. "openai/gpt-4.1")
+  AI_CHAT_MODEL?: string;
 };
 
 export type Variables = {

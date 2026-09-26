@@ -230,12 +230,12 @@ We are therefore Christ's ambassadors, as though God were making his appeal thro
   catechism: {
     title: 'Catechism',
     icon: '📖',
-    description: 'Catholic teaching and doctrine',
+    description: 'Christian teaching and doctrine',
     items: [
       {
         id: 'apostles-creed',
         title: 'Apostles\' Creed',
-        description: 'Statement of Catholic faith',
+        description: 'Statement of Christian faith',
         prayers: ['I believe in God, the Father Almighty, Creator of heaven and earth...'],
         catechism: 'The basic statement of Christian faith, dating to the early Church.',
         scripture: '1 Corinthians 15:3-4'
@@ -245,7 +245,7 @@ We are therefore Christ's ambassadors, as though God were making his appeal thro
         title: 'Nicene Creed',
         description: 'Profession of faith from the Mass',
         prayers: ['I believe in one God, the Father almighty...'],
-        catechism: 'The profession of faith used in the Liturgy, affirming core Catholic doctrines.',
+        catechism: 'The profession of faith used in the Liturgy, affirming core Christian doctrines.',
         scripture: 'John 1:1-3, John 10:30'
       },
       {
@@ -386,7 +386,7 @@ We are therefore Christ's ambassadors, as though God were making his appeal thro
       {
         id: 'apostles-creed',
         title: 'Apostles\' Creed',
-        description: 'Statement of Catholic faith',
+        description: 'Statement of Christian faith',
         prayers: ['I believe in God, the Father Almighty, Creator of heaven and earth; and in Jesus Christ, His only Son, our Lord; who was conceived by the Holy Spirit, born of the Virgin Mary, suffered under Pontius Pilate, was crucified, died and was buried. He descended into hell; the third day He rose again from the dead; He ascended into heaven, and sits at the right hand of God, the Father Almighty; from thence He shall come to judge the living and the dead. I believe in the Holy Spirit, the Holy Catholic Church, the communion of saints, the forgiveness of sins, the resurrection of the body, and life everlasting. Amen.'],
         catechism: 'The basic statement of Christian faith, dating to the early Church.',
         scripture: '1 Corinthians 15:3-4'
@@ -396,7 +396,7 @@ We are therefore Christ's ambassadors, as though God were making his appeal thro
         title: 'Nicene Creed',
         description: 'Profession of faith from the Mass',
         prayers: ['I believe in one God, the Father almighty, maker of heaven and earth, of all things visible and invisible. I believe in one Lord Jesus Christ, the Only Begotten Son of God, born of the Father before all ages. God from God, Light from Light, true God from true God, begotten, not made, consubstantial with the Father; through him all things were made. For us men and for our salvation he came down from heaven, and by the Holy Spirit was incarnate of the Virgin Mary, and became man. For our sake he was crucified under Pontius Pilate, he suffered death and was buried, and rose again on the third day in accordance with the Scriptures. He ascended into heaven and is seated at the right hand of the Father. He will come again in glory to judge the living and the dead and his kingdom will have no end. I believe in the Holy Spirit, the Lord, the giver of life, who proceeds from the Father and the Son, who with the Father and the Son is adored and glorified, who has spoken through the prophets. I believe in one, holy, catholic and apostolic Church. I confess one Baptism for the forgiveness of sins and I look forward to the resurrection of the dead and the life of the world to come. Amen.'],
-        catechism: 'The profession of faith used in the Liturgy, affirming core Catholic doctrines.',
+        catechism: 'The profession of faith used in the Liturgy, affirming core Christian doctrines.',
         scripture: 'John 1:1-3, John 10:30'
       },
       {
