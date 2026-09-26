@@ -216,7 +216,11 @@ export default function ChatInterface() {
       if (!response.ok) return;
 
       const data = await response.json();
-      const loaded: Message[] = (data.conversation?.messages || []).map((m: any, i: number) => {
+      let rawMessages = data.conversation?.messages ?? [];
+      if (typeof rawMessages === 'string') {
+        try { rawMessages = JSON.parse(rawMessages); } catch { rawMessages = []; }
+      }
+      const loaded: Message[] = rawMessages.map((m: any, i: number) => {
         const text = m.content || m.parts?.[0]?.text || '';
         return {
           id: `${id}-${i}`,

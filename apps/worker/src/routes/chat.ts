@@ -418,77 +418,7 @@ Remember: talk like someone who cares, not like an assistant. Be warm, be presen
   }
 });
 
-// GET /api/conversations - list the user's saved chats (for the history sidebar)
-chat.get("/conversations", validateSession, async (c) => {
-  try {
-    const user = c.get("user") as { id: string };
-
-    const result = await c.env.DB.prepare(
-      "SELECT id, title, updated_at FROM conversations WHERE user_id = ? ORDER BY updated_at DESC LIMIT 100",
-    )
-      .bind(user.id)
-      .all();
-
-    return c.json({ conversations: result.results || [] });
-  } catch (error) {
-    console.error("Error listing conversations:", error);
-    return c.json({ error: "Failed to list conversations" }, 500);
-  }
-});
-
-// GET /api/conversations/:id - load one saved chat
-chat.get("/conversations/:id", validateSession, async (c) => {
-  try {
-    const user = c.get("user") as { id: string };
-
-    const row = await c.env.DB.prepare(
-      "SELECT id, title, messages, created_at, updated_at FROM conversations WHERE id = ? AND user_id = ?",
-    )
-      .bind(c.req.param("id"), user.id)
-      .first();
-
-    if (!row) {
-      return c.json({ error: "Conversation not found" }, 404);
-    }
-
-    let messages: any[] = [];
-    try {
-      messages = JSON.parse((row as any).messages || "[]");
-    } catch {
-      messages = [];
-    }
-
-    return c.json({
-      conversation: {
-        id: (row as any).id,
-        title: (row as any).title,
-        messages,
-        created_at: (row as any).created_at,
-        updated_at: (row as any).updated_at,
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching conversation:", error);
-    return c.json({ error: "Failed to fetch conversation" }, 500);
-  }
-});
-
-// DELETE /api/conversations/:id - delete a saved chat
-chat.delete("/conversations/:id", validateSession, async (c) => {
-  try {
-    const user = c.get("user") as { id: string };
-
-    await c.env.DB.prepare(
-      "DELETE FROM conversations WHERE id = ? AND user_id = ?",
-    )
-      .bind(c.req.param("id"), user.id)
-      .run();
-
-    return c.json({ success: true });
-  } catch (error) {
-    console.error("Error deleting conversation:", error);
-    return c.json({ error: "Failed to delete conversation" }, 500);
-  }
-});
+// GET/DELETE for saved chats live in routes/conversations.ts, which is
+// mounted at /api/conversations by index.ts.
 
 export default chat;

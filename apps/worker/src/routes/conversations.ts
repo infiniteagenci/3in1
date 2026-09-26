@@ -41,4 +41,21 @@ conversations.get('/:id', validateSession, async (c) => {
   }
 });
 
+// DELETE /api/conversations/:id - Delete a saved chat
+conversations.delete('/:id', validateSession, async (c) => {
+  try {
+    const user = c.get('user') as { id: string };
+    const conversationId = c.req.param('id');
+
+    await c.env.DB.prepare(
+      'DELETE FROM conversations WHERE id = ? AND user_id = ?'
+    ).bind(conversationId, user.id).run();
+
+    return c.json({ success: true });
+  } catch (error) {
+    console.error('Delete conversation error:', error);
+    return c.json({ error: 'Failed to delete conversation' }, 500);
+  }
+});
+
 export default conversations;
