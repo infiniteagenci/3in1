@@ -10,17 +10,18 @@ import MobileLayout from '../components/MobileLayout.tsx'
   </div>
 
   <!-- Main Chat Interface -->
-  <div id="chat-container" class="chat-container hidden flex flex-col h-screen">
+  <div id="chat-container" class="chat-container aurora-bg hidden flex flex-col h-screen">
+    <div class="aurora-orb" aria-hidden="true"></div>
     <!-- Header with vibrant design -->
-    <header class="border-b border-gray-100 backdrop-blur-md bg-white/95 shadow-sm">
+    <header class="border-b border-white/60 backdrop-blur-xl bg-white/60 shadow-sm">
       <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg ring-2 ring-amber-100">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-violet-400 to-indigo-500 flex items-center justify-center shadow-lg ring-2 ring-violet-100">
             <span class="text-white font-bold font-geist text-lg">S</span>
           </div>
           <div>
             <h1 class="font-semibold text-gray-800 tracking-tight font-geist">Spirit</h1>
-            <p class="text-xs text-amber-600 font-geist" id="welcome-message">Your faith companion ✨</p>
+            <p class="text-xs text-violet-500 font-geist" id="welcome-message">Your faith companion ✨</p>
           </div>
         </div>
 
@@ -36,7 +37,7 @@ import MobileLayout from '../components/MobileLayout.tsx'
           </select>
         </div>
 
-        <button id="logout-btn" class="bg-gradient-to-r from-amber-50 to-orange-50 text-amber-700 px-4 py-2 rounded-xl text-sm hover:from-amber-100 hover:to-orange-100 transition-all duration-200 border border-amber-200 font-geist tracking-tight font-medium hover:shadow-md">Logout</button>
+        <button id="logout-btn" class="bg-white/70 text-violet-600 px-4 py-2 rounded-xl text-sm hover:bg-white transition-all duration-200 border border-violet-200/70 font-geist tracking-tight font-medium hover:shadow-md">Logout</button>
       </div>
     </header>
 

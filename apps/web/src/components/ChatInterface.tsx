@@ -399,15 +399,7 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
 
 
   return (
-    <div id='chatbox' className="flex flex-col h-full bg-gradient-to-br from-purple-50/60 via-pink-50/50 to-amber-50/60 relative">
-      {/* Animated background sparkle effects */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-10 right-10 w-2 h-2 bg-purple-400/30 rounded-full animate-twinkle"></div>
-        <div className="absolute top-32 left-20 w-1.5 h-1.5 bg-pink-400/30 rounded-full animate-twinkle" style={{ animationDelay: '0.5s' }}></div>
-        <div className="absolute top-60 right-32 w-2 h-2 bg-amber-400/30 rounded-full animate-twinkle" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-40 left-16 w-1.5 h-1.5 bg-rose-400/30 rounded-full animate-twinkle" style={{ animationDelay: '1.5s' }}></div>
-        <div className="absolute bottom-20 right-24 w-2 h-2 bg-purple-400/30 rounded-full animate-twinkle" style={{ animationDelay: '2s' }}></div>
-      </div>
+    <div id='chatbox' className="flex flex-col h-full relative bg-transparent">
       <Conversation className="flex-1 min-h-0 overflow-y-auto p-4 space-y-3">
         <ConversationContent>
           {/* Daily Check-in - shown at the top when no messages */}
@@ -497,11 +489,11 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
 
       {/* Suggestions - collapsible accordion */}
       {status !== 'streaming' && status !== 'submitted' && (
-        <div className="border-t border-gray-100 bg-white/80 backdrop-blur-sm">
+        <div className="border-t border-white/60 bg-white/55 backdrop-blur-xl">
           {/* Accordion Header */}
           <button
             onClick={toggleSuggestions}
-            className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-amber-50/50 transition-colors"
+            className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-violet-50/40 transition-colors"
           >
             <span className="text-sm text-gray-700 font-medium tracking-tight font-geist">
               {messages.length === 0 ? '✨ Ideas to get started' : '💭 Continue exploring'}
@@ -541,7 +533,7 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
         </div>
       )}
 
-      <div className="border-t border-gray-100 p-4 pb-20 bg-white/80 backdrop-blur-sm">
+      <div className="border-t border-white/60 p-4 pb-20 bg-white/55 backdrop-blur-xl">
         <form onSubmit={handleSubmit} className="flex items-end gap-2">
           <textarea
             value={input}
@@ -554,14 +546,14 @@ export default function ChatInterface({ triggerPrayer, onPrayerHandled }: ChatIn
             }}
             placeholder="Share what's on your heart..."
             rows={2}
-            className="flex-1 w-full resize-none border-2 border-gray-200 rounded-2xl px-4 py-3 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition-all font-geist text-gray-700 placeholder:text-gray-400 bg-white"
+            className="flex-1 w-full resize-none border border-white/70 rounded-2xl px-4 py-3 focus:outline-none focus:border-violet-300 focus:ring-2 focus:ring-violet-200/60 transition-all font-geist text-gray-700 placeholder:text-gray-400 bg-white/75 shadow-sm"
           />
 
           {/* Send Button */}
           <button
             type="submit"
             disabled={status === 'streaming' || !input?.trim()}
-            className="flex items-center justify-center w-12 h-12 rounded-full text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 shrink-0 bg-gradient-to-br from-amber-500 to-orange-600"
+            className="flex items-center justify-center w-12 h-12 rounded-full text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 shrink-0 bg-gradient-to-br from-violet-400 to-indigo-500"
           >
             {status === 'streaming' ? <SpinnerIcon /> : <SendIcon />}
           </button>
