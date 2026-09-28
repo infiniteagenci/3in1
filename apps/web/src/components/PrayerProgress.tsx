@@ -40,7 +40,7 @@ export default function PrayerProgress({ progress }: PrayerProgressProps) {
       <div className="flex items-center gap-3 mb-3">
         <div className="text-2xl">🔥</div>
         <div className="flex-1">
-          <div className="text-xl font-bold text-[#8a2a44]">{streak} days</div>
+          <div className="text-xl font-bold text-[#3d6e9e]">{streak} days</div>
           <div className="text-xs text-gray-500">Current streak</div>
         </div>
         {streak >= 7 && (
@@ -67,7 +67,7 @@ export default function PrayerProgress({ progress }: PrayerProgressProps) {
               <div
                 className={`w-full aspect-square rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
                   day.count > 0
-                    ? 'bg-[#9b3550] text-white'
+                    ? 'bg-[#4b7ca8] text-white'
                     : 'bg-gray-100 text-gray-400'
                 }`}
                 title={`${day.day}: ${day.count} prayers`}
@@ -83,11 +83,11 @@ export default function PrayerProgress({ progress }: PrayerProgressProps) {
       <div className="mb-2">
         <div className="flex justify-between text-xs mb-1">
           <span className="text-gray-600">Consistency</span>
-          <span className="font-semibold text-[#8a2a44]">{consistency}%</span>
+          <span className="font-semibold text-[#3d6e9e]">{consistency}%</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-1.5">
           <div
-            className="bg-gradient-to-r from-[#9b3550] to-blue-500 h-1.5 rounded-full transition-all duration-500"
+            className="bg-gradient-to-r from-[#4b7ca8] to-blue-500 h-1.5 rounded-full transition-all duration-500"
             style={{ width: `${consistency}%` }}
           />
         </div>
@@ -95,7 +95,7 @@ export default function PrayerProgress({ progress }: PrayerProgressProps) {
 
       {/* Encouragement */}
       {encouragement && (
-        <div className="text-xs text-gray-600 italic bg-[#faf0f2] p-2 rounded-lg border border-[#f3dde2]">
+        <div className="text-xs text-gray-600 italic bg-[#f4f7fc] p-2 rounded-lg border border-[#e4eef6]">
           {encouragement}
         </div>
       )}

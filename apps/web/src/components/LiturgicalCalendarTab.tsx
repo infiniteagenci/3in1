@@ -1093,7 +1093,7 @@ export default function LiturgicalCalendarTab() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Header with Today button */}
-      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-[#8a2a44] to-[#8a2a44] text-white shrink-0">
+      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-[#3d6e9e] to-[#3d6e9e] text-white shrink-0">
         <h2 className="text-lg font-semibold">Liturgical Calendar</h2>
         <button
           onClick={goToToday}
@@ -1356,7 +1356,7 @@ export default function LiturgicalCalendarTab() {
                   <div className="space-y-2 text-sm">
                     {selectedInfo.dailyReadings.firstReading && (
                       <div className="flex items-start gap-2">
-                        <span className="text-[#8a2a44] font-semibold shrink-0">1st:</span>
+                        <span className="text-[#3d6e9e] font-semibold shrink-0">1st:</span>
                         <div>
                           <span className="text-gray-900">{selectedInfo.dailyReadings.firstReading.book}</span>
                           <span className="text-gray-600"> - {selectedInfo.dailyReadings.firstReading.citation}</span>
@@ -1373,7 +1373,7 @@ export default function LiturgicalCalendarTab() {
 
                     {selectedInfo.dailyReadings.secondReading && (
                       <div className="flex items-start gap-2">
-                        <span className="text-[#8a2a44] font-semibold shrink-0">2nd:</span>
+                        <span className="text-[#3d6e9e] font-semibold shrink-0">2nd:</span>
                         <div>
                           <span className="text-gray-900">{selectedInfo.dailyReadings.secondReading.book}</span>
                           <span className="text-gray-600"> - {selectedInfo.dailyReadings.secondReading.citation}</span>

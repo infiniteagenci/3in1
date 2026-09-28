@@ -47,11 +47,11 @@ export default function MobileLayout({ onSendMessage }: MobileLayoutProps) {
               style={{ backgroundImage: `url(${bg.url})` }}
             />
             {/* Dark overlay for readability */}
-            <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-[#45121f]/30 to-black/50" />
+            <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-[#1e3a52]/30 to-black/50" />
             {/* Soft vignette effect */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.3)_70%,rgba(0,0,0,0.5)_100%)]" />
             {/* Soft color tint overlay */}
-            <div className="absolute inset-0 bg-[#45121f]/10 mix-blend-multiply" />
+            <div className="absolute inset-0 bg-[#1e3a52]/10 mix-blend-multiply" />
           </div>
         ))}
 

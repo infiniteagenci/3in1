@@ -175,7 +175,7 @@ export default function AdminDashboard({ onClose, userEmail }: { onClose: () => 
   return (
     <div className="flex flex-col h-full bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#8a2a44] to-blue-600 text-white px-4 py-6">
+      <div className="bg-gradient-to-r from-[#3d6e9e] to-blue-600 text-white px-4 py-6">
         <button
           onClick={onClose}
           className="flex items-center gap-2 text-white/90 hover:text-white mb-4 transition-colors"
@@ -189,7 +189,7 @@ export default function AdminDashboard({ onClose, userEmail }: { onClose: () => 
           <span className="text-3xl">👑</span>
           <div>
             <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-            <p className="text-sm text-[#f3dde2]">Superadmin Analytics</p>
+            <p className="text-sm text-[#e4eef6]">Superadmin Analytics</p>
           </div>
         </div>
       </div>
@@ -201,7 +201,7 @@ export default function AdminDashboard({ onClose, userEmail }: { onClose: () => 
             onClick={() => setActiveTab('overview')}
             className={`px-4 py-3 font-medium text-sm border-b-2 transition-colors ${
               activeTab === 'overview'
-                ? 'border-[#8a2a44] text-[#8a2a44]'
+                ? 'border-[#3d6e9e] text-[#3d6e9e]'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -214,7 +214,7 @@ export default function AdminDashboard({ onClose, userEmail }: { onClose: () => 
             }}
             className={`px-4 py-3 font-medium text-sm border-b-2 transition-colors ${
               activeTab === 'users'
-                ? 'border-[#8a2a44] text-[#8a2a44]'
+                ? 'border-[#3d6e9e] text-[#3d6e9e]'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -278,7 +278,7 @@ export default function AdminDashboard({ onClose, userEmail }: { onClose: () => 
                       <div className="w-24 text-xs text-gray-500">{day.date}</div>
                       <div className="flex-1 bg-gray-100 rounded-full h-6 overflow-hidden">
                         <div
-                          className="bg-gradient-to-r from-[#9b3550] to-blue-500 h-full flex items-center justify-end pr-2"
+                          className="bg-gradient-to-r from-[#4b7ca8] to-blue-500 h-full flex items-center justify-end pr-2"
                           style={{ width: `${Math.min(day.new_users * 20, 100)}%` }}
                         >
                           <span className="text-xs text-white font-medium">{day.new_users}</span>
@@ -319,7 +319,7 @@ export default function AdminDashboard({ onClose, userEmail }: { onClose: () => 
                     </select>
                     <button
                       onClick={() => fetchUserStats(user.id)}
-                      className="px-3 py-1 bg-[#f3dde2] text-[#6e1f36] rounded-lg text-sm hover:bg-[#e8bfc8]"
+                      className="px-3 py-1 bg-[#e4eef6] text-[#33587a] rounded-lg text-sm hover:bg-[#c3daec]"
                     >
                       View Stats
                     </button>
@@ -346,7 +346,7 @@ export default function AdminDashboard({ onClose, userEmail }: { onClose: () => 
 
             <div className="grid grid-cols-2 gap-3 mb-4">
               <div className="bg-gray-50 rounded-lg p-3 text-center">
-                <div className="text-2xl font-bold text-[#8a2a44]">{selectedUserStats.stats.focusSessions}</div>
+                <div className="text-2xl font-bold text-[#3d6e9e]">{selectedUserStats.stats.focusSessions}</div>
                 <div className="text-xs text-gray-500">Focus Sessions</div>
               </div>
               <div className="bg-gray-50 rounded-lg p-3 text-center">

@@ -45,7 +45,7 @@ export default function SacredLibraryTab({ onSelectItem }: SacredLibraryTabProps
   };
 
   const categories = [
-    { id: 'study-plans', icon: '📚', title: 'Study Plans', description: 'Bible study courses', color: 'from-[#9b3550] to-[#9b3550]' },
+    { id: 'study-plans', icon: '📚', title: 'Study Plans', description: 'Bible study courses', color: 'from-[#4b7ca8] to-[#4b7ca8]' },
     { id: 'biblical-characters', icon: '👤', title: 'Characters', description: 'Bible heroes & heroines', color: 'from-amber-500 to-orange-500' },
     { id: 'verse-wallpaper', icon: '🖼️', title: 'Wallpaper', description: 'Verse wallpapers', color: 'from-pink-500 to-rose-500' },
     { id: 'rosary', icon: '🙏', title: 'Rosary', description: 'Daily rosary mysteries', color: 'from-rose-500 to-pink-500' },
@@ -53,7 +53,7 @@ export default function SacredLibraryTab({ onSelectItem }: SacredLibraryTabProps
     { id: 'saints', icon: '👼', title: 'Saints', description: 'Inspiring holy lives', color: 'from-green-500 to-emerald-500' },
     { id: 'catechism', icon: '📖', title: 'Catechism', description: 'Church teachings & prayers', color: 'from-amber-500 to-orange-500' },
     { id: 'bible', icon: '✝️', title: 'Bible', description: 'Sacred Scripture', color: 'from-red-500 to-rose-500' },
-    { id: 'traditions', icon: '⛪', title: 'Traditions', description: 'Catholic customs', color: 'from-[#9b3550] to-[#9b3550]' },
+    { id: 'traditions', icon: '⛪', title: 'Traditions', description: 'Catholic customs', color: 'from-[#4b7ca8] to-[#4b7ca8]' },
   ];
 
   if (showVerseWallpaper) {
@@ -157,7 +157,7 @@ export default function SacredLibraryTab({ onSelectItem }: SacredLibraryTabProps
   return (
     <div className="h-full overflow-y-auto pb-20 bg-[var(--color-stone-50)]">
       {/* Header */}
-      <div className="bg-gradient-to-br from-[#8a2a44] to-blue-600 text-white px-4 py-6">
+      <div className="bg-gradient-to-br from-[#3d6e9e] to-blue-600 text-white px-4 py-6">
         <h1 className="text-2xl font-bold mb-1">✝️ Sacred Library</h1>
         <p className="text-sm text-white/90">Explore the richness of Catholic faith</p>
       </div>
@@ -181,15 +181,15 @@ export default function SacredLibraryTab({ onSelectItem }: SacredLibraryTabProps
 
       {/* Featured Section */}
       <div className="px-4 pb-4">
-        <div className="bg-gradient-to-r from-[#f3dde2] to-blue-100 rounded-xl p-4 border border-[#e8bfc8]">
-          <h3 className="font-semibold text-[#45121f] mb-2">✨ Daily Inspiration</h3>
-          <p className="text-sm text-[#6e1f36] mb-3">Start your day with Gospel readings and saint of the day.</p>
+        <div className="bg-gradient-to-r from-[#e4eef6] to-blue-100 rounded-xl p-4 border border-[#c3daec]">
+          <h3 className="font-semibold text-[#1e3a52] mb-2">✨ Daily Inspiration</h3>
+          <p className="text-sm text-[#33587a] mb-3">Start your day with Gospel readings and saint of the day.</p>
           <button
             onClick={() => onSelectItem('readings', {
               title: 'Today\'s Gospel',
               description: 'Daily readings and reflections'
             })}
-            className="bg-[#8a2a44] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#6e1f36] transition-colors"
+            className="bg-[#3d6e9e] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#33587a] transition-colors"
           >
             View Today's Readings
           </button>

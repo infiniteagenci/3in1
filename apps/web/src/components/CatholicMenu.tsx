@@ -2179,7 +2179,7 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
           // Detail View
           <>
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#8a2a44] to-blue-600 text-white p-6">
+            <div className="bg-gradient-to-r from-[#3d6e9e] to-blue-600 text-white p-6">
               <div className="flex items-center gap-3 mb-2">
                 <button
                   onClick={handleBackToItems}
@@ -2218,7 +2218,7 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                   <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2 font-geist">
                     <span>📖</span> Story
                   </h3>
-                  <p className="text-gray-700 leading-relaxed font-geist bg-[#faf0f2] p-4 rounded-xl border border-[#f3dde2]">
+                  <p className="text-gray-700 leading-relaxed font-geist bg-[#f4f7fc] p-4 rounded-xl border border-[#e4eef6]">
                     {selectedItem.story}
                   </p>
                 </div>
@@ -2276,7 +2276,7 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                       href="https://www.biblegateway.com"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-[#8a2a44] text-white rounded-lg hover:bg-[#6e1f36] transition-colors text-sm font-medium"
+                      className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-[#3d6e9e] text-white rounded-lg hover:bg-[#33587a] transition-colors text-sm font-medium"
                     >
                       <span>📖</span>
                       <span>Open in Bible</span>
@@ -2296,7 +2296,7 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                   </h3>
                   <div className="space-y-2">
                     {selectedItem.keyVerses.map((verse: string, index: number) => (
-                      <div key={index} className="bg-[#faf0f2] border border-[#f3dde2] rounded-lg p-3">
+                      <div key={index} className="bg-[#f4f7fc] border border-[#e4eef6] rounded-lg p-3">
                         <p className="text-sm text-gray-700 font-crimson italic">{verse}</p>
                       </div>
                     ))}
@@ -2331,8 +2331,8 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                   </h3>
                   <div className="space-y-3">
                     {Object.entries(selectedItem.byAgeGroup).map(([age, content]: [string, any]) => (
-                      <div key={age} className="bg-[#faf0f2] border border-[#f3dde2] rounded-lg p-4">
-                        <h4 className="font-medium text-[#57182a] capitalize mb-2">{age}</h4>
+                      <div key={age} className="bg-[#f4f7fc] border border-[#e4eef6] rounded-lg p-4">
+                        <h4 className="font-medium text-[#2a4a66] capitalize mb-2">{age}</h4>
                         <p className="text-sm text-gray-700 font-geist">{content}</p>
                       </div>
                     ))}
@@ -2345,7 +2345,7 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
           // Main Menu View
           <>
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#8a2a44] to-blue-600 text-white p-6">
+            <div className="bg-gradient-to-r from-[#3d6e9e] to-blue-600 text-white p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-2xl font-bold font-geist">Sacred Library</h2>
                 <button
@@ -2397,7 +2397,7 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                     <button
                       key={index}
                       onClick={() => handleSelectItem(item.categoryKey, item)}
-                      className="w-full text-left p-4 rounded-xl bg-white hover:bg-[#faf0f2] transition-all border border-gray-200 hover:border-[#d894a5] shadow-sm hover:shadow-md"
+                      className="w-full text-left p-4 rounded-xl bg-white hover:bg-[#f4f7fc] transition-all border border-gray-200 hover:border-[#9cbedc] shadow-sm hover:shadow-md"
                     >
                       <div className="flex items-start gap-3">
                         {item.image ? (
@@ -2412,7 +2412,7 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                         <div className="flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
                             <h4 className="font-bold text-gray-800 font-geist">{item.title}</h4>
-                            <span className="text-xs px-2 py-0.5 bg-[#f3dde2] text-[#6e1f36] rounded-full font-geist">
+                            <span className="text-xs px-2 py-0.5 bg-[#e4eef6] text-[#33587a] rounded-full font-geist">
                               {item.resultType}
                             </span>
                             <span className="text-xs px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full font-geist">
@@ -2433,9 +2433,9 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                           )}
 
                           {item.story && (
-                            <div className="mt-2 p-3 bg-[#faf0f2] rounded-lg border border-[#e8bfc8]">
-                              <p className="text-xs font-semibold text-[#6e1f36] mb-1 font-geist">📖 Story:</p>
-                              <p className="text-xs text-[#6e1f36] font-geist line-clamp-3">{item.story}</p>
+                            <div className="mt-2 p-3 bg-[#f4f7fc] rounded-lg border border-[#c3daec]">
+                              <p className="text-xs font-semibold text-[#33587a] mb-1 font-geist">📖 Story:</p>
+                              <p className="text-xs text-[#33587a] font-geist line-clamp-3">{item.story}</p>
                             </div>
                           )}
 
@@ -2461,7 +2461,7 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                                 href="https://www.biblegateway.com"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 mt-2 text-xs text-[#8a2a44] hover:text-[#57182a] font-medium"
+                                className="inline-flex items-center gap-1 mt-2 text-xs text-[#3d6e9e] hover:text-[#2a4a66] font-medium"
                               >
                                 Open in Bible →
                               </a>
@@ -2485,7 +2485,7 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
             <div>
               <button
                 onClick={() => setActiveCategory(null)}
-                className="flex items-center gap-2 text-[#8a2a44] hover:text-[#6e1f36] mb-4 font-geist"
+                className="flex items-center gap-2 text-[#3d6e9e] hover:text-[#33587a] mb-4 font-geist"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -2501,7 +2501,7 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                   <button
                     key={item.id}
                     onClick={() => handleSelectItem(activeCategory, item)}
-                    className="w-full text-left p-4 rounded-xl bg-gray-50 hover:bg-[#faf0f2] transition-colors border border-gray-200 hover:border-[#d894a5] group"
+                    className="w-full text-left p-4 rounded-xl bg-gray-50 hover:bg-[#f4f7fc] transition-colors border border-gray-200 hover:border-[#9cbedc] group"
                   >
                     <div className="flex items-center gap-3">
                       {item.image && (
@@ -2512,7 +2512,7 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                         />
                       )}
                       <div className="flex-1">
-                        <h4 className="font-semibold text-gray-800 group-hover:text-[#6e1f36] font-geist">{item.title}</h4>
+                        <h4 className="font-semibold text-gray-800 group-hover:text-[#33587a] font-geist">{item.title}</h4>
                         <p className="text-sm text-gray-600 mt-1 font-geist">{item.description}</p>
                       </div>
                     </div>
@@ -2527,14 +2527,14 @@ export default function CatholicMenu({ onSelectItem, onClose, initialCategory }:
                 <button
                   key={key}
                   onClick={() => setActiveCategory(key as MenuCategory)}
-                  className="p-4 rounded-xl bg-gradient-to-br from-[#faf0f2] to-blue-50 hover:from-[#f3dde2] hover:to-blue-100 transition-all border border-[#e8bfc8] hover:border-[#d894a5] text-left group"
+                  className="p-4 rounded-xl bg-gradient-to-br from-[#f4f7fc] to-blue-50 hover:from-[#e4eef6] hover:to-blue-100 transition-all border border-[#c3daec] hover:border-[#9cbedc] text-left group"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-3xl group-hover:scale-110 transition-transform">{category.icon}</span>
                     <div>
-                      <h3 className="font-bold text-gray-800 group-hover:text-[#6e1f36] font-geist">{category.title}</h3>
+                      <h3 className="font-bold text-gray-800 group-hover:text-[#33587a] font-geist">{category.title}</h3>
                       <p className="text-sm text-gray-600 font-geist">{category.description}</p>
-                      <p className="text-xs text-[#8a2a44] mt-1 font-geist">{category.items.length} items</p>
+                      <p className="text-xs text-[#3d6e9e] mt-1 font-geist">{category.items.length} items</p>
                     </div>
                   </div>
                 </button>

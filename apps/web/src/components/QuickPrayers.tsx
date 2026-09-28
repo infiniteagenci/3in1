@@ -22,7 +22,7 @@ export default function QuickPrayers({ onSelect }: QuickPrayersProps) {
         <button
           key={prayer.id}
           onClick={() => onSelect(prayer.id)}
-          className="bg-white rounded-lg p-3 border border-gray-200 hover:border-[#d894a5] hover:shadow-md transition-all text-left group"
+          className="bg-white rounded-lg p-3 border border-gray-200 hover:border-[#9cbedc] hover:shadow-md transition-all text-left group"
         >
           <div className="text-xl mb-1 group-hover:scale-110 transition-transform">{prayer.icon}</div>
           <div className="font-semibold text-gray-800 text-sm">{prayer.label}</div>

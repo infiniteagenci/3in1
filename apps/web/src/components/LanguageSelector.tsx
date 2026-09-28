@@ -90,7 +90,7 @@ export default function LanguageSelector({
                   onClick={() => handleLanguageSelect(lang.code)}
                   className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
                     currentLanguage === lang.code
-                      ? 'bg-[#faf0f2] text-[#6e1f36] font-medium'
+                      ? 'bg-[#f4f7fc] text-[#33587a] font-medium'
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
@@ -114,7 +114,7 @@ export default function LanguageSelector({
       )}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl hover:border-[#d894a5] transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl hover:border-[#9cbedc] transition-colors"
       >
         <div className="flex items-center gap-3">
           <span className="text-2xl">🌐</span>
@@ -137,7 +137,7 @@ export default function LanguageSelector({
                 onClick={() => handleLanguageSelect(lang.code)}
                 className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
                   currentLanguage === lang.code
-                    ? 'bg-[#faf0f2] text-[#6e1f36] font-medium'
+                    ? 'bg-[#f4f7fc] text-[#33587a] font-medium'
                     : 'text-gray-700 hover:bg-gray-50'
                 }`}
               >

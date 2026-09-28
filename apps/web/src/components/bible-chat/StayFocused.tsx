@@ -582,15 +582,15 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
           </div>
 
           {/* Worship Music Player */}
-          <div className="bg-gradient-to-r from-[#faf0f2] to-blue-50 rounded-xl p-4 mb-6 border border-[#f3dde2]">
+          <div className="bg-gradient-to-r from-[#f4f7fc] to-blue-50 rounded-xl p-4 mb-6 border border-[#e4eef6]">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <span className="text-xl">🎵</span>
-                <span className="font-semibold text-[#57182a] font-geist">Worship Music</span>
+                <span className="font-semibold text-[#2a4a66] font-geist">Worship Music</span>
               </div>
               <button
                 onClick={() => setShowMusicSelector(!showMusicSelector)}
-                className="text-sm text-[#8a2a44] hover:text-[#57182a] font-medium"
+                className="text-sm text-[#3d6e9e] hover:text-[#2a4a66] font-medium"
               >
                 {showMusicSelector ? 'Close' : 'Change'}
               </button>
@@ -604,8 +604,8 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
                     onClick={() => selectMusic(music.id)}
                     className={`w-full text-left p-3 rounded-lg border-2 transition-all ${
                       activeSession?.selectedMusic === music.id
-                        ? 'bg-[#f3dde2] border-[#b04a63]'
-                        : 'bg-white border-gray-200 hover:border-[#d894a5]'
+                        ? 'bg-[#e4eef6] border-[#6e9cc4]'
+                        : 'bg-white border-gray-200 hover:border-[#9cbedc]'
                     }`}
                   >
                     <div className="font-medium text-sm text-gray-900">{music.title}</div>
@@ -633,7 +633,7 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
                     </div>
                     <button
                       onClick={toggleMusic}
-                      className="ml-3 w-10 h-10 flex items-center justify-center bg-[#8a2a44] text-white rounded-full hover:bg-[#6e1f36] transition-colors"
+                      className="ml-3 w-10 h-10 flex items-center justify-center bg-[#3d6e9e] text-white rounded-full hover:bg-[#33587a] transition-colors"
                     >
                       {isPlaying ? (
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -649,7 +649,7 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
                 ) : (
                   <button
                     onClick={() => setShowMusicSelector(true)}
-                    className="w-full py-3 bg-[#f3dde2] text-[#6e1f36] rounded-lg font-medium hover:bg-[#e8bfc8] transition-colors text-sm"
+                    className="w-full py-3 bg-[#e4eef6] text-[#33587a] rounded-lg font-medium hover:bg-[#c3daec] transition-colors text-sm"
                   >
                     🎵 Select Worship Music
                   </button>
@@ -849,24 +849,24 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
               {!selectedMusic ? (
                 <button
                   onClick={() => setShowMusicSelector(!showMusicSelector)}
-                  className="w-full p-4 bg-[#faf0f2] border-2 border-[#e8bfc8] rounded-xl text-center hover:bg-[#f3dde2] transition-colors"
+                  className="w-full p-4 bg-[#f4f7fc] border-2 border-[#c3daec] rounded-xl text-center hover:bg-[#e4eef6] transition-colors"
                 >
-                  <div className="text-[#6e1f36] font-medium">
+                  <div className="text-[#33587a] font-medium">
                     {showMusicSelector ? 'Hide Music Options' : 'Select Worship Music'}
                   </div>
-                  <div className="text-xs text-[#9b3550] mt-1">
+                  <div className="text-xs text-[#4b7ca8] mt-1">
                     Add peaceful music to your focus time
                   </div>
                 </button>
               ) : (
-                <div className="bg-[#faf0f2] border-2 border-[#e8bfc8] rounded-xl p-3 flex items-center justify-between">
+                <div className="bg-[#f4f7fc] border-2 border-[#c3daec] rounded-xl p-3 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">🎵</span>
                     <div>
-                      <div className="font-medium text-[#45121f] text-sm">
+                      <div className="font-medium text-[#1e3a52] text-sm">
                         {worshipMusic.find(m => m.id === selectedMusic)?.title}
                       </div>
-                      <div className="text-xs text-[#8a2a44]">
+                      <div className="text-xs text-[#3d6e9e]">
                         {worshipMusic.find(m => m.id === selectedMusic)?.artist}
                       </div>
                     </div>
@@ -890,13 +890,13 @@ export default function StayFocused({ className = '' }: StayFocusedProps) {
                       }}
                       className={`p-3 rounded-lg border-2 transition-all text-left ${
                         selectedMusic === music.id
-                          ? 'bg-[#f3dde2] border-[#9b3550]'
-                          : 'bg-white border-gray-200 hover:border-[#d894a5]'
+                          ? 'bg-[#e4eef6] border-[#4b7ca8]'
+                          : 'bg-white border-gray-200 hover:border-[#9cbedc]'
                       }`}
                     >
                       <div className="font-medium text-sm text-gray-900">{music.title}</div>
                       <div className="text-xs text-gray-500">{music.artist} • {music.duration}</div>
-                      <div className="text-xs text-[#8a2a44] mt-1 capitalize">{music.category}</div>
+                      <div className="text-xs text-[#3d6e9e] mt-1 capitalize">{music.category}</div>
                     </button>
                   ))}
                 </div>

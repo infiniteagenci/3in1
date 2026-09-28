@@ -17,25 +17,25 @@ import MobileLayout from '../components/MobileLayout.tsx'
       <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <!-- Chat history button (opens saved-chats drawer) -->
-          <button id="chats-menu-btn" class="w-11 h-11 rounded-2xl bg-white/70 border border-white/80 shadow-sm flex items-center justify-center text-gray-600 hover:bg-white hover:text-[#8a2a44] transition-all" aria-label="Chat history">
+          <button id="chats-menu-btn" class="w-11 h-11 rounded-2xl bg-white/70 border border-white/80 shadow-sm flex items-center justify-center text-gray-600 hover:bg-white hover:text-[#3d6e9e] transition-all" aria-label="Chat history">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="4" y1="6" x2="20" y2="6"/>
               <line x1="4" y1="12" x2="16" y2="12"/>
               <line x1="4" y1="18" x2="20" y2="18"/>
             </svg>
           </button>
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#8a2a44] to-[#b04a63] flex items-center justify-center shadow-lg ring-2 ring-[#e9d3a3]">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#3d6e9e] to-[#6e9cc4] flex items-center justify-center shadow-lg ring-2 ring-[#f6e0bd]">
             <span class="text-white font-bold font-geist text-lg">S</span>
           </div>
           <div>
             <h1 class="font-semibold text-gray-800 tracking-tight font-geist">Spirit</h1>
-            <p class="text-xs text-[#9b3550] font-geist" id="welcome-message">Your faith companion ✨</p>
+            <p class="text-xs text-[#4b7ca8] font-geist" id="welcome-message">Your faith companion ✨</p>
           </div>
         </div>
 
         <!-- Dev Mode User Switcher (only shows in local development) -->
         <div id="dev-user-switcher" class="hidden flex items-center gap-2">
-          <span class="text-xs px-2 py-0.5 rounded bg-[#f3dde2] text-[#6e1f36] font-geist">DEV MODE</span>
+          <span class="text-xs px-2 py-0.5 rounded bg-[#e4eef6] text-[#33587a] font-geist">DEV MODE</span>
           <select id="dev-user-select" class="px-3 py-1.5 rounded-[var(--radius-md)] text-sm border border-[var(--color-stone-300)] bg-white font-geist tracking-tight cursor-pointer">
             <option value="">Switch User...</option>
             <option value="dev-user-1">👤 Alex (Teen)</option>
@@ -45,7 +45,7 @@ import MobileLayout from '../components/MobileLayout.tsx'
           </select>
         </div>
 
-        <button id="logout-btn" class="bg-white/70 text-[#8a2a44] px-4 py-2 rounded-xl text-sm hover:bg-white transition-all duration-200 border border-[#e8bfc8]/70 font-geist tracking-tight font-medium hover:shadow-md">Logout</button>
+        <button id="logout-btn" class="bg-white/70 text-[#3d6e9e] px-4 py-2 rounded-xl text-sm hover:bg-white transition-all duration-200 border border-[#c3daec]/70 font-geist tracking-tight font-medium hover:shadow-md">Logout</button>
       </div>
     </header>
 
@@ -182,14 +182,14 @@ import MobileLayout from '../components/MobileLayout.tsx'
           emoji: '🌟',
           title: 'Growing in Faith',
           message: 'Exploring what it means to follow Jesus',
-          gradient: 'from-blue-100 to-[#f3dde2]',
+          gradient: 'from-blue-100 to-[#e4eef6]',
           icon: '🙏'
         },
         'young-adult': {
           emoji: '🎓',
           title: 'Journeying Through Scripture',
           message: 'Finding wisdom and purpose in God\'s Word',
-          gradient: 'from-[#f3dde2] to-pink-100',
+          gradient: 'from-[#e4eef6] to-pink-100',
           icon: '✨'
         },
         'adult': {
@@ -374,8 +374,8 @@ import MobileLayout from '../components/MobileLayout.tsx'
       position: absolute;
       inset: 0;
       background-image:
-        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%238A2A44' stroke-width='0.5' opacity='0.08'%3E%3Cpath d='M30 5c-13.8 0-25 11.2-25 25s11.2 25 25 25 25-11.2 25-25-11.2-25-25zm0 45c-11 0-20-9-20-20s9-20 20-20 20 9 20 20-9 20-20z'/%3E%3C/g%3E%3C/svg%3E"),
-        url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B04A63' stroke-width='0.5' opacity='0.06'%3E%3Cpath d='M20 35c-8.3 0-15-6.7-15-15V10h30v10c0 8.3-6.7 15-15 15z'/%3E%3Cpath d='M30 20h10v15c0 2.8-2.2 5-5 5H30'/%3E%3C/g%3E%3C/svg%3E");
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%233d6e9e' stroke-width='0.5' opacity='0.08'%3E%3Cpath d='M30 5c-13.8 0-25 11.2-25 25s11.2 25 25 25 25-11.2 25-25-11.2-25-25zm0 45c-11 0-20-9-20-20s9-20 20-20 20 9 20 20-9 20-20z'/%3E%3C/g%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%236e9cc4' stroke-width='0.5' opacity='0.06'%3E%3Cpath d='M20 35c-8.3 0-15-6.7-15-15V10h30v10c0 8.3-6.7 15-15 15z'/%3E%3Cpath d='M30 20h10v15c0 2.8-2.2 5-5 5H30'/%3E%3C/g%3E%3C/svg%3E");
       background-repeat: repeat;
       pointer-events: none;
       opacity: 0.5;

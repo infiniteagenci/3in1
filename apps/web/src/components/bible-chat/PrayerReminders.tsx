@@ -153,7 +153,7 @@ export default function PrayerReminders({ onClose }: PrayerRemindersProps) {
   return (
     <div className="bg-[var(--color-stone-50)] min-h-screen">
       {/* Header */}
-      <div className="bg-gradient-to-br from-[#8a2a44] to-blue-600 text-white px-4 py-6 sticky top-0 z-10">
+      <div className="bg-gradient-to-br from-[#3d6e9e] to-blue-600 text-white px-4 py-6 sticky top-0 z-10">
         <div className="flex items-center gap-3 mb-4">
           <button
             onClick={onClose}
@@ -197,7 +197,7 @@ export default function PrayerReminders({ onClose }: PrayerRemindersProps) {
               <div
                 key={prayer.id}
                 className={`flex items-center justify-between px-4 py-3 ${
-                  prayer.enabled ? 'bg-[#faf0f2]' : ''
+                  prayer.enabled ? 'bg-[#f4f7fc]' : ''
                 }`}
               >
                 <div className="flex items-center gap-3 flex-1">
@@ -216,7 +216,7 @@ export default function PrayerReminders({ onClose }: PrayerRemindersProps) {
                 <button
                   onClick={() => togglePrayerTime(prayer.id)}
                   className={`relative inline-flex h-12 w-20 items-center rounded-full transition-colors ${
-                    prayer.enabled ? 'bg-[#8a2a44]' : 'bg-gray-200'
+                    prayer.enabled ? 'bg-[#3d6e9e]' : 'bg-gray-200'
                   }`}
                 >
                   <span
@@ -245,7 +245,7 @@ export default function PrayerReminders({ onClose }: PrayerRemindersProps) {
                   onClick={() => toggleIntent(intent.id)}
                   className={`p-3 rounded-xl border-2 transition-all ${
                     selectedIntents.includes(intent.id)
-                      ? 'border-[#9b3550] bg-[#faf0f2]'
+                      ? 'border-[#4b7ca8] bg-[#f4f7fc]'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >

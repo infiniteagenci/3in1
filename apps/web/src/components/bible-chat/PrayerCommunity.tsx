@@ -28,7 +28,7 @@ const categories = {
   healing: { label: 'Healing', emoji: '🏥', color: 'bg-red-100 text-red-700 border-red-200' },
   guidance: { label: 'Guidance', emoji: '🧭', color: 'bg-blue-100 text-blue-700 border-blue-200' },
   provision: { label: 'Provision', emoji: '💰', color: 'bg-green-100 text-green-700 border-green-200' },
-  protection: { label: 'Protection', emoji: '🛡️', color: 'bg-[#f3dde2] text-[#6e1f36] border-[#e8bfc8]' },
+  protection: { label: 'Protection', emoji: '🛡️', color: 'bg-[#e4eef6] text-[#33587a] border-[#c3daec]' },
   thanksgiving: { label: 'Thanksgiving', emoji: '🙏', color: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
   other: { label: 'Other', emoji: '💬', color: 'bg-gray-100 text-gray-700 border-gray-200' }
 };
@@ -171,10 +171,10 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
     return (
       <div className={`bg-white rounded-2xl border border-gray-200 overflow-hidden ${className}`}>
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#9b3550] to-[#8a2a44] px-6 py-6 text-white">
+        <div className="bg-gradient-to-r from-[#4b7ca8] to-[#3d6e9e] px-6 py-6 text-white">
           <button
             onClick={() => setShowNewRequest(false)}
-            className="flex items-center gap-2 text-[#f3dde2] hover:text-white mb-4 transition-colors"
+            className="flex items-center gap-2 text-[#e4eef6] hover:text-white mb-4 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -182,7 +182,7 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
             <span className="text-sm font-medium">Back to Community</span>
           </button>
           <h2 className="text-2xl font-bold font-playfair">Share a Prayer Request</h2>
-          <p className="text-[#f3dde2] text-sm mt-1">Let others pray for you</p>
+          <p className="text-[#e4eef6] text-sm mt-1">Let others pray for you</p>
         </div>
 
         {/* Form */}
@@ -221,7 +221,7 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               placeholder="Share what's on your heart... How can we pray for you?"
               rows={6}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#9b3550] focus:outline-none font-geist resize-none"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#4b7ca8] focus:outline-none font-geist resize-none"
             />
             <p className="text-xs text-gray-500 mt-1">Your request will be visible to the community</p>
           </div>
@@ -233,7 +233,7 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
               id="anonymous"
               checked={formData.isAnonymous}
               onChange={(e) => setFormData({ ...formData, isAnonymous: e.target.checked })}
-              className="w-5 h-5 text-[#8a2a44] rounded focus:ring-[#9b3550]"
+              className="w-5 h-5 text-[#3d6e9e] rounded focus:ring-[#4b7ca8]"
             />
             <label htmlFor="anonymous" className="text-sm text-gray-700">
               Post anonymously
@@ -243,7 +243,7 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
           {/* Submit */}
           <button
             onClick={handleSubmitRequest}
-            className="w-full py-3 bg-gradient-to-r from-[#9b3550] to-[#8a2a44] text-white rounded-xl font-semibold font-geist hover:shadow-lg transition-all"
+            className="w-full py-3 bg-gradient-to-r from-[#4b7ca8] to-[#3d6e9e] text-white rounded-xl font-semibold font-geist hover:shadow-lg transition-all"
           >
             Share Prayer Request
           </button>
@@ -258,10 +258,10 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
     return (
       <div className={`bg-white rounded-2xl border border-gray-200 overflow-hidden ${className}`}>
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#9b3550] to-[#8a2a44] px-6 py-6 text-white">
+        <div className="bg-gradient-to-r from-[#4b7ca8] to-[#3d6e9e] px-6 py-6 text-white">
           <button
             onClick={() => setSelectedRequest(null)}
-            className="flex items-center gap-2 text-[#f3dde2] hover:text-white mb-4 transition-colors"
+            className="flex items-center gap-2 text-[#e4eef6] hover:text-white mb-4 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -274,9 +274,9 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
         {/* Content */}
         <div className="p-6 space-y-6 max-h-[60vh] overflow-y-auto">
           {/* Request */}
-          <div className="bg-[#faf0f2] rounded-xl p-4 border border-[#f3dde2]">
+          <div className="bg-[#f4f7fc] rounded-xl p-4 border border-[#e4eef6]">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#9b3550] to-[#9b3550] flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#4b7ca8] to-[#4b7ca8] flex items-center justify-center text-white font-bold">
                 {selectedRequest.author.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1">
@@ -311,7 +311,7 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
           <div className="flex items-center gap-3">
             <button
               onClick={() => handlePrayFor(selectedRequest.id)}
-              className="flex-1 py-3 bg-gradient-to-r from-[#9b3550] to-[#8a2a44] text-white rounded-xl font-semibold font-geist hover:shadow-lg transition-all flex items-center justify-center gap-2"
+              className="flex-1 py-3 bg-gradient-to-r from-[#4b7ca8] to-[#3d6e9e] text-white rounded-xl font-semibold font-geist hover:shadow-lg transition-all flex items-center justify-center gap-2"
             >
               <span>🙏</span>
               I'm Praying ({selectedRequest.prayedFor})
@@ -360,7 +360,7 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 placeholder="Share a word of encouragement..."
-                className="flex-1 px-4 py-2 border-2 border-gray-200 rounded-xl focus:border-[#9b3550] focus:outline-none text-sm font-geist"
+                className="flex-1 px-4 py-2 border-2 border-gray-200 rounded-xl focus:border-[#4b7ca8] focus:outline-none text-sm font-geist"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     handleAddComment(selectedRequest.id);
@@ -369,7 +369,7 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
               />
               <button
                 onClick={() => handleAddComment(selectedRequest.id)}
-                className="px-4 py-2 bg-[#f3dde2] text-[#6e1f36] rounded-xl hover:bg-[#e8bfc8] transition-colors text-sm font-medium"
+                className="px-4 py-2 bg-[#e4eef6] text-[#33587a] rounded-xl hover:bg-[#c3daec] transition-colors text-sm font-medium"
               >
                 Post
               </button>
@@ -394,13 +394,13 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
   return (
     <div className={`bg-white rounded-2xl border border-gray-200 overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#9b3550] to-[#8a2a44] px-6 py-6 text-white">
+      <div className="bg-gradient-to-r from-[#4b7ca8] to-[#3d6e9e] px-6 py-6 text-white">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3">
             <span className="text-3xl">🙏</span>
             <div>
               <h2 className="text-2xl font-bold font-playfair">Prayer Community</h2>
-              <p className="text-[#f3dde2] text-sm">Pray for one another</p>
+              <p className="text-[#e4eef6] text-sm">Pray for one another</p>
             </div>
           </div>
         </div>
@@ -409,19 +409,19 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
         <div className="flex gap-4 mt-4">
           <div className="flex-1 bg-white/10 rounded-lg p-3 text-center">
             <div className="text-2xl font-bold">{requests.length}</div>
-            <div className="text-xs text-[#f3dde2]">Requests</div>
+            <div className="text-xs text-[#e4eef6]">Requests</div>
           </div>
           <div className="flex-1 bg-white/10 rounded-lg p-3 text-center">
             <div className="text-2xl font-bold">
               {requests.reduce((sum, req) => sum + req.prayedFor, 0)}
             </div>
-            <div className="text-xs text-[#f3dde2]">Prayers</div>
+            <div className="text-xs text-[#e4eef6]">Prayers</div>
           </div>
           <div className="flex-1 bg-white/10 rounded-lg p-3 text-center">
             <div className="text-2xl font-bold">
               {requests.filter(req => req.isAnswered).length}
             </div>
-            <div className="text-xs text-[#f3dde2]">Answered</div>
+            <div className="text-xs text-[#e4eef6]">Answered</div>
           </div>
         </div>
       </div>
@@ -430,7 +430,7 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
       <div className="px-4 py-3 border-b border-gray-200 flex gap-2 overflow-x-auto">
         <button
           onClick={() => setShowNewRequest(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#9b3550] to-[#8a2a44] text-white rounded-full hover:shadow-lg transition-all font-medium text-sm whitespace-nowrap"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#4b7ca8] to-[#3d6e9e] text-white rounded-full hover:shadow-lg transition-all font-medium text-sm whitespace-nowrap"
         >
           <span>✨</span> New Request
         </button>
@@ -460,7 +460,7 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
           </p>
           <button
             onClick={() => setShowNewRequest(true)}
-            className="px-6 py-3 bg-gradient-to-r from-[#9b3550] to-[#8a2a44] text-white rounded-xl font-semibold font-geist hover:shadow-lg transition-all"
+            className="px-6 py-3 bg-gradient-to-r from-[#4b7ca8] to-[#3d6e9e] text-white rounded-xl font-semibold font-geist hover:shadow-lg transition-all"
           >
             Share a Request
           </button>
@@ -473,15 +473,15 @@ export default function PrayerCommunity({ className = '' }: PrayerCommunityProps
               <button
                 key={request.id}
                 onClick={() => setSelectedRequest(request)}
-                className="w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-[#d894a5] hover:bg-[#faf0f2] transition-all group"
+                className="w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-[#9cbedc] hover:bg-[#f4f7fc] transition-all group"
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#9b3550] to-[#9b3550] flex items-center justify-center text-white font-bold flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#4b7ca8] to-[#4b7ca8] flex items-center justify-center text-white font-bold flex-shrink-0">
                     {request.author.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <h4 className="font-semibold text-gray-900 truncate font-geist group-hover:text-[#6e1f36]">
+                      <h4 className="font-semibold text-gray-900 truncate font-geist group-hover:text-[#33587a]">
                         {request.author}
                       </h4>
                       <span className={`px-2 py-0.5 rounded-full text-xs ${category.color}`}>

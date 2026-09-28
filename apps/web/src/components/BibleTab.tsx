@@ -181,8 +181,8 @@ export default function BibleTab({ onClose }: BibleTabProps) {
   // Main view - Testament selection
   if (!selectedTestament) {
     return (
-      <div className="flex flex-col h-full bg-gradient-to-br from-[#faf0f2] to-blue-50">
-        <div className="bg-gradient-to-br from-[#8a2a44] to-blue-600 text-white px-4 py-6">
+      <div className="flex flex-col h-full bg-gradient-to-br from-[#f4f7fc] to-blue-50">
+        <div className="bg-gradient-to-br from-[#3d6e9e] to-blue-600 text-white px-4 py-6">
           <button
             onClick={onClose}
             className="flex items-center gap-2 text-white/90 hover:text-white mb-4 transition-colors"
@@ -196,7 +196,7 @@ export default function BibleTab({ onClose }: BibleTabProps) {
             <span className="text-4xl">📖</span>
             <div>
               <h1 className="text-2xl font-bold font-playfair">Holy Bible</h1>
-              <p className="text-sm text-[#f3dde2]">Catholic Edition - Complete with 73 Books</p>
+              <p className="text-sm text-[#e4eef6]">Catholic Edition - Complete with 73 Books</p>
             </div>
           </div>
         </div>
@@ -221,9 +221,9 @@ export default function BibleTab({ onClose }: BibleTabProps) {
             {searchQuery.length >= 2 && searchResults.length > 0 && (
               <div className="mt-4 space-y-3 max-h-60 overflow-y-auto">
                 {searchResults.map((result, index) => (
-                  <div key={index} className="bg-[#faf0f2] rounded-lg p-4 border-l-4 border-[#9b3550]">
+                  <div key={index} className="bg-[#f4f7fc] rounded-lg p-4 border-l-4 border-[#4b7ca8]">
                     <p className="text-sm text-gray-700 italic font-crimson">"{result.text}"</p>
-                    <p className="text-xs text-[#8a2a44] mt-2 font-medium">{result.reference}</p>
+                    <p className="text-xs text-[#3d6e9e] mt-2 font-medium">{result.reference}</p>
                   </div>
                 ))}
               </div>
@@ -242,7 +242,7 @@ export default function BibleTab({ onClose }: BibleTabProps) {
           <div className="grid grid-cols-2 gap-4 mb-6">
             <button
               onClick={() => setSelectedTestament('old')}
-              className="bg-white rounded-xl p-6 shadow-sm border-2 border-gray-200 hover:border-[#b04a63] hover:bg-[#faf0f2] transition-all"
+              className="bg-white rounded-xl p-6 shadow-sm border-2 border-gray-200 hover:border-[#6e9cc4] hover:bg-[#f4f7fc] transition-all"
             >
               <div className="text-4xl mb-3">📜</div>
               <h3 className="font-bold text-gray-800 font-playfair">Old Testament</h3>
@@ -251,7 +251,7 @@ export default function BibleTab({ onClose }: BibleTabProps) {
 
             <button
               onClick={() => setSelectedTestament('new')}
-              className="bg-white rounded-xl p-6 shadow-sm border-2 border-gray-200 hover:border-[#b04a63] hover:bg-[#faf0f2] transition-all"
+              className="bg-white rounded-xl p-6 shadow-sm border-2 border-gray-200 hover:border-[#6e9cc4] hover:bg-[#f4f7fc] transition-all"
             >
               <div className="text-4xl mb-3">✝️</div>
               <h3 className="font-bold text-gray-800 font-playfair">New Testament</h3>
@@ -275,7 +275,7 @@ export default function BibleTab({ onClose }: BibleTabProps) {
                     fetchBibleVerse(book.id, 1).then(setVerses);
                   }
                 }}
-                className="bg-white rounded-lg p-3 shadow-sm border border-gray-200 hover:border-[#b04a63] hover:bg-[#faf0f2] transition-all text-center"
+                className="bg-white rounded-lg p-3 shadow-sm border border-gray-200 hover:border-[#6e9cc4] hover:bg-[#f4f7fc] transition-all text-center"
               >
                 <span className="text-sm font-medium text-gray-700">{bookName}</span>
               </button>
@@ -291,8 +291,8 @@ export default function BibleTab({ onClose }: BibleTabProps) {
     const books = selectedTestament === 'old' ? bibleBooks.oldTestament : bibleBooks.newTestament;
 
     return (
-      <div className="flex flex-col h-full bg-gradient-to-br from-[#faf0f2] to-blue-50">
-        <div className="bg-gradient-to-br from-[#8a2a44] to-blue-600 text-white px-4 py-6">
+      <div className="flex flex-col h-full bg-gradient-to-br from-[#f4f7fc] to-blue-50">
+        <div className="bg-gradient-to-br from-[#3d6e9e] to-blue-600 text-white px-4 py-6">
           <button
             onClick={() => setSelectedTestament(null)}
             className="flex items-center gap-2 text-white/90 hover:text-white mb-4 transition-colors"
@@ -313,7 +313,7 @@ export default function BibleTab({ onClose }: BibleTabProps) {
               <button
                 key={book.id}
                 onClick={() => handleBookSelect(book)}
-                className="bg-white rounded-xl p-4 shadow-sm border border-gray-200 hover:border-[#b04a63] hover:bg-[#faf0f2] transition-all text-left"
+                className="bg-white rounded-xl p-4 shadow-sm border border-gray-200 hover:border-[#6e9cc4] hover:bg-[#f4f7fc] transition-all text-left"
               >
                 <h3 className="font-semibold text-gray-800 font-geist">{book.name}</h3>
                 <p className="text-xs text-gray-500">{book.chapters} chapters</p>
@@ -327,8 +327,8 @@ export default function BibleTab({ onClose }: BibleTabProps) {
 
   // Chapter/Verse view
   return (
-    <div className="flex flex-col h-full bg-gradient-to-br from-[#faf0f2] to-blue-50">
-      <div className="bg-gradient-to-br from-[#8a2a44] to-blue-600 text-white px-4 py-6">
+    <div className="flex flex-col h-full bg-gradient-to-br from-[#f4f7fc] to-blue-50">
+      <div className="bg-gradient-to-br from-[#3d6e9e] to-blue-600 text-white px-4 py-6">
         <button
           onClick={() => {
             setSelectedBook(null);
@@ -355,8 +355,8 @@ export default function BibleTab({ onClose }: BibleTabProps) {
                 onClick={() => handleChapterSelect(i + 1)}
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                   selectedChapter === i + 1
-                    ? 'bg-[#8a2a44] text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-[#f3dde2]'
+                    ? 'bg-[#3d6e9e] text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-[#e4eef6]'
                 }`}
               >
                 {i + 1}
@@ -373,7 +373,7 @@ export default function BibleTab({ onClose }: BibleTabProps) {
           <div className="space-y-4">
             {verses.map((verse: any) => (
               <div key={verse.verse} className="flex gap-3 pb-3 border-b border-gray-100 last:border-0">
-                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#f3dde2] text-[#6e1f36] flex items-center justify-center text-sm font-bold">
+                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#e4eef6] text-[#33587a] flex items-center justify-center text-sm font-bold">
                   {verse.verse}
                 </span>
                 <p className="text-sm text-gray-700 leading-relaxed flex-1 font-crimson">{verse.text}</p>
