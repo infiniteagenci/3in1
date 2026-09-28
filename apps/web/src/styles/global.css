@@ -245,9 +245,9 @@ body {
   height: 200%;
   top: -50%;
   left: -50%;
-  background: radial-gradient(circle at 20% 80%, rgba(139, 95, 207, 0.35) 0%, transparent 50%),
+  background: radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.35) 0%, transparent 50%),
               radial-gradient(circle at 80% 20%, rgba(255, 179, 71, 0.25) 0%, transparent 50%),
-              radial-gradient(circle at 40% 40%, rgba(200, 75, 159, 0.25) 0%, transparent 50%);
+              radial-gradient(circle at 40% 40%, rgba(138, 42, 68, 0.25) 0%, transparent 50%);
   animation: float 20s ease-in-out infinite;
   z-index: 0;
   pointer-events: none;
@@ -368,7 +368,7 @@ body {
   font-size: 2rem;
   font-weight: bold;
   color: white;
-  box-shadow: 0 10px 25px rgba(200, 75, 159, 0.3);
+  box-shadow: 0 10px 25px rgba(138, 42, 68, 0.3);
 }
 
 .app-name {
@@ -496,7 +496,7 @@ body {
   align-items: center;
   gap: 0.625rem;
   padding: 0.4rem;
-  background: rgba(200, 75, 159, 0.06);
+  background: rgba(138, 42, 68, 0.06);
   border-radius: 0.5rem;
 }
 
@@ -535,7 +535,7 @@ body {
   color: white;
   font-size: 2rem;
   font-weight: bold;
-  box-shadow: 0 10px 25px rgba(200, 75, 159, 0.3);
+  box-shadow: 0 10px 25px rgba(138, 42, 68, 0.3);
 }
 
 .avatar img {
@@ -575,7 +575,7 @@ body {
 
 .chat-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(200, 75, 159, 0.3);
+  box-shadow: 0 10px 25px rgba(138, 42, 68, 0.3);
 }
 
 .logout-btn {
@@ -651,7 +651,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 20% 80%, rgba(139, 95, 207, 0.35) 0%, transparent 50%),
+  background: radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.35) 0%, transparent 50%),
               radial-gradient(circle at 80% 20%, rgba(255, 179, 71, 0.25) 0%, transparent 50%);
   z-index: -1;
 }
@@ -1077,7 +1077,7 @@ body {
 
 .send-btn:hover:not(:disabled) {
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(200, 75, 159, 0.3);
+  box-shadow: 0 4px 12px rgba(138, 42, 68, 0.3);
 }
 
 .send-btn:disabled {
@@ -1233,7 +1233,7 @@ body {
 }
 
 .dark .feature-item {
-  background: rgba(139, 95, 207, 0.15);
+  background: rgba(212, 175, 55, 0.15);
 }
 
 .dark .feature-text {
