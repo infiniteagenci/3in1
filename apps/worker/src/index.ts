@@ -3,6 +3,7 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import admin from './routes/admin';
 import auth from './routes/auth';
+import bible from './routes/bible';
 import chat from './routes/chat';
 import conversations from './routes/conversations';
 import focus from './routes/focus';
@@ -50,6 +51,7 @@ app.route('/auth', auth);
 
 // API routes
 app.route('/api/admin', admin);
+app.route('/api/bible', bible);
 app.route('/api/chat', chat);
 app.route('/api/conversations', conversations);
 app.route('/api/focus', focus);

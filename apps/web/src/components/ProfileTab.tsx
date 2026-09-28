@@ -1,4 +1,3 @@
-import PrayerReminders from './bible-chat/PrayerReminders';
 import AdminDashboard from './AdminDashboard';
 import { useState, useEffect, useRef } from 'react';
 
@@ -20,7 +19,6 @@ export default function ProfileTab({ onClose }: ProfileTabProps) {
     return '';
   });
   const [editBibleVersion, setEditBibleVersion] = useState('');
-  const [showReminders, setShowReminders] = useState(false);
   const [showAccountSettings, setShowAccountSettings] = useState(false);
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -422,12 +420,6 @@ export default function ProfileTab({ onClose }: ProfileTabProps) {
     { value: 'MSG', label: 'The Message — Paraphrase', description: 'Fresh, conversational retelling' },
   ];
 
-  // Prayer Reminders view
-  if (showReminders) {
-    return <PrayerReminders onClose={() => setShowReminders(false)} />;
-  }
-
-
   // Account Settings view
   if (showAccountSettings) {
     return (
@@ -678,19 +670,6 @@ export default function ProfileTab({ onClose }: ProfileTabProps) {
             <div className="flex items-center gap-3">
               <span className="text-xl">⚙️</span>
               <span className="text-sm text-gray-700">Account Settings</span>
-            </div>
-            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-
-          <button
-            onClick={() => setShowReminders(true)}
-            className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100"
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-xl">🔔</span>
-              <span className="text-sm text-gray-700">Prayer Reminders</span>
             </div>
             <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

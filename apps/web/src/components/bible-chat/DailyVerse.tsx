@@ -73,6 +73,34 @@ export default function DailyVerse({ className = '', onClose }: DailyVerseProps)
 
   const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
 
+  // Show the verse in the reader's saved Bible version: ask the worker
+  // to render this reference in their translation, cached per version.
+  // Falls back silently to the built-in text if the request fails.
+  const applyBibleVersion = async (verse: BibleVerse) => {
+    const version = localStorage.getItem('bible_version');
+    if (!version || version === verse.version) return;
+    const PUBLIC_BASE_API_URL = (window as any).PUBLIC_BASE_API_URL || 'http://localhost:8787';
+    const token = localStorage.getItem('session_token');
+    const cacheKey = `verse_${version}:${verse.reference}`;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      setCurrentVerse({ ...verse, text: cached, version: version as BibleVerse['version'] });
+      return;
+    }
+    try {
+      const res = await fetch(
+        `${PUBLIC_BASE_API_URL}/api/bible/verse?reference=${encodeURIComponent(verse.reference)}&version=${encodeURIComponent(version)}`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data?.text) {
+        setCurrentVerse({ ...verse, text: data.text, version: version as BibleVerse['version'] });
+        try { localStorage.setItem(cacheKey, data.text); } catch { /* storage full */ }
+      }
+    } catch { /* keep built-in text */ }
+  };
+
   useEffect(() => {
     // Load saved verses from localStorage
     const saved = localStorage.getItem('saved_verses');
@@ -89,6 +117,7 @@ export default function DailyVerse({ className = '', onClose }: DailyVerseProps)
     // Set daily verse
     const dailyVerse = getDailyVerse();
     setCurrentVerse(dailyVerse);
+    applyBibleVersion(dailyVerse);
   }, []);
 
   // Text-to-speech functionality
@@ -212,6 +241,7 @@ export default function DailyVerse({ className = '', onClose }: DailyVerseProps)
   const handleNewVerse = () => {
     const newVerse = getRandomVerse();
     setCurrentVerse(newVerse);
+    applyBibleVersion(newVerse);
   };
 
   if (!currentVerse) return null;

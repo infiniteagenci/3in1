@@ -11,6 +11,7 @@ import { Conversation, ConversationContent } from './ai-elements/conversation';
 import { Loader } from './ai-elements/loader';
 import { Suggestions, Suggestion } from './ai-elements/suggestion';
 import DailyVerse from './bible-chat/DailyVerse';
+import { speechSupported, startListening, speak, stopSpeaking } from './voice';
 
 // Icons
 const SendIcon = () => (
@@ -99,6 +100,66 @@ export default function ChatInterface() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loadingConversation, setLoadingConversation] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Voice: talk to Spirit with the mic, hear Spirit's replies read aloud
+  const [isListening, setIsListening] = useState(false);
+  const [interimTranscript, setInterimTranscript] = useState('');
+  const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null);
+  const recognitionRef = useRef<any>(null);
+  const hasSpeech = speechSupported();
+
+  const stopListening = useCallback(() => {
+    recognitionRef.current?.stop?.();
+    recognitionRef.current = null;
+    setIsListening(false);
+    setInterimTranscript('');
+  }, []);
+
+  const toggleListening = useCallback(() => {
+    if (isListening) {
+      stopListening();
+      return;
+    }
+    stopSpeaking(); // never talk over each other
+    setSpeakingMessageId(null);
+    const lang = localStorage.getItem('app_language') || 'en';
+    const rec = startListening(
+      lang,
+      (finalText) => {
+        setInput((prev) => (prev ? `${prev} ${finalText}` : finalText));
+        setInterimTranscript('');
+      },
+      (interim) => setInterimTranscript(interim),
+      () => {
+        setIsListening(false);
+        setInterimTranscript('');
+      },
+    );
+    if (rec) {
+      recognitionRef.current = rec;
+      setIsListening(true);
+    }
+  }, [isListening, stopListening]);
+
+  const toggleSpeakMessage = useCallback((id: string, text: string) => {
+    if (speakingMessageId === id) {
+      stopSpeaking();
+      setSpeakingMessageId(null);
+      return;
+    }
+    stopListening(); // can't listen and hear at the same time
+    const lang = localStorage.getItem('app_language') || 'en';
+    if (speak(text, lang)) setSpeakingMessageId(id);
+    else setSpeakingMessageId(null);
+  }, [speakingMessageId, stopListening]);
+
+  // Clean up speech when the chat unmounts
+  useEffect(() => {
+    return () => {
+      stopSpeaking();
+      recognitionRef.current?.stop?.();
+    };
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -250,6 +311,8 @@ export default function ChatInterface() {
     setShowSuggestions(false);
     setShowDailyVerse(true);
     setSidebarOpen(false);
+    stopSpeaking();
+    setSpeakingMessageId(null);
   }, []);
 
   // Delete a saved chat
@@ -277,6 +340,9 @@ export default function ChatInterface() {
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || status === 'streaming') return;
+
+    stopSpeaking(); // pause any read-aloud when the user speaks
+    setSpeakingMessageId(null);
 
     const userMessage = input.trim();
     setInput('');
@@ -505,6 +571,36 @@ export default function ChatInterface() {
                   return null;
                 })}
               </MessageContent>
+
+              {/* Listen to Spirit's reply */}
+              {message.role === 'assistant' &&
+                message.parts?.some((p) => p.type === 'text' && p.text?.trim()) && (
+                <button
+                  onClick={() => {
+                    const text = message.parts
+                      .filter((p) => p.type === 'text')
+                      .map((p) => p.text)
+                      .join(' ');
+                    toggleSpeakMessage(message.id, text);
+                  }}
+                  className={`self-end mb-1 w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                    speakingMessageId === message.id
+                      ? 'bg-[#e8a24c]/20 text-[#b97a2e]'
+                      : 'text-gray-400 hover:text-[#3d6e9e] hover:bg-white/80'
+                  }`}
+                  aria-label={speakingMessageId === message.id ? 'Stop reading' : 'Listen to this message'}
+                >
+                  {speakingMessageId === message.id ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                    </svg>
+                  )}
+                </button>
+              )}
             </MessageComponent>
           ))}
 
@@ -583,6 +679,18 @@ export default function ChatInterface() {
       )}
 
       <div className="border-t border-white/60 p-4 pb-20 bg-white/55 backdrop-blur-xl">
+        {/* Live transcript while the mic is listening */}
+        {isListening && (
+          <div className="mb-2 flex items-start gap-2 px-4 py-2.5 rounded-2xl bg-white/85 border border-[#e8a24c]/40 shadow-sm">
+            <span className="relative flex h-3 w-3 mt-1.5 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#e8a24c] opacity-60"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-[#e8a24c]"></span>
+            </span>
+            <span className="text-sm text-gray-600 font-geist italic flex-1">
+              {interimTranscript || "Listening… speak what's on your heart"}
+            </span>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="flex items-end gap-2">
           <textarea
             value={input}
@@ -597,6 +705,27 @@ export default function ChatInterface() {
             rows={2}
             className="flex-1 w-full resize-none border border-white/70 rounded-2xl px-4 py-3 focus:outline-none focus:border-[#e8a24c] focus:ring-2 focus:ring-[#e8a24c]/35 transition-all font-geist text-gray-700 placeholder:text-gray-400 bg-white/75 shadow-sm"
           />
+
+          {/* Microphone: talk to Spirit */}
+          {hasSpeech && (
+            <button
+              type="button"
+              onClick={toggleListening}
+              className={`flex items-center justify-center w-12 h-12 rounded-full shrink-0 transition-all duration-200 shadow-md hover:shadow-lg shrink-0 ${
+                isListening
+                  ? 'bg-gradient-to-br from-[#e8a24c] to-[#d89135] text-white animate-pulse'
+                  : 'bg-white/85 text-[#3d6e9e] border border-white/80 hover:scale-105'
+              }`}
+              aria-label={isListening ? 'Stop listening' : 'Speak to Spirit'}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+              </svg>
+            </button>
+          )}
 
           {/* Send Button */}
           <button
