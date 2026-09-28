@@ -101,12 +101,28 @@ export default function ChatInterface() {
   const [loadingConversation, setLoadingConversation] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Voice: talk to Spirit with the mic, hear Spirit's replies read aloud
+  // Voice: talk to Spirit with the mic, hear Spirit's replies read aloud.
+  // With "voice conversation" on, whatever you say is sent automatically
+  // when you finish speaking, and Spirit reads every reply aloud.
   const [isListening, setIsListening] = useState(false);
   const [interimTranscript, setInterimTranscript] = useState('');
   const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null);
   const recognitionRef = useRef<any>(null);
   const hasSpeech = speechSupported();
+
+  // Voice-conversation mode (auto-send what you say + auto-read replies).
+  // Persisted so the choice sticks between visits; on by default so the
+  // first mic tap starts a real spoken conversation.
+  const [autoVoice, setAutoVoice] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('spirit_voice_auto') !== '0';
+  });
+  const autoVoiceRef = useRef(autoVoice);
+  autoVoiceRef.current = autoVoice;
+  // Latest final transcript heard by the mic, sent when recognition ends
+  const voiceTextRef = useRef('');
+  // Always-current handleSubmit, callable from recognition callbacks
+  const handleSubmitRef = useRef<(e: React.FormEvent, overrideText?: string) => void>(() => {});
 
   const stopListening = useCallback(() => {
     recognitionRef.current?.stop?.();
@@ -123,16 +139,30 @@ export default function ChatInterface() {
     stopSpeaking(); // never talk over each other
     setSpeakingMessageId(null);
     const lang = localStorage.getItem('app_language') || 'en';
+    voiceTextRef.current = '';
     const rec = startListening(
       lang,
       (finalText) => {
-        setInput((prev) => (prev ? `${prev} ${finalText}` : finalText));
+        // Keep the newest words visible while Spirit keeps listening
+        voiceTextRef.current = voiceTextRef.current
+          ? `${voiceTextRef.current} ${finalText}`
+          : finalText;
         setInterimTranscript('');
       },
       (interim) => setInterimTranscript(interim),
       () => {
+        // Recognition ended (silence or stop) — send what was heard, no
+        // send-button tap needed. Falls back to the composer if it can't send.
+        const finalText = voiceTextRef.current.trim();
+        voiceTextRef.current = '';
         setIsListening(false);
         setInterimTranscript('');
+        if (finalText) {
+          // Show the words in the composer; handleSubmit clears it on send,
+          // and if Spirit is still mid-reply the text stays for one tap.
+          setInput(finalText);
+          handleSubmitRef.current({ preventDefault() {} } as unknown as React.FormEvent, finalText);
+        }
       },
     );
     if (rec) {
@@ -149,9 +179,24 @@ export default function ChatInterface() {
     }
     stopListening(); // can't listen and hear at the same time
     const lang = localStorage.getItem('app_language') || 'en';
-    if (speak(text, lang)) setSpeakingMessageId(id);
-    else setSpeakingMessageId(null);
+    if (speak(text, lang, () => setSpeakingMessageId((cur) => (cur === id ? null : cur)))) {
+      setSpeakingMessageId(id);
+    } else {
+      setSpeakingMessageId(null);
+    }
   }, [speakingMessageId, stopListening]);
+
+  const toggleAutoVoice = useCallback(() => {
+    setAutoVoice((v) => {
+      const next = !v;
+      localStorage.setItem('spirit_voice_auto', next ? '1' : '0');
+      if (!next) {
+        stopSpeaking();
+        setSpeakingMessageId(null);
+      }
+      return next;
+    });
+  }, []);
 
   // Clean up speech when the chat unmounts
   useEffect(() => {
@@ -337,14 +382,16 @@ export default function ChatInterface() {
     }
   }, [PUBLIC_BASE_API_URL, conversationId]);
 
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+  // Accepts an optional overrideText so voice input can auto-send what was
+  // heard without racing the (stale) composer state.
+  const handleSubmit = useCallback(async (e: React.FormEvent, overrideText?: string) => {
     e.preventDefault();
-    if (!input.trim() || status === 'streaming') return;
+    if ((!overrideText && !input.trim()) || status === 'streaming') return;
 
     stopSpeaking(); // pause any read-aloud when the user speaks
     setSpeakingMessageId(null);
 
-    const userMessage = input.trim();
+    const userMessage = (overrideText ?? input).trim();
     setInput('');
     setShowSuggestions(false);
     setStatus('submitted');
@@ -460,11 +507,23 @@ export default function ChatInterface() {
 
       setStatus('ready');
       fetchConversations();
+
+      // Voice conversation: Spirit reads the finished reply aloud so the
+      // exchange feels like two voices, not a screenful of text.
+      if (autoVoiceRef.current && assistantText.trim()) {
+        const lang = (typeof window !== 'undefined' && localStorage.getItem('app_language')) || 'en';
+        if (speak(assistantText, lang, () => setSpeakingMessageId((cur) => (cur === aiMsgId ? null : cur)))) {
+          setSpeakingMessageId(aiMsgId);
+        }
+      }
     } catch (error) {
       console.error('Error sending message:', error);
       setStatus('ready');
     }
   }, [input, status, messages, conversationId, fetchConversations, PUBLIC_BASE_API_URL]);
+
+  // Keep the ref pointing at the latest handleSubmit (fresh `input`, `status`)
+  handleSubmitRef.current = handleSubmit;
 
   const handleSuggestionClick = useCallback((suggestion: string) => {
     setInput(suggestion);
@@ -687,7 +746,11 @@ export default function ChatInterface() {
               <span className="relative inline-flex rounded-full h-3 w-3 bg-[#e8a24c]"></span>
             </span>
             <span className="text-sm text-gray-600 font-geist italic flex-1">
-              {interimTranscript || "Listening… speak what's on your heart"}
+              {interimTranscript
+                ? `${interimTranscript}…`
+                : autoVoice
+                  ? "Listening… I'll send your message when you pause ✨"
+                  : "Listening… speak what's on your heart"}
             </span>
           </div>
         )}
@@ -705,6 +768,35 @@ export default function ChatInterface() {
             rows={2}
             className="flex-1 w-full resize-none border border-white/70 rounded-2xl px-4 py-3 focus:outline-none focus:border-[#e8a24c] focus:ring-2 focus:ring-[#e8a24c]/35 transition-all font-geist text-gray-700 placeholder:text-gray-400 bg-white/75 shadow-sm"
           />
+
+          {/* Voice-conversation toggle: Spirit auto-sends your speech and
+              reads every reply aloud, like a real conversation */}
+          {hasSpeech && (
+            <button
+              type="button"
+              onClick={toggleAutoVoice}
+              className={`flex items-center justify-center w-10 h-12 rounded-full shrink-0 transition-all duration-200 ${
+                autoVoice
+                  ? 'text-[#d89135]'
+                  : 'text-gray-400 hover:text-[#3d6e9e]'
+              }`}
+              aria-label={autoVoice ? 'Voice conversation on — Spirit reads replies aloud' : 'Voice conversation off'}
+              title={autoVoice ? 'Voice conversation: on (tap to mute Spirit)' : 'Voice conversation: off (tap to hear Spirit)'}
+            >
+              {autoVoice ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                  <line x1="23" y1="9" x2="17" y2="15"></line>
+                  <line x1="17" y1="9" x2="23" y2="15"></line>
+                </svg>
+              )}
+            </button>
+          )}
 
           {/* Microphone: talk to Spirit */}
           {hasSpeech && (

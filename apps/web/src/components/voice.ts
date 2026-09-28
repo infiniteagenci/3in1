@@ -64,7 +64,9 @@ function speakableText(text: string): string {
 
 let currentUtterance: SpeechSynthesisUtterance | null = null;
 
-export function speak(text: string, appLanguage?: string): boolean {
+// Speak text aloud; onEnd fires when this utterance finishes (or is
+// cancelled/replaced), so the UI can clear its "speaking" state.
+export function speak(text: string, appLanguage?: string, onEnd?: () => void): boolean {
   if (typeof window === 'undefined' || !window.speechSynthesis) return false;
   const clean = speakableText(text);
   if (!clean) return false;
@@ -77,7 +79,15 @@ export function speak(text: string, appLanguage?: string): boolean {
     || voices.find((v) => v.lang.toLowerCase().startsWith(appLanguage || 'en'));
   if (voice) utterance.voice = voice;
   utterance.rate = 0.95; // a touch slower feels calm and prayerful
-  utterance.onend = () => { currentUtterance = null; };
+  utterance.onend = () => {
+    // Only report "finished" if this utterance is still the active one —
+    // cancel() also fires onend, and a replaced utterance shouldn't clear
+    // the speaking state of a newer one.
+    if (currentUtterance === utterance) {
+      currentUtterance = null;
+      onEnd?.();
+    }
+  };
   currentUtterance = utterance;
   window.speechSynthesis.speak(utterance);
   return true;
