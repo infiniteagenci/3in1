@@ -541,7 +541,7 @@ export default function ChatInterface() {
           {/* Accordion Header */}
           <button
             onClick={toggleSuggestions}
-            className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-violet-50/40 transition-colors"
+            className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[#faf0f2]/40 transition-colors"
           >
             <span className="text-sm text-gray-700 font-medium tracking-tight font-geist">
               {messages.length === 0 ? '✨ Ideas to get started' : '💭 Continue exploring'}
@@ -594,14 +594,14 @@ export default function ChatInterface() {
             }}
             placeholder="Share what's on your heart..."
             rows={2}
-            className="flex-1 w-full resize-none border border-white/70 rounded-2xl px-4 py-3 focus:outline-none focus:border-violet-300 focus:ring-2 focus:ring-violet-200/60 transition-all font-geist text-gray-700 placeholder:text-gray-400 bg-white/75 shadow-sm"
+            className="flex-1 w-full resize-none border border-white/70 rounded-2xl px-4 py-3 focus:outline-none focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/35 transition-all font-geist text-gray-700 placeholder:text-gray-400 bg-white/75 shadow-sm"
           />
 
           {/* Send Button */}
           <button
             type="submit"
             disabled={status === 'streaming' || !input?.trim()}
-            className="flex items-center justify-center w-12 h-12 rounded-full text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 shrink-0 bg-gradient-to-br from-violet-400 to-indigo-500"
+            className="flex items-center justify-center w-12 h-12 rounded-full text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 shrink-0 bg-gradient-to-br from-[#8a2a44] to-[#b04a63]"
           >
             {status === 'streaming' ? <SpinnerIcon /> : <SendIcon />}
           </button>
@@ -633,7 +633,7 @@ export default function ChatInterface() {
           <div className="px-3 pb-1">
             <button
               onClick={newChat}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-400 to-indigo-500 text-white text-sm font-medium shadow-md hover:shadow-lg hover:scale-[1.01] transition-all font-geist"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#8a2a44] to-[#b04a63] text-white text-sm font-medium shadow-md hover:shadow-lg hover:scale-[1.01] transition-all font-geist"
             >
               ✨ New chat
             </button>
@@ -659,11 +659,11 @@ export default function ChatInterface() {
                         key={c.id}
                         onClick={() => loadConversation(c.id)}
                         className={`group flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl cursor-pointer transition-all ${
-                          c.id === conversationId ? 'bg-violet-100/80' : 'hover:bg-gray-100/80'
+                          c.id === conversationId ? 'bg-[#f3dde2]/80' : 'hover:bg-gray-100/80'
                         }`}
                       >
                         <div className="min-w-0">
-                          <p className={`text-sm truncate font-geist ${c.id === conversationId ? 'text-violet-800 font-medium' : 'text-gray-700'}`}>
+                          <p className={`text-sm truncate font-geist ${c.id === conversationId ? 'text-[#57182a] font-medium' : 'text-gray-700'}`}>
                             {c.title || 'New conversation'}
                           </p>
                           <p className="text-[11px] text-gray-400 font-geist">{relativeTime(c.updated_at)}</p>

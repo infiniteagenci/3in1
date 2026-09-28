@@ -128,12 +128,12 @@ export default function VerseWallpaper({ className = '' }: VerseWallpaperProps) 
   return (
     <div className={`bg-white rounded-2xl border border-gray-200 overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-6 text-white">
+      <div className="bg-gradient-to-r from-[#9b3550] to-pink-500 px-6 py-6 text-white">
         <div className="flex items-center gap-3 mb-2">
           <span className="text-3xl">🖼️</span>
           <div>
             <h2 className="text-2xl font-bold font-playfair">Verse Wallpaper</h2>
-            <p className="text-purple-100 text-sm">Beautiful wallpapers with daily verses</p>
+            <p className="text-[#f3dde2] text-sm">Beautiful wallpapers with daily verses</p>
           </div>
         </div>
       </div>
@@ -195,7 +195,7 @@ export default function VerseWallpaper({ className = '' }: VerseWallpaperProps) 
             </button>
             <button
               onClick={handleDownloadWallpaper}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:shadow-lg transition-colors font-geist font-medium"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-[#9b3550] to-pink-500 text-white rounded-xl hover:shadow-lg transition-colors font-geist font-medium"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -211,7 +211,7 @@ export default function VerseWallpaper({ className = '' }: VerseWallpaperProps) 
             <h3 className="font-semibold text-gray-900 font-geist">Customize</h3>
             <button
               onClick={() => setShowCustomize(!showCustomize)}
-              className="text-sm text-purple-600 hover:text-purple-700 font-geist"
+              className="text-sm text-[#8a2a44] hover:text-[#6e1f36] font-geist"
             >
               {showCustomize ? 'Hide' : 'Show'}
             </button>
@@ -228,7 +228,7 @@ export default function VerseWallpaper({ className = '' }: VerseWallpaperProps) 
                       key={wallpaper.id}
                       onClick={() => setSelectedWallpaper(wallpaper)}
                       className={`relative rounded-lg overflow-hidden aspect-square ${
-                        selectedWallpaper.id === wallpaper.id ? 'ring-2 ring-purple-500 ring-offset-2' : ''
+                        selectedWallpaper.id === wallpaper.id ? 'ring-2 ring-[#9b3550] ring-offset-2' : ''
                       }`}
                     >
                       <div
@@ -260,7 +260,7 @@ export default function VerseWallpaper({ className = '' }: VerseWallpaperProps) 
                       onClick={() => setSelectedFont(font)}
                       className={`w-full px-4 py-3 rounded-lg text-left border-2 transition-colors ${
                         selectedFont.id === font.id
-                          ? 'border-purple-500 bg-purple-50'
+                          ? 'border-[#9b3550] bg-[#faf0f2]'
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >

@@ -6,22 +6,21 @@
    DESIGN TOKENS (CSS Variables)
    ======================================== */
 :root {
-  /* AI Labs Color Scheme - Softer tones */
-  /* Primary Colors - Magenta to Purple Gradient */
-  --color-primary: #C84B9F;
-  --color-primary-hover: #B31F8C;
-  --color-primary-light: #D870B7;
-  --color-primary-purple: #8B5FCF;
-  --color-primary-bg: rgba(200, 75, 159, 0.12);
+  /* Christian palette - Deep Burgundy + Gold */
+  --color-primary: #8A2A44;
+  --color-primary-hover: #6E1F36;
+  --color-primary-light: #B04A63;
+  --color-primary-purple: #7B1E3C;
+  --color-primary-bg: rgba(138, 42, 68, 0.10);
 
-  /* Secondary Colors - Orange to Violet Gradient */
-  --color-secondary-orange: #FFB347;
-  --color-secondary-violet: #9B7ED8;
+  /* Secondary Colors - Gold */
+  --color-secondary-orange: #D4AF37;
+  --color-secondary-violet: #C9A227;
 
-  /* Accent Color - Yellow */
-  --color-accent: #FFD54F;
-  --color-accent-purple: #BA68C8;
-  --color-accent-blue: #64B5F6;
+  /* Accent Color - Gold light */
+  --color-accent: #E6C25A;
+  --color-accent-purple: #D4AF37;
+  --color-accent-blue: #E6C25A;
 
   /* Neutral Colors */
   --color-stone-50: #fafaf9;
@@ -42,9 +41,9 @@
   --color-bg-glass: rgba(255, 255, 255, 0.3);
 
   /* Gradients - Softer tones */
-  --gradient-primary: linear-gradient(135deg, #C84B9F 0%, #8B5FCF 50%, #D870B7 100%);
-  --gradient-secondary: linear-gradient(135deg, #FFB347 0%, #9B7ED8 100%);
-  --gradient-hero: linear-gradient(135deg, #C84B9F 0%, #8B5FCF 100%);
+  --gradient-primary: linear-gradient(135deg, #7B1E3C 0%, #A8354F 50%, #B04A63 100%);
+  --gradient-secondary: linear-gradient(135deg, #E6C25A 0%, #D4AF37 100%);
+  --gradient-hero: linear-gradient(135deg, #7B1E3C 0%, #8A2A44 100%);
 
   /* Border Colors */
   --color-border: rgba(231, 229, 228, 0.6);
@@ -387,7 +386,7 @@ body {
 
 .spirit-name {
   font-size: 1.125rem;
-  color: #7c3aed;
+  color: #8a2a44;
   font-weight: 600;
 }
 
@@ -676,7 +675,7 @@ body {
 .cta-button {
   display: inline-block;
   background: white;
-  color: #7c3aed;
+  color: #8a2a44;
   padding: 1rem 2rem;
   border-radius: 2rem;
   text-decoration: none;
@@ -754,7 +753,7 @@ body {
 /* Soft aurora background - calm, modern, frosted-glass friendly */
 .aurora-bg {
   position: relative;
-  background: #f6f6fb; /* soft lavender-white base */
+  background: #faf6ef; /* warm ivory base */
   overflow: hidden;
 }
 
@@ -776,7 +775,7 @@ body {
   max-height: 560px;
   top: -12%;
   left: -12%;
-  background: radial-gradient(circle, rgba(167, 139, 250, 0.35) 0%, rgba(167, 139, 250, 0) 70%);
+  background: radial-gradient(circle, rgba(138, 42, 68, 0.16) 0%, rgba(138, 42, 68, 0) 70%);
   animation: aurora-drift 26s ease-in-out infinite;
 }
 
@@ -787,7 +786,7 @@ body {
   max-height: 520px;
   top: 8%;
   right: -15%;
-  background: radial-gradient(circle, rgba(125, 172, 248, 0.32) 0%, rgba(125, 172, 248, 0) 70%);
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.22) 0%, rgba(212, 175, 55, 0) 70%);
   animation: aurora-drift 32s ease-in-out infinite reverse;
 }
 
@@ -798,7 +797,7 @@ body {
   max-height: 520px;
   bottom: -22%;
   left: 8%;
-  background: radial-gradient(circle, rgba(244, 175, 219, 0.28) 0%, rgba(244, 175, 219, 0) 70%);
+  background: radial-gradient(circle, rgba(230, 194, 90, 0.20) 0%, rgba(230, 194, 90, 0) 70%);
   animation: aurora-drift 38s ease-in-out infinite;
   animation-delay: -8s;
 }
@@ -1280,7 +1279,7 @@ body {
 }
 
 .dark .hero-section {
-  background: linear-gradient(135deg, #8B5FCF 0%, #6D28D9 50%, #5B21B6 100%);
+  background: linear-gradient(135deg, #7B1E3C 0%, #6E1F36 50%, #57182a 100%);
 }
 
 .dark .cta-content {
@@ -1381,11 +1380,11 @@ body {
 }
 
 .dark .bg-gradient-to-br {
-  background: linear-gradient(to bottom right, #8B5FCF, #6D28D9) !important;
+  background: linear-gradient(to bottom right, #7B1E3C, #6E1F36) !important;
 }
 
 .dark .bg-gradient-to-r {
-  background: linear-gradient(to right, #8B5FCF, #6D28D9) !important;
+  background: linear-gradient(to right, #7B1E3C, #6E1F36) !important;
 }
 
 /* Dark mode specific for stay focused */
@@ -1450,7 +1449,7 @@ body {
 .dark .text-blue-700,
 .dark .text-purple-700,
 .dark .text-purple-600 {
-  color: #c4b5fd !important;
+  color: #d4af37 !important;
 }
 
 .dark .text-amber-700,

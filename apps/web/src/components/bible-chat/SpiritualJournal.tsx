@@ -21,7 +21,7 @@ const moods = {
   joyful: { emoji: '😊', label: 'Joyful', color: 'bg-yellow-100 text-yellow-700 border-yellow-300' },
   peaceful: { emoji: '😌', label: 'Peaceful', color: 'bg-blue-100 text-blue-700 border-blue-300' },
   grateful: { emoji: '🙏', label: 'Grateful', color: 'bg-green-100 text-green-700 border-green-300' },
-  hopeful: { emoji: '🌟', label: 'Hopeful', color: 'bg-purple-100 text-purple-700 border-purple-300' },
+  hopeful: { emoji: '🌟', label: 'Hopeful', color: 'bg-[#f3dde2] text-[#6e1f36] border-[#d894a5]' },
   anxious: { emoji: '😰', label: 'Anxious', color: 'bg-orange-100 text-orange-700 border-orange-300' },
   sad: { emoji: '😢', label: 'Sad', color: 'bg-gray-100 text-gray-700 border-gray-300' },
   struggling: { emoji: '😔', label: 'Struggling', color: 'bg-red-100 text-red-700 border-red-300' }
@@ -196,10 +196,10 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
     return (
       <div className={`bg-white rounded-2xl border border-gray-200 overflow-hidden ${className}`}>
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-6 text-white">
+        <div className="bg-gradient-to-r from-[#9b3550] to-[#8a2a44] px-6 py-6 text-white">
           <button
             onClick={() => setIsCreatingEntry(false)}
-            className="flex items-center gap-2 text-purple-100 hover:text-white mb-4 transition-colors"
+            className="flex items-center gap-2 text-[#f3dde2] hover:text-white mb-4 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -207,7 +207,7 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
             <span className="text-sm font-medium">Back to Journal</span>
           </button>
           <h2 className="text-2xl font-bold font-playfair">New Journal Entry</h2>
-          <p className="text-purple-100 text-sm mt-1">Record your spiritual journey</p>
+          <p className="text-[#f3dde2] text-sm mt-1">Record your spiritual journey</p>
         </div>
 
         {/* Form */}
@@ -225,11 +225,11 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
                 max="10"
                 value={formData.closenessToGod}
                 onChange={(e) => setFormData({ ...formData, closenessToGod: parseInt(e.target.value) })}
-                className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#8a2a44]"
               />
               <span className="text-2xl">😄</span>
             </div>
-            <div className="text-center text-sm font-medium text-purple-600 mt-2">
+            <div className="text-center text-sm font-medium text-[#8a2a44] mt-2">
               {formData.closenessToGod}/10
             </div>
           </div>
@@ -268,7 +268,7 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="What's on your heart today?"
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none font-geist"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#9b3550] focus:outline-none font-geist"
             />
           </div>
 
@@ -282,7 +282,7 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               placeholder="Share your thoughts, prayers, or what God is showing you..."
               rows={6}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none font-geist resize-none"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#9b3550] focus:outline-none font-geist resize-none"
             />
           </div>
 
@@ -296,7 +296,7 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
               value={formData.verses}
               onChange={(e) => setFormData({ ...formData, verses: e.target.value })}
               placeholder="John 3:16, Psalm 23:1-3"
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none font-geist"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#9b3550] focus:outline-none font-geist"
             />
             <p className="text-xs text-gray-500 mt-1">Separate multiple verses with commas</p>
           </div>
@@ -311,7 +311,7 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
               onChange={(e) => setFormData({ ...formData, prayerPoints: e.target.value })}
               placeholder="List things you're praying for...&#10;One point per line"
               rows={4}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none font-geist resize-none"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#9b3550] focus:outline-none font-geist resize-none"
             />
           </div>
 
@@ -335,7 +335,7 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
         <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
           <button
             onClick={saveEntry}
-            className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl font-semibold font-geist hover:shadow-lg transition-all"
+            className="w-full py-3 bg-gradient-to-r from-[#9b3550] to-[#8a2a44] text-white rounded-xl font-semibold font-geist hover:shadow-lg transition-all"
           >
             Save Journal Entry
           </button>
@@ -350,10 +350,10 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
     return (
       <div className={`bg-white rounded-2xl border border-gray-200 overflow-hidden ${className}`}>
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-6 text-white">
+        <div className="bg-gradient-to-r from-[#9b3550] to-[#8a2a44] px-6 py-6 text-white">
           <button
             onClick={() => setSelectedEntry(null)}
-            className="flex items-center gap-2 text-purple-100 hover:text-white mb-4 transition-colors"
+            className="flex items-center gap-2 text-[#f3dde2] hover:text-white mb-4 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -361,7 +361,7 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
             <span className="text-sm font-medium">Back to Journal</span>
           </button>
           <h2 className="text-xl font-bold font-playfair">{selectedEntry.title}</h2>
-          <p className="text-purple-100 text-sm mt-1">
+          <p className="text-[#f3dde2] text-sm mt-1">
             {new Date(selectedEntry.date).toLocaleDateString('en-US', {
               weekday: 'long',
               year: 'numeric',
@@ -375,16 +375,16 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
         <div className="p-6 space-y-6">
           {/* Closeness and Mood */}
           <div className="flex items-center gap-4">
-            <div className="flex-1 bg-purple-50 rounded-xl p-4">
-              <div className="text-sm text-purple-600 font-medium mb-1">Closeness to God</div>
+            <div className="flex-1 bg-[#faf0f2] rounded-xl p-4">
+              <div className="text-sm text-[#8a2a44] font-medium mb-1">Closeness to God</div>
               <div className="flex items-center gap-2">
-                <div className="flex-1 h-3 bg-purple-200 rounded-full overflow-hidden">
+                <div className="flex-1 h-3 bg-[#e8bfc8] rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full"
+                    className="h-full bg-gradient-to-r from-[#9b3550] to-[#9b3550] rounded-full"
                     style={{ width: `${selectedEntry.closenessToGod * 10}%` }}
                   />
                 </div>
-                <span className="text-lg font-bold text-purple-700">{selectedEntry.closenessToGod}/10</span>
+                <span className="text-lg font-bold text-[#6e1f36]">{selectedEntry.closenessToGod}/10</span>
               </div>
             </div>
             <div className={`px-4 py-3 rounded-xl border-2 ${moodInfo.color}`}>
@@ -407,7 +407,7 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
               <h3 className="font-semibold text-gray-900 mb-2 font-geist">Related Verses</h3>
               <div className="space-y-2">
                 {selectedEntry.verses.map((verse, index) => (
-                  <div key={index} className="bg-indigo-50 border border-indigo-100 rounded-lg p-3">
+                  <div key={index} className="bg-[#faf0f2] border border-[#f3dde2] rounded-lg p-3">
                     <p className="text-sm text-gray-700 font-crimson italic">{verse}</p>
                   </div>
                 ))}
@@ -422,7 +422,7 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
               <ul className="space-y-2">
                 {selectedEntry.prayerPoints.map((point, index) => (
                   <li key={index} className="flex items-start gap-2 text-gray-700">
-                    <span className="text-purple-500 mt-1">•</span>
+                    <span className="text-[#9b3550] mt-1">•</span>
                     <span className="flex-1 font-geist font-light">{point}</span>
                   </li>
                 ))}
@@ -486,11 +486,11 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
     return (
       <div className={`bg-white rounded-2xl border border-gray-200 overflow-hidden ${className}`}>
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-6 text-white">
+        <div className="bg-gradient-to-r from-[#9b3550] to-[#8a2a44] px-6 py-6 text-white">
           <div className="flex items-center justify-between mb-2">
             <button
               onClick={() => setViewMode('list')}
-              className="flex items-center gap-2 text-purple-100 hover:text-white transition-colors"
+              className="flex items-center gap-2 text-[#f3dde2] hover:text-white transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -500,20 +500,20 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
             <h2 className="text-2xl font-bold font-playfair">Spiritual Insights</h2>
             <div className="w-20" /> {/* Spacer */}
           </div>
-          <p className="text-purple-100 text-sm">Track your spiritual growth over time</p>
+          <p className="text-[#f3dde2] text-sm">Track your spiritual growth over time</p>
         </div>
 
         {/* Insights Content */}
         <div className="p-6 space-y-6">
           {/* Overview Stats */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-purple-50 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold text-purple-700">{entries.length}</div>
-              <div className="text-sm text-purple-600">Total Entries</div>
+            <div className="bg-[#faf0f2] rounded-xl p-4 text-center">
+              <div className="text-3xl font-bold text-[#6e1f36]">{entries.length}</div>
+              <div className="text-sm text-[#8a2a44]">Total Entries</div>
             </div>
-            <div className="bg-indigo-50 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold text-indigo-700">{entriesThisWeek.length}</div>
-              <div className="text-sm text-indigo-600">This Week</div>
+            <div className="bg-[#faf0f2] rounded-xl p-4 text-center">
+              <div className="text-3xl font-bold text-[#6e1f36]">{entriesThisWeek.length}</div>
+              <div className="text-sm text-[#8a2a44]">This Week</div>
             </div>
             <div className="bg-blue-50 rounded-xl p-4 text-center">
               <div className="text-3xl font-bold text-blue-700">{getAverageCloseness()}</div>
@@ -573,7 +573,7 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
                           {new Date(entry.date).toLocaleDateString()}
                         </div>
                       </div>
-                      <div className="text-sm font-bold text-purple-600">{entry.closenessToGod}/10</div>
+                      <div className="text-sm font-bold text-[#8a2a44]">{entry.closenessToGod}/10</div>
                     </div>
                   );
                 })}
@@ -589,11 +589,11 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
   return (
     <div className={`bg-white rounded-2xl border border-gray-200 overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-6 text-white">
+      <div className="bg-gradient-to-r from-[#9b3550] to-[#8a2a44] px-6 py-6 text-white">
         <div className="flex items-center justify-between mb-2">
           <div>
             <h2 className="text-2xl font-bold font-playfair">Spiritual Journal</h2>
-            <p className="text-purple-100 text-sm mt-1">Track your walk with God</p>
+            <p className="text-[#f3dde2] text-sm mt-1">Track your walk with God</p>
           </div>
           <button
             onClick={() => setViewMode(viewMode === 'insights' ? 'list' : 'insights')}
@@ -607,15 +607,15 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
         <div className="flex gap-4 mt-4">
           <div className="flex-1 bg-white/10 rounded-lg p-3 text-center">
             <div className="text-2xl font-bold">{entries.length}</div>
-            <div className="text-xs text-purple-100">Total Entries</div>
+            <div className="text-xs text-[#f3dde2]">Total Entries</div>
           </div>
           <div className="flex-1 bg-white/10 rounded-lg p-3 text-center">
             <div className="text-2xl font-bold">{getAnsweredPrayers()}</div>
-            <div className="text-xs text-purple-100">Answered Prayers</div>
+            <div className="text-xs text-[#f3dde2]">Answered Prayers</div>
           </div>
           <div className="flex-1 bg-white/10 rounded-lg p-3 text-center">
             <div className="text-2xl font-bold">{getAverageCloseness()}</div>
-            <div className="text-xs text-purple-100">Avg. Closeness</div>
+            <div className="text-xs text-[#f3dde2]">Avg. Closeness</div>
           </div>
         </div>
       </div>
@@ -630,7 +630,7 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
           </p>
           <button
             onClick={() => setIsCreatingEntry(true)}
-            className="px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl font-semibold font-geist hover:shadow-lg transition-all"
+            className="px-6 py-3 bg-gradient-to-r from-[#9b3550] to-[#8a2a44] text-white rounded-xl font-semibold font-geist hover:shadow-lg transition-all"
           >
             Write Your First Entry
           </button>
@@ -643,13 +643,13 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
               <button
                 key={entry.id}
                 onClick={() => setSelectedEntry(entry)}
-                className="w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-purple-300 hover:bg-purple-50 transition-all group"
+                className="w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-[#d894a5] hover:bg-[#faf0f2] transition-all group"
               >
                 <div className="flex items-start gap-3">
                   <span className="text-2xl">{moodInfo.emoji}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <h4 className="font-semibold text-gray-900 truncate font-geist group-hover:text-purple-700">
+                      <h4 className="font-semibold text-gray-900 truncate font-geist group-hover:text-[#6e1f36]">
                         {entry.title}
                       </h4>
                       {entry.answeredPrayer && (
@@ -668,7 +668,7 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
                     </p>
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    <div className="text-sm font-bold text-purple-600">{entry.closenessToGod}/10</div>
+                    <div className="text-sm font-bold text-[#8a2a44]">{entry.closenessToGod}/10</div>
                   </div>
                 </div>
               </button>
@@ -685,7 +685,7 @@ export default function SpiritualJournal({ className = '' }: SpiritualJournalPro
             setSelectedEntry(null);
             setIsCreatingEntry(true);
           }}
-          className="fixed bottom-24 right-4 w-14 h-14 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center text-2xl z-10"
+          className="fixed bottom-24 right-4 w-14 h-14 bg-gradient-to-r from-[#9b3550] to-[#8a2a44] text-white rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center text-2xl z-10"
         >
           ✏️
         </button>

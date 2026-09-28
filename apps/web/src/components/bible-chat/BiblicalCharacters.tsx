@@ -1292,13 +1292,13 @@ export const biblicalCharacters: BiblicalCharacter[] = [
 const categories = {
   patriarch: { label: 'Patriarch', color: 'from-amber-500 to-yellow-500', icon: '👴' },
   matriarch: { label: 'Matriarch', color: 'from-pink-500 to-rose-500', icon: '👵' },
-  prophet: { label: 'Prophet', color: 'from-purple-500 to-indigo-500', icon: '📜' },
+  prophet: { label: 'Prophet', color: 'from-[#9b3550] to-[#9b3550]', icon: '📜' },
   king: { label: 'King', color: 'from-yellow-500 to-amber-500', icon: '👑' },
-  queen: { label: 'Queen', color: 'from-fuchsia-500 to-pink-500', icon: '👸' },
+  queen: { label: 'Queen', color: 'from-[#9b3550] to-pink-500', icon: '👸' },
   apostle: { label: 'Apostle', color: 'from-blue-500 to-cyan-500', icon: '✨' },
   disciple: { label: 'Disciple', color: 'from-green-500 to-emerald-500', icon: '🐟' },
   warrior: { label: 'Warrior', color: 'from-red-500 to-orange-500', icon: '⚔️' },
-  leader: { label: 'Leader', color: 'from-indigo-500 to-violet-500', icon: '🎯' },
+  leader: { label: 'Leader', color: 'from-[#9b3550] to-[#9b3550]', icon: '🎯' },
   savior: { label: 'Savior', color: 'from-white to-gray-100', icon: '✝️' }
 };
 
@@ -1372,7 +1372,7 @@ export default function BiblicalCharacters({ className = '' }: BiblicalCharacter
             </h3>
             <div className="space-y-2">
               {selectedCharacter.keyVerses.map((verse, index) => (
-                <div key={index} className="bg-indigo-50 border border-indigo-100 rounded-lg p-3">
+                <div key={index} className="bg-[#faf0f2] border border-[#f3dde2] rounded-lg p-3">
                   <p className="text-sm text-gray-700 font-crimson italic">{verse}</p>
                 </div>
               ))}
@@ -1386,8 +1386,8 @@ export default function BiblicalCharacters({ className = '' }: BiblicalCharacter
             </h3>
             <div className="grid gap-2">
               {selectedCharacter.lessons.map((lesson, index) => (
-                <div key={index} className="flex items-start gap-3 bg-purple-50 border border-purple-100 rounded-lg p-3">
-                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-200 text-purple-700 flex items-center justify-center text-xs font-bold">
+                <div key={index} className="flex items-start gap-3 bg-[#faf0f2] border border-[#f3dde2] rounded-lg p-3">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#e8bfc8] text-[#6e1f36] flex items-center justify-center text-xs font-bold">
                     {index + 1}
                   </span>
                   <p className="text-sm text-gray-700 pt-0.5 font-geist font-light">{lesson}</p>

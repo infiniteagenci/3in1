@@ -220,7 +220,7 @@ export default function DailyVerse({ className = '', onClose }: DailyVerseProps)
   const isLiked = likedVerses.includes(currentVerse.id);
 
   return (
-    <div className={`relative bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-2xl p-6 border border-indigo-100 shadow-sm ${className}`}>
+    <div className={`relative bg-gradient-to-br from-[#faf0f2] via-white to-[#faf0f2] rounded-2xl p-6 border border-[#f3dde2] shadow-sm ${className}`}>
       {/* Close Button */}
       {onClose && (
         <button
@@ -243,7 +243,7 @@ export default function DailyVerse({ className = '', onClose }: DailyVerseProps)
         </div>
         <button
           onClick={handleNewVerse}
-          className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-full hover:bg-indigo-100 transition-colors"
+          className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-[#8a2a44] bg-[#faf0f2] rounded-full hover:bg-[#f3dde2] transition-colors"
         >
           <RefreshIcon />
           New Verse
@@ -255,7 +255,7 @@ export default function DailyVerse({ className = '', onClose }: DailyVerseProps)
         <p className="text-lg text-gray-800 leading-relaxed font-crimson italic mb-3">
           "{currentVerse.text}"
         </p>
-        <p className="text-sm font-semibold text-indigo-600 font-geist">
+        <p className="text-sm font-semibold text-[#8a2a44] font-geist">
           {currentVerse.reference}
         </p>
         {currentVerse.theme && (
@@ -266,14 +266,14 @@ export default function DailyVerse({ className = '', onClose }: DailyVerseProps)
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center justify-between pt-4 border-t border-indigo-100">
+      <div className="flex items-center justify-between pt-4 border-t border-[#f3dde2]">
         <div className="flex items-center gap-2">
           {/* Audio Play Button */}
           <button
             onClick={handlePlayPause}
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg transition-colors ${
               isPlaying && !isPaused
-                ? 'text-indigo-600 bg-indigo-50'
+                ? 'text-[#8a2a44] bg-[#faf0f2]'
                 : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
@@ -299,7 +299,7 @@ export default function DailyVerse({ className = '', onClose }: DailyVerseProps)
             onClick={handleBookmark}
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg transition-colors ${
               isSaved
-                ? 'text-indigo-600 bg-indigo-50'
+                ? 'text-[#8a2a44] bg-[#faf0f2]'
                 : 'text-gray-600 hover:bg-gray-100'
             }`}
           >

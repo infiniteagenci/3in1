@@ -453,9 +453,9 @@ export default function ProfileTab() {
             <div className="space-y-4">
               {Object.entries(studyNotes).map(([key, data]) => (
                 <div key={key} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                  <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 text-white">
+                  <div className="bg-gradient-to-r from-[#9b3550] to-[#8a2a44] px-4 py-3 text-white">
                     <h3 className="font-semibold font-playfair">{data.lesson.title}</h3>
-                    <p className="text-xs text-indigo-100">{data.plan.title}</p>
+                    <p className="text-xs text-[#f3dde2]">{data.plan.title}</p>
                   </div>
                   <div className="p-4 space-y-3">
                     {/* Personal Notes */}
@@ -529,10 +529,10 @@ export default function ProfileTab() {
                   <img
                     src={avatarUrl}
                     alt="Profile"
-                    className="w-20 h-20 rounded-full object-cover border-2 border-purple-200"
+                    className="w-20 h-20 rounded-full object-cover border-2 border-[#e8bfc8]"
                   />
                 ) : (
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white text-2xl font-bold">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#9b3550] to-blue-500 flex items-center justify-center text-white text-2xl font-bold">
                     {userName.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -556,7 +556,7 @@ export default function ProfileTab() {
             <div className="flex gap-2">
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#8a2a44] text-white rounded-lg font-medium hover:bg-[#6e1f36] transition-colors"
               >
                 {uploadProgress > 0 ? (
                   <span className="text-sm">{uploadProgress}%</span>
@@ -595,14 +595,14 @@ export default function ProfileTab() {
                     onClick={() => setEditAgeGroup(option.value)}
                     className={`p-3 rounded-lg border-2 text-left transition-all ${
                       editAgeGroup === option.value
-                        ? 'border-purple-500 bg-purple-50'
-                        : 'border-gray-200 hover:border-purple-300 hover:bg-purple-50/50'
+                        ? 'border-[#9b3550] bg-[#faf0f2]'
+                        : 'border-gray-200 hover:border-[#d894a5] hover:bg-[#faf0f2]/50'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-medium text-sm text-gray-900">{option.label}</span>
                       {editAgeGroup === option.value && (
-                        <svg className="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-5 h-5 text-[#8a2a44]" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
                       )}
@@ -614,7 +614,7 @@ export default function ProfileTab() {
 
               <button
                 onClick={handleUpdateAgeGroup}
-                className="w-full py-2.5 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors"
+                className="w-full py-2.5 bg-[#8a2a44] text-white rounded-lg font-medium hover:bg-[#6e1f36] transition-colors"
               >
                 {isLoading ? 'Saving...' : 'Save Age Group'}
               </button>
@@ -645,7 +645,7 @@ export default function ProfileTab() {
   return (
     <div className="h-full overflow-y-auto pb-20 bg-[var(--color-stone-50)]">
       {/* Header */}
-      <div className="bg-gradient-to-br from-purple-600 to-blue-600 text-white px-4 py-6">
+      <div className="bg-gradient-to-br from-[#8a2a44] to-blue-600 text-white px-4 py-6">
         <h1 className="text-2xl font-bold mb-1">👤 Profile</h1>
         <p className="text-sm text-white/90">Your spiritual journey</p>
       </div>
@@ -654,12 +654,12 @@ export default function ProfileTab() {
         {/* User Card */}
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white text-2xl font-bold">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#9b3550] to-blue-500 flex items-center justify-center text-white text-2xl font-bold">
               {userName.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1">
               <h2 className="text-lg font-semibold text-gray-800">{userName}</h2>
-              <p className="text-sm text-purple-600">{getAgeGroupLabel(ageGroup)}</p>
+              <p className="text-sm text-[#8a2a44]">{getAgeGroupLabel(ageGroup)}</p>
             </div>
           </div>
         </div>
@@ -672,14 +672,14 @@ export default function ProfileTab() {
         {/* Spiritual Journal Button */}
         <button
           onClick={() => setShowJournal(true)}
-          className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all"
+          className="w-full bg-gradient-to-r from-[#9b3550] to-[#8a2a44] text-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <span className="text-2xl">📖</span>
               <div className="text-left">
                 <h3 className="font-semibold">Spiritual Journal</h3>
-                <p className="text-xs text-purple-100">Record your walk with God</p>
+                <p className="text-xs text-[#f3dde2]">Record your walk with God</p>
               </div>
             </div>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -711,7 +711,7 @@ export default function ProfileTab() {
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
             <div className="text-3xl mb-2">🔥</div>
-            <div className="text-2xl font-bold text-purple-600">{prayerProgress?.streak || 0}</div>
+            <div className="text-2xl font-bold text-[#8a2a44]">{prayerProgress?.streak || 0}</div>
             <div className="text-xs text-gray-500">Day Streak</div>
           </div>
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
@@ -729,13 +729,13 @@ export default function ProfileTab() {
           {SUPERADMIN_EMAILS.includes(userEmail) && (
             <button
               onClick={() => setShowAdminDashboard(true)}
-              className="w-full flex items-center justify-between px-4 py-3 hover:bg-purple-50 transition-colors border-b border-gray-100 bg-gradient-to-r from-purple-50 to-blue-50"
+              className="w-full flex items-center justify-between px-4 py-3 hover:bg-[#faf0f2] transition-colors border-b border-gray-100 bg-gradient-to-r from-[#faf0f2] to-blue-50"
             >
               <div className="flex items-center gap-3">
                 <span className="text-xl">👑</span>
-                <span className="text-sm font-semibold text-purple-700">Admin Dashboard</span>
+                <span className="text-sm font-semibold text-[#6e1f36]">Admin Dashboard</span>
               </div>
-              <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-[#b04a63]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>

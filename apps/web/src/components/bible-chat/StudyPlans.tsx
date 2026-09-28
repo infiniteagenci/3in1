@@ -55,7 +55,7 @@ const BookOpenIcon = () => (
 
 const categories = {
   foundations: { label: 'Foundations', color: 'bg-blue-100 text-blue-700', icon: '🏛️' },
-  character: { label: 'Biblical Characters', color: 'bg-purple-100 text-purple-700', icon: '👤' },
+  character: { label: 'Biblical Characters', color: 'bg-[#f3dde2] text-[#6e1f36]', icon: '👤' },
   themes: { label: 'Biblical Themes', color: 'bg-green-100 text-green-700', icon: '💡' },
   'life-application': { label: 'Life Application', color: 'bg-orange-100 text-orange-700', icon: '🌱' }
 };
@@ -213,12 +213,12 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
     return (
       <div className={`bg-white rounded-2xl border border-gray-200 overflow-hidden ${className}`}>
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-8 text-white">
+        <div className="bg-gradient-to-r from-[#9b3550] to-[#8a2a44] px-6 py-8 text-white">
           <div className="flex items-center gap-3 mb-2">
             <BookOpenIcon />
             <h2 className="text-2xl font-bold font-playfair">Bible Study Plans</h2>
           </div>
-          <p className="text-indigo-100 font-geist text-sm">
+          <p className="text-[#f3dde2] font-geist text-sm">
             Structured plans to help you grow in faith and understanding
           </p>
         </div>
@@ -267,18 +267,18 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
                 <button
                   key={plan.id}
                   onClick={() => handlePlanSelect(plan)}
-                  className="w-full text-left p-5 rounded-xl border-2 border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all group"
+                  className="w-full text-left p-5 rounded-xl border-2 border-gray-200 hover:border-[#d894a5] hover:bg-[#faf0f2] transition-all group"
                 >
                   <div className="flex items-start gap-4">
                     {/* Icon */}
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xl shrink-0">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#b04a63] to-[#9b3550] flex items-center justify-center text-white text-xl shrink-0">
                       {category.icon}
                     </div>
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold text-gray-900 font-geist group-hover:text-indigo-700 transition-colors">
+                        <h3 className="font-semibold text-gray-900 font-geist group-hover:text-[#6e1f36] transition-colors">
                           {plan.title}
                         </h3>
                         <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${difficulty.color}`}>
@@ -293,7 +293,7 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
                       <div className="flex items-center gap-3">
                         <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all"
+                            className="h-full bg-gradient-to-r from-[#9b3550] to-[#9b3550] rounded-full transition-all"
                             style={{ width: `${progressPercent}%` }}
                           />
                         </div>
@@ -315,7 +315,7 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
                     </div>
 
                     {/* Arrow */}
-                    <svg className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-gray-400 group-hover:text-[#8a2a44] transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
@@ -337,10 +337,10 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
     return (
       <div className={`bg-white rounded-2xl border border-gray-200 overflow-hidden ${className}`}>
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-6 text-white">
+        <div className="bg-gradient-to-r from-[#9b3550] to-[#8a2a44] px-6 py-6 text-white">
           <button
             onClick={handleBackToPlans}
-            className="flex items-center gap-2 text-indigo-100 hover:text-white mb-4 transition-colors"
+            className="flex items-center gap-2 text-[#f3dde2] hover:text-white mb-4 transition-colors"
           >
             <BackIcon />
             <span className="text-sm font-medium">Back to Plans</span>
@@ -351,7 +351,7 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
             </div>
             <h2 className="text-xl font-bold font-playfair">{selectedPlan.title}</h2>
           </div>
-          <p className="text-indigo-100 text-sm mb-4 font-geist font-light">
+          <p className="text-[#f3dde2] text-sm mb-4 font-geist font-light">
             {selectedPlan.description}
           </p>
           <div className="flex items-center gap-3 text-sm">
@@ -382,10 +382,10 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
                     status === 'completed'
                       ? 'border-green-300 bg-green-50'
                       : status === 'in-progress'
-                      ? 'border-indigo-300 bg-indigo-50'
+                      ? 'border-[#d894a5] bg-[#faf0f2]'
                       : isLocked
                       ? 'border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed'
-                      : 'border-gray-200 hover:border-indigo-300 hover:bg-indigo-50'
+                      : 'border-gray-200 hover:border-[#d894a5] hover:bg-[#faf0f2]'
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -394,7 +394,7 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
                       status === 'completed'
                         ? 'bg-green-500 text-white'
                         : status === 'in-progress'
-                        ? 'bg-indigo-500 text-white'
+                        ? 'bg-[#9b3550] text-white'
                         : isLocked
                         ? 'bg-gray-300 text-gray-500'
                         : 'bg-gray-200 text-gray-600'
@@ -413,7 +413,7 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <h4 className={`font-semibold font-geist ${
-                        status === 'completed' ? 'text-green-700' : status === 'in-progress' ? 'text-indigo-700' : 'text-gray-900'
+                        status === 'completed' ? 'text-green-700' : status === 'in-progress' ? 'text-[#6e1f36]' : 'text-gray-900'
                       }`}>
                         {lesson.title}
                       </h4>
@@ -457,16 +457,16 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
   return (
     <div className={`bg-white rounded-2xl border border-gray-200 overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-6 text-white">
+      <div className="bg-gradient-to-r from-[#9b3550] to-[#8a2a44] px-6 py-6 text-white">
         <button
           onClick={handleBackToPlans}
-          className="flex items-center gap-2 text-indigo-100 hover:text-white mb-4 transition-colors"
+          className="flex items-center gap-2 text-[#f3dde2] hover:text-white mb-4 transition-colors"
         >
           <BackIcon />
           <span className="text-sm font-medium">Back to Lessons</span>
         </button>
         <h2 className="text-xl font-bold font-playfair mb-2">{selectedLesson.title}</h2>
-        <p className="text-indigo-100 text-sm font-geist font-light">{selectedLesson.description}</p>
+        <p className="text-[#f3dde2] text-sm font-geist font-light">{selectedLesson.description}</p>
       </div>
 
       {/* Lesson Content */}
@@ -478,7 +478,7 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
           </h4>
           <div className="space-y-2">
             {selectedLesson.verses.map((verse, index) => (
-              <div key={index} className="bg-indigo-50 border border-indigo-100 rounded-lg p-3">
+              <div key={index} className="bg-[#faf0f2] border border-[#f3dde2] rounded-lg p-3">
                 <p className="text-sm text-gray-700 font-crimson italic">{verse}</p>
               </div>
             ))}
@@ -493,7 +493,7 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
           <div className="space-y-3">
             {selectedLesson.questions.map((question, index) => (
               <div key={index} className="flex gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-xs font-bold">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#f3dde2] text-[#6e1f36] flex items-center justify-center text-xs font-bold">
                   {index + 1}
                 </span>
                 <p className="text-sm text-gray-700 pt-0.5 font-geist font-light">{question}</p>
@@ -507,7 +507,7 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
           <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 font-geist">
             <span>🙏</span> Prayer
           </h4>
-          <div className="bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-100 rounded-lg p-4">
+          <div className="bg-gradient-to-br from-[#faf0f2] to-[#faf0f2] border border-[#f3dde2] rounded-lg p-4">
             <p className="text-sm text-gray-700 font-crimson italic leading-relaxed">{selectedLesson.prayer}</p>
           </div>
         </div>
@@ -527,17 +527,17 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
           <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 font-geist">
             <span>📝</span> Your Personal Notes
           </h4>
-          <div className="bg-purple-50 border border-purple-100 rounded-lg p-4 space-y-3">
+          <div className="bg-[#faf0f2] border border-[#f3dde2] rounded-lg p-4 space-y-3">
             <textarea
               value={personalNotes}
               onChange={(e) => setPersonalNotes(e.target.value)}
               placeholder="Write your personal thoughts, insights, or reflections here..."
-              className="w-full px-3 py-2 border border-purple-200 rounded-lg text-sm text-gray-700 focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+              className="w-full px-3 py-2 border border-[#e8bfc8] rounded-lg text-sm text-gray-700 focus:ring-2 focus:ring-[#9b3550] focus:border-transparent resize-none"
               rows={4}
             />
             <button
               onClick={handleSaveNotes}
-              className="w-full py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors"
+              className="w-full py-2 bg-[#8a2a44] text-white rounded-lg text-sm font-medium hover:bg-[#6e1f36] transition-colors"
             >
               Save Notes
             </button>
@@ -570,7 +570,7 @@ export default function StudyPlans({ onLessonSelect, className = '' }: StudyPlan
       <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
         <button
           onClick={handleMarkComplete}
-          className="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-semibold font-geist hover:shadow-lg transition-all"
+          className="w-full py-3 bg-gradient-to-r from-[#9b3550] to-[#8a2a44] text-white rounded-xl font-semibold font-geist hover:shadow-lg transition-all"
         >
           Mark Complete & Continue
         </button>

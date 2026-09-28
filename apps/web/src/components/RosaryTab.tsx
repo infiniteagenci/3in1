@@ -78,9 +78,9 @@ const rosaryMysteries = {
     name: 'Sorrowful Mysteries',
     icon: '💜',
     day: 'Tuesday & Friday',
-    color: 'from-purple-500 to-violet-600',
-    textColor: 'text-purple-700',
-    bgColor: 'bg-purple-50',
+    color: 'from-[#9b3550] to-[#8a2a44]',
+    textColor: 'text-[#6e1f36]',
+    bgColor: 'bg-[#faf0f2]',
     mysteries: [
       { name: 'The Agony in the Garden', scripture: 'Matthew 26:36-46', fruit: 'Contrition' },
       { name: 'The Scourging at the Pillar', scripture: 'Matthew 27:26', fruit: 'Purity' },
@@ -378,9 +378,9 @@ export default function RosaryTab({ onClose }: { onClose: () => void }) {
 
   // ==================== HOLY ROSARY VIEW ====================
   return (
-    <div className="flex flex-col h-full bg-gradient-to-br from-purple-50 to-blue-50">
+    <div className="flex flex-col h-full bg-gradient-to-br from-[#faf0f2] to-blue-50">
       {/* Header with Section Toggle */}
-      <div className="bg-gradient-to-br from-purple-600 to-blue-600 text-white px-4 py-4">
+      <div className="bg-gradient-to-br from-[#8a2a44] to-blue-600 text-white px-4 py-4">
         <button
           onClick={onClose}
           className="flex items-center gap-2 text-white/90 hover:text-white mb-3 transition-colors"
@@ -397,8 +397,8 @@ export default function RosaryTab({ onClose }: { onClose: () => void }) {
             onClick={() => setActiveSection('rosary')}
             className={`flex-1 py-2 px-3 rounded-lg font-medium text-sm transition-all ${
               activeSection === 'rosary'
-                ? 'bg-white text-purple-600'
-                : 'bg-purple-400/30 text-white hover:bg-purple-400/50'
+                ? 'bg-white text-[#8a2a44]'
+                : 'bg-[#b04a63]/30 text-white hover:bg-[#b04a63]/50'
             }`}
           >
             📿 Holy Rosary
@@ -407,8 +407,8 @@ export default function RosaryTab({ onClose }: { onClose: () => void }) {
             onClick={() => setActiveSection('divine-mercy')}
             className={`flex-1 py-2 px-3 rounded-lg font-medium text-sm transition-all ${
               activeSection === 'divine-mercy'
-                ? 'bg-white text-purple-600'
-                : 'bg-purple-400/30 text-white hover:bg-purple-400/50'
+                ? 'bg-white text-[#8a2a44]'
+                : 'bg-[#b04a63]/30 text-white hover:bg-[#b04a63]/50'
             }`}
           >
             💜 Divine Mercy
@@ -437,8 +437,8 @@ export default function RosaryTab({ onClose }: { onClose: () => void }) {
                 onClick={() => setSelectedMystery(mystery)}
                 className={`p-3 rounded-xl border-2 transition-all ${
                   selectedMystery.name === mystery.name
-                    ? 'border-purple-500 bg-purple-50'
-                    : 'border-gray-200 bg-white hover:border-purple-300'
+                    ? 'border-[#9b3550] bg-[#faf0f2]'
+                    : 'border-gray-200 bg-white hover:border-[#d894a5]'
                 }`}
               >
                 <span className="text-2xl">{mystery.icon}</span>
@@ -459,7 +459,7 @@ export default function RosaryTab({ onClose }: { onClose: () => void }) {
             {/* Beginning Prayers */}
             <div>
               <h4 className="font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xs font-bold">✝️</span>
+                <span className="w-6 h-6 rounded-full bg-[#f3dde2] text-[#8a2a44] flex items-center justify-center text-xs font-bold">✝️</span>
                 Beginning Prayers
               </h4>
               <div className="space-y-2">
@@ -470,7 +470,7 @@ export default function RosaryTab({ onClose }: { onClose: () => void }) {
 
             {/* First Decade */}
             {[0, 1, 2, 3, 4].map((decadeIndex) => (
-              <div key={decadeIndex} className={`rounded-xl border-2 ${selectedMystery.bgColor} ${currentDecade === decadeIndex ? 'ring-2 ring-purple-400' : ''}`}>
+              <div key={decadeIndex} className={`rounded-xl border-2 ${selectedMystery.bgColor} ${currentDecade === decadeIndex ? 'ring-2 ring-[#b04a63]' : ''}`}>
                 <button
                   onClick={() => setCurrentDecade(currentDecade === decadeIndex ? null : decadeIndex)}
                   className="w-full px-4 py-3 flex items-center justify-between"
@@ -512,7 +512,7 @@ export default function RosaryTab({ onClose }: { onClose: () => void }) {
             {/* Closing Prayers */}
             <div>
               <h4 className="font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xs font-bold">🙏</span>
+                <span className="w-6 h-6 rounded-full bg-[#f3dde2] text-[#8a2a44] flex items-center justify-center text-xs font-bold">🙏</span>
                 Closing Prayers
               </h4>
               <div className="space-y-2">
@@ -530,7 +530,7 @@ export default function RosaryTab({ onClose }: { onClose: () => void }) {
                   setCurrentDecade(0);
                 }
               }}
-              className="w-full px-4 py-3 bg-purple-100 text-purple-700 rounded-xl hover:bg-purple-200 transition-colors font-medium font-geist"
+              className="w-full px-4 py-3 bg-[#f3dde2] text-[#6e1f36] rounded-xl hover:bg-[#e8bfc8] transition-colors font-medium font-geist"
             >
               {currentDecade !== null ? 'Collapse All Decades' : 'Expand All Decades'}
             </button>
@@ -553,9 +553,9 @@ export default function RosaryTab({ onClose }: { onClose: () => void }) {
 
           {expandedPrayer && (
             <div className="px-4 pb-4">
-              <div className="bg-purple-50 rounded-xl p-4 border border-purple-200">
-                <h5 className="font-semibold text-purple-900 mb-2">{prayers[expandedPrayer as keyof typeof prayers]?.name}</h5>
-                <p className="text-sm text-purple-800 italic leading-relaxed">"{prayers[expandedPrayer as keyof typeof prayers]?.text}"</p>
+              <div className="bg-[#faf0f2] rounded-xl p-4 border border-[#e8bfc8]">
+                <h5 className="font-semibold text-[#45121f] mb-2">{prayers[expandedPrayer as keyof typeof prayers]?.name}</h5>
+                <p className="text-sm text-[#57182a] italic leading-relaxed">"{prayers[expandedPrayer as keyof typeof prayers]?.text}"</p>
               </div>
             </div>
           )}

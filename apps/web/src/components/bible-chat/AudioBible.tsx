@@ -233,18 +233,18 @@ export default function AudioBible({ verses = [], className = '', initialVerse }
   return (
     <div className={`bg-white rounded-2xl border border-gray-200 overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-6 text-white">
+      <div className="bg-gradient-to-r from-[#9b3550] to-[#8a2a44] px-6 py-6 text-white">
         <div className="flex items-center gap-3 mb-2">
           <span className="text-3xl">🔊</span>
           <div>
             <h2 className="text-2xl font-bold font-playfair">Audio Bible</h2>
-            <p className="text-indigo-100 text-sm">Listen to God's Word</p>
+            <p className="text-[#f3dde2] text-sm">Listen to God's Word</p>
           </div>
         </div>
 
         {/* Rate Selector */}
         <div className="mt-4">
-          <label className="text-xs text-indigo-100 mb-2 block">Speed: {rate}x</label>
+          <label className="text-xs text-[#f3dde2] mb-2 block">Speed: {rate}x</label>
           <div className="flex gap-2">
             {[0.5, 0.75, 1, 1.25, 1.5].map((speed) => (
               <button
@@ -252,7 +252,7 @@ export default function AudioBible({ verses = [], className = '', initialVerse }
                 onClick={() => handleRateChange(speed)}
                 className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
                   rate === speed
-                    ? 'bg-white text-indigo-600'
+                    ? 'bg-white text-[#8a2a44]'
                     : 'bg-white/20 text-white hover:bg-white/30'
                 }`}
               >
@@ -264,16 +264,16 @@ export default function AudioBible({ verses = [], className = '', initialVerse }
       </div>
 
       {/* Current Verse Display */}
-      <div className="p-6 bg-gradient-to-br from-indigo-50 to-purple-50">
+      <div className="p-6 bg-gradient-to-br from-[#faf0f2] to-[#faf0f2]">
         <div className="mb-4">
-          <span className="text-xs font-medium text-indigo-600 bg-indigo-100 px-2 py-1 rounded-full">
+          <span className="text-xs font-medium text-[#8a2a44] bg-[#f3dde2] px-2 py-1 rounded-full">
             {currentVerse.version}
           </span>
         </div>
         <p className="text-lg text-gray-800 leading-relaxed font-crimson italic mb-3">
           "{currentVerse.text}"
         </p>
-        <p className="text-sm font-semibold text-indigo-600 font-geist">
+        <p className="text-sm font-semibold text-[#8a2a44] font-geist">
           {currentVerse.reference}
         </p>
       </div>
@@ -286,7 +286,7 @@ export default function AudioBible({ verses = [], className = '', initialVerse }
         </div>
         <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all"
+            className="h-full bg-gradient-to-r from-[#9b3550] to-[#9b3550] rounded-full transition-all"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -311,7 +311,7 @@ export default function AudioBible({ verses = [], className = '', initialVerse }
             {!isPlaying ? (
               <button
                 onClick={handlePlay}
-                className="p-4 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:shadow-lg transition-all"
+                className="p-4 rounded-full bg-gradient-to-r from-[#9b3550] to-[#8a2a44] text-white hover:shadow-lg transition-all"
               >
                 <PlayIcon />
               </button>
@@ -320,14 +320,14 @@ export default function AudioBible({ verses = [], className = '', initialVerse }
                 {!isPaused ? (
                   <button
                     onClick={handlePause}
-                    className="p-4 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:shadow-lg transition-all"
+                    className="p-4 rounded-full bg-gradient-to-r from-[#9b3550] to-[#8a2a44] text-white hover:shadow-lg transition-all"
                   >
                     <PauseIcon />
                   </button>
                 ) : (
                   <button
                     onClick={handlePlay}
-                    className="p-4 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:shadow-lg transition-all"
+                    className="p-4 rounded-full bg-gradient-to-r from-[#9b3550] to-[#8a2a44] text-white hover:shadow-lg transition-all"
                   >
                     <PlayIcon />
                   </button>
@@ -369,7 +369,7 @@ export default function AudioBible({ verses = [], className = '', initialVerse }
             step="0.1"
             value={isMuted ? 0 : volume}
             onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-            className="flex-1 h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-indigo-600"
+            className="flex-1 h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-[#8a2a44]"
           />
           <span className="text-xs text-gray-600 font-geist w-8">
             {Math.round((isMuted ? 0 : volume) * 100)}
@@ -378,8 +378,8 @@ export default function AudioBible({ verses = [], className = '', initialVerse }
       </div>
 
       {/* Tips */}
-      <div className="px-6 py-4 bg-indigo-50 border-t border-indigo-100">
-        <p className="text-xs text-indigo-700 font-geist font-light">
+      <div className="px-6 py-4 bg-[#faf0f2] border-t border-[#f3dde2]">
+        <p className="text-xs text-[#6e1f36] font-geist font-light">
           💡 Tip: For best results, use Chrome, Edge, or Safari. Adjust the speed to match your preferred listening pace.
         </p>
       </div>

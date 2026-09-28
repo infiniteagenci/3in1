@@ -8,7 +8,7 @@ export default function PrayersTab({ onPrayerSelect }: PrayersTabProps) {
   return (
     <div className="h-full overflow-y-auto pb-20 bg-[var(--color-stone-50)]">
       {/* Header */}
-      <div className="bg-gradient-to-br from-purple-600 to-blue-600 text-white px-4 py-6">
+      <div className="bg-gradient-to-br from-[#8a2a44] to-blue-600 text-white px-4 py-6">
         <h1 className="text-2xl font-bold mb-1">🙏 Focus</h1>
         <p className="text-sm text-white/90">Center your heart and mind</p>
       </div>

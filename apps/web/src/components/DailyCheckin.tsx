@@ -12,7 +12,7 @@ const moods: MoodOption[] = [
   { id: 'grateful', emoji: '🙏', label: 'Grateful', color: 'bg-green-100 hover:bg-green-200' },
   { id: 'peaceful', emoji: '😌', label: 'Peaceful', color: 'bg-blue-100 hover:bg-blue-200' },
   { id: 'anxious', emoji: '😰', label: 'Anxious', color: 'bg-orange-100 hover:bg-orange-200' },
-  { id: 'sad', emoji: '😢', label: 'Sad', color: 'bg-purple-100 hover:bg-purple-200' },
+  { id: 'sad', emoji: '😢', label: 'Sad', color: 'bg-[#f3dde2] hover:bg-[#e8bfc8]' },
   { id: 'struggling', emoji: '😣', label: 'Struggling', color: 'bg-red-100 hover:bg-red-200' },
   { id: 'tired', emoji: '😴', label: 'Tired', color: 'bg-gray-100 hover:bg-gray-200' },
 ];
@@ -73,11 +73,11 @@ export default function DailyCheckin({ onComplete, onDismiss, compact = false }:
 
   if (compact) {
     return (
-      <div className="bg-white/95 backdrop-blur-sm rounded-xl p-3 mb-2 border border-purple-200 shadow-lg">
+      <div className="bg-white/95 backdrop-blur-sm rounded-xl p-3 mb-2 border border-[#e8bfc8] shadow-lg">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <span className="text-lg">✨</span>
-            <span className="text-sm font-semibold text-purple-900">How are you feeling?</span>
+            <span className="text-sm font-semibold text-[#45121f]">How are you feeling?</span>
           </div>
           {onDismiss && (
             <button
@@ -116,13 +116,13 @@ export default function DailyCheckin({ onComplete, onDismiss, compact = false }:
   }
 
   return (
-    <div className="bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 rounded-xl p-4 mb-3 border border-purple-200">
+    <div className="bg-gradient-to-br from-[#faf0f2] via-blue-50 to-[#faf0f2] rounded-xl p-4 mb-3 border border-[#e8bfc8]">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h3 className="text-base font-semibold text-purple-900 flex items-center gap-2">
+          <h3 className="text-base font-semibold text-[#45121f] flex items-center gap-2">
             <span>✨</span> How are you feeling today?
           </h3>
-          <p className="text-xs text-purple-700 mt-1">Take a moment to check in with yourself and God.</p>
+          <p className="text-xs text-[#6e1f36] mt-1">Take a moment to check in with yourself and God.</p>
         </div>
         {onDismiss && (
           <button
@@ -147,7 +147,7 @@ export default function DailyCheckin({ onComplete, onDismiss, compact = false }:
             disabled={isSubmitting}
             className={`p-2 rounded-lg transition-all ${mood.color} ${
               selectedMood === mood.id
-                ? 'ring-2 ring-purple-500 scale-105 shadow-md'
+                ? 'ring-2 ring-[#9b3550] scale-105 shadow-md'
                 : 'hover:scale-102'
             } ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
             aria-label={`Feeling ${mood.label}`}
@@ -172,7 +172,7 @@ export default function DailyCheckin({ onComplete, onDismiss, compact = false }:
                   key={level}
                   onClick={() => {}}
                   disabled={isSubmitting}
-                  className={`flex-1 h-8 rounded text-xs font-medium transition-all bg-purple-500 text-white shadow-md ${
+                  className={`flex-1 h-8 rounded text-xs font-medium transition-all bg-[#9b3550] text-white shadow-md ${
                     isSubmitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                   }`}
                   aria-label={`Energy level ${level}`}
@@ -190,7 +190,7 @@ export default function DailyCheckin({ onComplete, onDismiss, compact = false }:
             disabled={!selectedMood || isSubmitting}
             className={`w-full py-2.5 px-4 rounded-lg font-semibold transition-all shadow-md ${
               selectedMood && !isSubmitting
-                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700'
+                ? 'bg-gradient-to-r from-[#8a2a44] to-blue-600 text-white hover:from-[#6e1f36] hover:to-blue-700'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
