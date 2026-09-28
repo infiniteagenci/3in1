@@ -1,14 +1,14 @@
-import PrayerProgress from './PrayerProgress';
-import SpiritualJournal from './bible-chat/SpiritualJournal';
 import PrayerReminders from './bible-chat/PrayerReminders';
 import AdminDashboard from './AdminDashboard';
 import { useState, useEffect, useRef } from 'react';
-import { getAllStudyPlans, getStudyProgress, type StudyPlan, type StudyLesson } from '../data/bible-study-plans';
 
 const SUPERADMIN_EMAILS = ['infinite.agenci@gmail.com', 'rainavinci@gmail.com'];
 
-export default function ProfileTab() {
-  const [prayerProgress, setPrayerProgress] = useState<any>(null);
+interface ProfileTabProps {
+  onClose?: () => void;
+}
+
+export default function ProfileTab({ onClose }: ProfileTabProps) {
   const [userName, setUserName] = useState('Friend');
   const [userEmail, setUserEmail] = useState('');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -20,9 +20,7 @@ export default function ProfileTab() {
     return '';
   });
   const [editBibleVersion, setEditBibleVersion] = useState('');
-  const [showJournal, setShowJournal] = useState(false);
   const [showReminders, setShowReminders] = useState(false);
-  const [showStudyProgress, setShowStudyProgress] = useState(false);
   const [showAccountSettings, setShowAccountSettings] = useState(false);
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -31,7 +29,6 @@ export default function ProfileTab() {
     }
     return 'light';
   });
-  const [studyNotes, setStudyNotes] = useState<Record<string, { lesson: StudyLesson; plan: StudyPlan; notes: string; questionNotes: Record<string, string> }>>({});
 
   // Account settings form states
   const [editAgeGroup, setEditAgeGroup] = useState('');
@@ -81,47 +78,6 @@ export default function ProfileTab() {
             localStorage.setItem('bible_version', profile.bibleVersion);
           }
         }
-
-        // Fetch prayer progress
-        const progressResponse = await fetch(`${PUBLIC_BASE_API_URL}/api/prayer/progress`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          }
-        });
-
-        if (progressResponse.ok) {
-          const data = await progressResponse.json();
-          setPrayerProgress(data);
-        }
-
-        // Load study notes from localStorage
-        const allPlans = getAllStudyPlans();
-        const loadedNotes: Record<string, { lesson: StudyLesson; plan: StudyPlan; notes: string; questionNotes: Record<string, string> }> = {};
-
-        allPlans.forEach(plan => {
-          const progress = getStudyProgress(plan.id);
-          const completedLessons = progress?.completed || [];
-
-          completedLessons.forEach((lessonId: string) => {
-            const lesson = plan.lessons.find(l => l.id === lessonId);
-            if (lesson) {
-              const storageKey = `study_notes_${plan.id}_${lessonId}`;
-              const savedData = localStorage.getItem(storageKey);
-              if (savedData) {
-                const parsed = JSON.parse(savedData);
-                loadedNotes[`${plan.id}_${lessonId}`] = {
-                  lesson,
-                  plan,
-                  notes: parsed.personal || '',
-                  questionNotes: parsed.questionNotes || {}
-                };
-              }
-            }
-          });
-        });
-
-        setStudyNotes(loadedNotes);
       } catch (error) {
         console.error('Failed to load user data:', error);
       }
@@ -466,97 +422,11 @@ export default function ProfileTab() {
     { value: 'MSG', label: 'The Message — Paraphrase', description: 'Fresh, conversational retelling' },
   ];
 
-  // Journal view
-  if (showJournal) {
-    return (
-      <div className="h-full overflow-y-auto pb-20 bg-[var(--color-stone-50)]">
-        <button
-          onClick={() => setShowJournal(false)}
-          className="flex items-center gap-2 px-4 py-3 bg-white border-b border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          <span className="font-medium">Back to Profile</span>
-        </button>
-        <div className="p-4">
-          <SpiritualJournal />
-        </div>
-      </div>
-    );
-  }
-
   // Prayer Reminders view
   if (showReminders) {
     return <PrayerReminders onClose={() => setShowReminders(false)} />;
   }
 
-  // Study Progress view
-  if (showStudyProgress) {
-    return (
-      <div className="h-full overflow-y-auto pb-20 bg-[var(--color-stone-50)]">
-        <button
-          onClick={() => setShowStudyProgress(false)}
-          className="flex items-center gap-2 px-4 py-3 bg-white border-b border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          <span className="font-medium">Back to Profile</span>
-        </button>
-        <div className="p-4">
-          <h2 className="text-xl font-bold font-playfair text-gray-900 mb-4">📚 My Study Progress</h2>
-
-          {Object.keys(studyNotes).length === 0 ? (
-            <div className="bg-white rounded-xl p-8 text-center shadow-sm border border-gray-100">
-              <div className="text-4xl mb-3">📖</div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">No completed lessons yet</h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Complete lessons in Study Plans to track your progress and notes here.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {Object.entries(studyNotes).map(([key, data]) => (
-                <div key={key} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                  <div className="bg-gradient-to-r from-[#4b7ca8] to-[#3d6e9e] px-4 py-3 text-white">
-                    <h3 className="font-semibold font-playfair">{data.lesson.title}</h3>
-                    <p className="text-xs text-[#e4eef6]">{data.plan.title}</p>
-                  </div>
-                  <div className="p-4 space-y-3">
-                    {/* Personal Notes */}
-                    {data.notes && (
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">📝 Your Notes:</h4>
-                        <p className="text-sm text-gray-600 italic bg-gray-50 p-3 rounded-lg">{data.notes}</p>
-                      </div>
-                    )}
-
-                    {/* Question Notes */}
-                    {Object.keys(data.questionNotes).length > 0 && (
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">💭 Your Answers:</h4>
-                        <div className="space-y-2">
-                          {data.lesson.questions.map((question, idx) => (
-                            data.questionNotes[idx] ? (
-                              <div key={idx} className="bg-blue-50 p-3 rounded-lg">
-                                <p className="text-xs text-gray-600 mb-1">{question}</p>
-                                <p className="text-sm text-gray-700 italic">{data.questionNotes[idx]}</p>
-                              </div>
-                            ) : null
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
 
   // Account Settings view
   if (showAccountSettings) {
@@ -751,9 +621,20 @@ export default function ProfileTab() {
   return (
     <div className="h-full overflow-y-auto pb-20 bg-[var(--color-stone-50)]">
       {/* Header */}
-      <div className="bg-gradient-to-br from-[#3d6e9e] to-blue-600 text-white px-4 py-6">
+      <div className="bg-gradient-to-br from-[#3d6e9e] to-blue-600 text-white px-4 py-6 relative">
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+            aria-label="Back to chat"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
         <h1 className="text-2xl font-bold mb-1">👤 Profile</h1>
-        <p className="text-sm text-white/90">Your spiritual journey</p>
+        <p className="text-sm text-white/90">Your account &amp; settings</p>
       </div>
 
       <div className="p-4 space-y-4">
@@ -767,63 +648,6 @@ export default function ProfileTab() {
               <h2 className="text-lg font-semibold text-gray-800">{userName}</h2>
               <p className="text-sm text-[#3d6e9e]">{getAgeGroupLabel(ageGroup)}</p>
             </div>
-          </div>
-        </div>
-
-        {/* Prayer Progress */}
-        {prayerProgress && (
-          <PrayerProgress progress={prayerProgress} />
-        )}
-
-        {/* Spiritual Journal Button */}
-        <button
-          onClick={() => setShowJournal(true)}
-          className="w-full bg-gradient-to-r from-[#4b7ca8] to-[#3d6e9e] text-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">📖</span>
-              <div className="text-left">
-                <h3 className="font-semibold">Spiritual Journal</h3>
-                <p className="text-xs text-[#e4eef6]">Record your walk with God</p>
-              </div>
-            </div>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </div>
-        </button>
-
-        {/* Study Progress Button */}
-        <button
-          onClick={() => setShowStudyProgress(true)}
-          className="w-full bg-gradient-to-r from-blue-500 to-cyan-600 text-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">📚</span>
-              <div className="text-left">
-                <h3 className="font-semibold">My Study Progress</h3>
-                <p className="text-xs text-blue-100">{Object.keys(studyNotes).length} completed lessons</p>
-              </div>
-            </div>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </div>
-        </button>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
-            <div className="text-3xl mb-2">🔥</div>
-            <div className="text-2xl font-bold text-[#3d6e9e]">{prayerProgress?.streak || 0}</div>
-            <div className="text-xs text-gray-500">Day Streak</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
-            <div className="text-3xl mb-2">📈</div>
-            <div className="text-2xl font-bold text-blue-600">{prayerProgress?.consistency || 0}%</div>
-            <div className="text-xs text-gray-500">Consistency</div>
           </div>
         </div>
 
@@ -896,7 +720,7 @@ export default function ProfileTab() {
           </button>
 
           <button
-            onClick={() => alert('3in1 Catholic App v1.0\n\nA spiritual companion for your faith journey.\n\nFeatures:\n• Chat with Spirit AI guide\n• Daily Bible verses\n• Spiritual journaling\n• Prayer community\n• Bible study plans\n• Biblical characters\n• And much more!\n\nMade with ❤️ for the Catholic community.')}
+            onClick={() => alert('3in1 — Chat with Spirit\n\nA quiet place to talk: Christian counsel, prayer and Scripture, in a warm, human conversation.\n\nMade with ❤️ for every follower of Jesus.')}
             className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
           >
             <div className="flex items-center gap-3">
@@ -923,7 +747,7 @@ export default function ProfileTab() {
 
         {/* Version Info */}
         <p className="text-center text-xs text-gray-400 pb-4">
-          3in1 Catholic App v1.0
+          3in1 — Christian Spiritual App
         </p>
       </div>
     </div>

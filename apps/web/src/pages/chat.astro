@@ -47,6 +47,12 @@ import LanguageSelector from '../components/LanguageSelector.tsx'
         </div>
 
         <div class="flex items-center gap-2">
+          <button id="profile-btn" class="w-11 h-11 rounded-2xl bg-white/70 border border-white/80 shadow-sm flex items-center justify-center text-gray-600 hover:bg-white hover:text-[#3d6e9e] transition-all" aria-label="Profile">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </button>
           <LanguageSelector client:load compact />
           <button id="logout-btn" class="bg-white/70 text-[#3d6e9e] px-4 py-2 rounded-xl text-sm hover:bg-white transition-all duration-200 border border-[#c3daec]/70 font-geist tracking-tight font-medium hover:shadow-md">Logout</button>
         </div>
@@ -323,6 +329,11 @@ import LanguageSelector from '../components/LanguageSelector.tsx'
     // Chat history button - asks the ChatInterface island to open its drawer
     document.getElementById('chats-menu-btn')?.addEventListener('click', () => {
       window.dispatchEvent(new CustomEvent('toggle-chat-sidebar'));
+    });
+
+    // Profile button - opens the Profile view in the MobileLayout island
+    document.getElementById('profile-btn')?.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('toggle-profile'));
     });
 
     // Dev user switcher event listener
