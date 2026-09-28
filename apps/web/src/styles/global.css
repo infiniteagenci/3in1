@@ -817,6 +817,13 @@ body {
   z-index: 1;
 }
 
+/* The chat header (and its language dropdown) must clear page content —
+   this restores the z-30 from the markup that the rule above would
+   otherwise override (same specificity, later source order wins) */
+.aurora-bg > header {
+  z-index: 30;
+}
+
 /* ...but leave fixed-position elements (floating heart, modals) alone */
 .aurora-bg > .fixed {
   position: fixed;

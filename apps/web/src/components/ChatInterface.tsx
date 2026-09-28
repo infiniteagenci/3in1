@@ -324,6 +324,7 @@ export default function ChatInterface() {
         body: JSON.stringify({
           messages: messagesPayload,
           conversationId: convId,
+          language: (typeof window !== 'undefined' && localStorage.getItem('app_language')) || 'en',
         }),
       });
 

@@ -211,6 +211,14 @@ MEMORY & PRESENCE:
 - React to THIS message first; reach for the past only when it's natural.
 - If you don't know something, say so plainly. Authentic beats impressive.`;
 
+// Language code → natural name for the system prompt
+const LANGUAGE_NAMES: Record<string, string> = {
+  en: "English", es: "Spanish", pt: "Portuguese", fr: "French", de: "German",
+  it: "Italian", pl: "Polish", tl: "Filipino", vi: "Vietnamese", ko: "Korean",
+  "zh-CN": "Simplified Chinese", ja: "Japanese", ar: "Arabic", hi: "Hindi",
+  ta: "Tamil", te: "Telugu", kn: "Kannada", ks: "Kashmiri", la: "Latin",
+};
+
 // Speaking-voice profiles, one per age group. Injected into the system prompt
 // whenever the user has picked an age group, so the way Spirit talks actually
 // changes from one age to the next.
@@ -331,6 +339,15 @@ This is how you sound with them in EVERY message — vocabulary, sentence length
 
 === BIBLE TRANSLATION ===
 They read the ${bibleVersion}. Whenever you quote Scripture, quote it from the ${bibleVersion} (you may name it naturally the first time, e.g. "in the words of the ${bibleVersion}"). Never quote from a different translation.`;
+    }
+
+    const requestedLanguage = (requestBody.language as string) || "en";
+    const languageName = LANGUAGE_NAMES[requestedLanguage] || "English";
+    if (requestedLanguage !== "en") {
+      systemPrompt += `
+
+=== LANGUAGE ===
+Write EVERY reply in ${languageName}, even if ${userFirstName} writes to you in English or another language. Keep all your warmth, empathy and Scripture-rooted counsel — just express it in natural, native-sounding ${languageName}. Quote Scripture in ${languageName} too.`;
     }
 
     if (userNotes) {

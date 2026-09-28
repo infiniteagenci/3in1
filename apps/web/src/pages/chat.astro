@@ -14,7 +14,7 @@ import LanguageSelector from '../components/LanguageSelector.tsx'
   <div id="chat-container" class="chat-container aurora-bg hidden flex flex-col h-screen">
     <div class="aurora-orb" aria-hidden="true"></div>
     <!-- Header with vibrant design -->
-    <header class="border-b border-white/60 backdrop-blur-xl bg-white/60 shadow-sm">
+    <header class="relative z-30 border-b border-white/60 backdrop-blur-xl bg-white/60 shadow-sm">
       <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <!-- Chat history button (opens saved-chats drawer) -->
@@ -433,7 +433,8 @@ import LanguageSelector from '../components/LanguageSelector.tsx'
 
       const gtElement = document.createElement('div');
       gtElement.id = 'google_translate_element_chat';
-      gtElement.style.display = 'none';
+      // Rendered but off-screen (display:none breaks the widget)
+      gtElement.style.cssText = 'position:absolute;left:-9999px;top:0;visibility:hidden;';
       document.body.appendChild(gtElement);
 
       const script = document.createElement('script');
@@ -446,7 +447,9 @@ import LanguageSelector from '../components/LanguageSelector.tsx'
         new google.translate.TranslateElement({
           pageLanguage: 'en',
           includedLanguages: 'es,pt,fr,de,it,pl,tl,vi,zh-CN,ja,ar,hi,ta,te,kn,ur,la',
-          layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+          // Default (VERTICAL) layout — it renders a real <select class="goog-te-combo">
+          // that the languageChange / restore code drives programmatically.
+          // (InlineLayout.SIMPLE renders a popup with no combo select.)
           autoDisplay: false
         }, 'google_translate_element_chat');
       };
@@ -472,44 +475,40 @@ import LanguageSelector from '../components/LanguageSelector.tsx'
       // Stop checking after 5 seconds
       setTimeout(() => clearInterval(checkTranslate), 5000);
     });
+
+    // Re-apply the saved language when the page loads
+    (function restoreLanguage() {
+      const savedLang = localStorage.getItem('app_language');
+      if (!savedLang || savedLang === 'en') return;
+      const applySaved = setInterval(function() {
+        const combo = document.querySelector('.goog-te-combo');
+        if (combo) {
+          clearInterval(applySaved);
+          combo.value = savedLang;
+          combo.dispatchEvent(new Event('change'));
+        }
+      }, 300);
+      setTimeout(() => clearInterval(applySaved), 10000);
+    })();
   </script>
 
   <style is:global>
-    /* Hide Google Translate widget */
-    .goog-te-banner-frame, .goog-te-gadget, .skiptranslate, .goog-te-spinner, .goog-te-spinner-pos {
-      display: none !important;
-      visibility: hidden !important;
-      opacity: 0 !important;
-      height: 0 !important;
-      width: 0 !important;
-      position: absolute !important;
-      left: -9999px !important;
-      top: -9999px !important;
-    }
-
-    .goog-te-combo {
-      position: absolute !important;
-      left: -9999px !important;
-      top: -9999px !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
-    }
-
+    /* Google Translate: keep the widget container off-screen only.
+       Do NOT display:none .skiptranslate / .goog-te-gadget / GT iframes —
+       GT needs its own hidden menu frame to perform the translation
+       (hiding it causes "Cannot read properties of undefined (reading 'link')"). */
     #google_translate_element_chat {
-      display: none !important;
-    }
-
-    iframe[src*="translate.google.com"],
-    iframe[src*="google.com/translate"] {
-      display: none !important;
-      visibility: hidden !important;
       position: absolute !important;
       left: -9999px !important;
+      top: -9999px !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
     }
 
-    .skiptranslate, .skiptranslate *, .goog-te-gadget, .goog-te-gadget * {
-      display: none !important;
-      visibility: hidden !important;
+    /* Safety net: if GT ever shifts the body for its banner, keep layout stable */
+    body {
+      top: 0 !important;
     }
   </style>
 </Layout>
