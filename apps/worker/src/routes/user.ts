@@ -42,32 +42,55 @@ async function getSessionUser(c: any, next: any) {
   }
 }
 
-// Update user profile (age group, etc.)
+// Update user profile (age group, bible version, etc.)
 user.post('/profile', getSessionUser, async (c) => {
   const userData = c.get('user');
-  const body = await c.req.json() as { ageGroup?: string };
+  const body = await c.req.json() as { ageGroup?: string; bibleVersion?: string };
 
-  const { ageGroup } = body;
+  const { ageGroup, bibleVersion } = body;
 
-  if (!ageGroup) {
-    return c.json({ error: 'ageGroup is required' }, 400);
+  if (!ageGroup && !bibleVersion) {
+    return c.json({ error: 'ageGroup or bibleVersion is required' }, 400);
   }
 
   try {
+    // Merge with any existing preferences JSON
+    const existing = await c.env.DB.prepare(
+      'SELECT preferences FROM user_profiles WHERE user_id = ?'
+    ).bind(userData.id).first() as { preferences?: string } | null;
+
+    let preferences: Record<string, string> = {};
+    if (existing?.preferences) {
+      try { preferences = JSON.parse(existing.preferences); } catch { preferences = {}; }
+    }
+    if (bibleVersion) preferences.bibleVersion = bibleVersion;
+    const preferencesJson = Object.keys(preferences).length ? JSON.stringify(preferences) : null;
+
     // Update or insert user profile
     await c.env.DB.prepare(`
-      INSERT INTO user_profiles (id, user_id, age_group, updated_at)
-      VALUES (?, ?, ?, datetime("now"))
+      INSERT INTO user_profiles (id, user_id, age_group, preferences, updated_at)
+      VALUES (?, ?, ?, ?, datetime("now"))
       ON CONFLICT(user_id) DO UPDATE SET
-        age_group = ?,
+        age_group = COALESCE(?, age_group),
+        preferences = COALESCE(?, preferences),
         updated_at = datetime("now")
-    `).bind(crypto.randomUUID(), userData.id, ageGroup, ageGroup).run();
+    `).bind(
+      crypto.randomUUID(),
+      userData.id,
+      ageGroup ?? null,
+      preferencesJson,
+      ageGroup ?? null,
+      preferencesJson
+    ).run();
 
     // Also save to notes for the AI agent to see
+    const note = ageGroup
+      ? `Age group: ${ageGroup} (user selected this)`
+      : `Bible version: ${bibleVersion} (preferred for Scripture quotes)`;
     await c.env.DB.prepare(`
       INSERT INTO notes (id, user_id, content, created_at)
       VALUES (?, ?, ?, datetime("now"))
-    `).bind(crypto.randomUUID(), userData.id, `Age group: ${ageGroup} (user selected this)`).run();
+    `).bind(crypto.randomUUID(), userData.id, note).run();
 
     return c.json({
       success: true,
@@ -85,8 +108,13 @@ user.get('/profile', getSessionUser, async (c) => {
 
   try {
     const userProfile = await c.env.DB.prepare(
-      'SELECT age_group, created_at, updated_at FROM user_profiles WHERE user_id = ?'
-    ).bind(userData.id).first();
+      'SELECT age_group, preferences, created_at, updated_at FROM user_profiles WHERE user_id = ?'
+    ).bind(userData.id).first() as any;
+
+    let bibleVersion: string | null = null;
+    if (userProfile?.preferences) {
+      try { bibleVersion = JSON.parse(userProfile.preferences).bibleVersion || null; } catch {}
+    }
 
     // Return combined user data and profile
     return c.json({
@@ -94,6 +122,7 @@ user.get('/profile', getSessionUser, async (c) => {
       email: userData.email,
       avatar_url: userData.avatar_url,
       ageGroup: userProfile?.age_group || null,
+      bibleVersion,
       profile: userProfile || { ageGroup: null }
     });
   } catch (error) {

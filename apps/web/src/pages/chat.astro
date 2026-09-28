@@ -2,6 +2,7 @@
 // src/pages/chat.astro
 import Layout from '../layouts/Layout.astro'
 import MobileLayout from '../components/MobileLayout.tsx'
+import LanguageSelector from '../components/LanguageSelector.tsx'
 ---
 
 <Layout title="Chat with Spirit - 3in1 Christian Spiritual App - v2">
@@ -45,7 +46,10 @@ import MobileLayout from '../components/MobileLayout.tsx'
           </select>
         </div>
 
-        <button id="logout-btn" class="bg-white/70 text-[#3d6e9e] px-4 py-2 rounded-xl text-sm hover:bg-white transition-all duration-200 border border-[#c3daec]/70 font-geist tracking-tight font-medium hover:shadow-md">Logout</button>
+        <div class="flex items-center gap-2">
+          <LanguageSelector client:load compact />
+          <button id="logout-btn" class="bg-white/70 text-[#3d6e9e] px-4 py-2 rounded-xl text-sm hover:bg-white transition-all duration-200 border border-[#c3daec]/70 font-geist tracking-tight font-medium hover:shadow-md">Logout</button>
+        </div>
       </div>
     </header>
 

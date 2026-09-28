@@ -13,6 +13,13 @@ export default function ProfileTab() {
   const [userEmail, setUserEmail] = useState('');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [ageGroup, setAgeGroup] = useState<string>('');
+  const [bibleVersion, setBibleVersion] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('bible_version') || '';
+    }
+    return '';
+  });
+  const [editBibleVersion, setEditBibleVersion] = useState('');
   const [showJournal, setShowJournal] = useState(false);
   const [showReminders, setShowReminders] = useState(false);
   const [showStudyProgress, setShowStudyProgress] = useState(false);
@@ -67,6 +74,11 @@ export default function ProfileTab() {
             setEditAgeGroup(profile.ageGroup);
             // Store in localStorage for immediate access by other components
             localStorage.setItem('user_age_group', profile.ageGroup);
+          }
+          if (profile.bibleVersion) {
+            setBibleVersion(profile.bibleVersion);
+            setEditBibleVersion(profile.bibleVersion);
+            localStorage.setItem('bible_version', profile.bibleVersion);
           }
         }
 
@@ -391,6 +403,49 @@ export default function ProfileTab() {
     }
   };
 
+  const handleUpdateBibleVersion = async () => {
+    if (!editBibleVersion) {
+      showMessage('error', 'Please select a Bible version');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const token = getToken();
+      const apiUrl = getApiUrl();
+
+      if (!token) {
+        showMessage('error', 'Please log in first');
+        setIsLoading(false);
+        return;
+      }
+
+      const response = await fetch(`${apiUrl}/api/user/profile`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ bibleVersion: editBibleVersion }),
+      });
+
+      if (response.ok) {
+        setBibleVersion(editBibleVersion);
+        localStorage.setItem('bible_version', editBibleVersion);
+        showMessage('success', `✓ ${editBibleVersion} saved — Spirit will quote from it now`);
+      } else {
+        const data = await response.json();
+        console.error('Server error:', data);
+        showMessage('error', data.error || 'Failed to update Bible version');
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+      showMessage('error', 'Network error. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const ageGroupOptions = [
     { value: 'child', label: '👶 Child (under 13)', description: 'For our youngest faith explorers' },
     { value: 'teen', label: '🌟 Teen (13-17)', description: 'For teenagers navigating faith' },
@@ -398,6 +453,17 @@ export default function ProfileTab() {
     { value: 'adult', label: '🌿 Adult (26-45)', description: 'For adults in their prime years' },
     { value: 'midlife', label: '🌅 Midlife (46-64)', description: 'For those in their middle years' },
     { value: 'senior', label: '🌺 Senior (65+)', description: 'For our wise elders' },
+  ];
+
+  const bibleVersions = [
+    { value: 'NIV', label: 'NIV — New International Version', description: 'Balanced, easy to read, most loved' },
+    { value: 'KJV', label: 'KJV — King James Version', description: 'The classic, majestic wording' },
+    { value: 'ESV', label: 'ESV — English Standard Version', description: 'Accurate and literary' },
+    { value: 'NLT', label: 'NLT — New Living Translation', description: 'Warm, clear, everyday language' },
+    { value: 'NKJV', label: 'NKJV — New King James Version', description: 'Classic feel, modern words' },
+    { value: 'CSB', label: 'CSB — Christian Standard Bible', description: 'Faithful and highly readable' },
+    { value: 'NASB', label: 'NASB — New American Standard Bible', description: 'Closest to the original text' },
+    { value: 'MSG', label: 'The Message — Paraphrase', description: 'Fresh, conversational retelling' },
   ];
 
   // Journal view
@@ -617,6 +683,46 @@ export default function ProfileTab() {
                 className="w-full py-2.5 bg-[#3d6e9e] text-white rounded-lg font-medium hover:bg-[#33587a] transition-colors"
               >
                 {isLoading ? 'Saving...' : 'Save Age Group'}
+              </button>
+            </div>
+          </div>
+
+          {/* Bible Version Section */}
+          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">📖 Bible Version</h3>
+
+            <div className="space-y-3">
+              <p className="text-sm text-gray-600">Choose the Bible version you love — Spirit will quote Scripture from it when we chat:</p>
+
+              <div className="grid grid-cols-1 gap-2">
+                {bibleVersions.map((version) => (
+                  <button
+                    key={version.value}
+                    onClick={() => setEditBibleVersion(version.value)}
+                    className={`p-3 rounded-lg border-2 text-left transition-all ${
+                      editBibleVersion === version.value
+                        ? 'border-[#4b7ca8] bg-[#f4f7fc]'
+                        : 'border-gray-200 hover:border-[#9cbedc] hover:bg-[#f4f7fc]/50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-sm text-gray-900">{version.label}</span>
+                      {editBibleVersion === version.value && (
+                        <svg className="w-5 h-5 text-[#3d6e9e] shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">{version.description}</p>
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={handleUpdateBibleVersion}
+                className="w-full py-2.5 bg-[#3d6e9e] text-white rounded-lg font-medium hover:bg-[#33587a] transition-colors"
+              >
+                {isLoading ? 'Saving...' : 'Save Bible Version'}
               </button>
             </div>
           </div>

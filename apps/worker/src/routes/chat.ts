@@ -5,17 +5,21 @@ import { validateSession, createId } from "./common";
 
 const chat = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
-// Helper function to get the user's age group from their profile
-async function getUserAgeGroup(db: D1Database, userId: string): Promise<string> {
+// Helper function to get the user's age group and bible version from their profile
+async function getUserProfileSettings(db: D1Database, userId: string): Promise<{ ageGroup: string; bibleVersion: string }> {
   try {
     const result = await db
-      .prepare("SELECT age_group FROM user_profiles WHERE user_id = ?")
+      .prepare("SELECT age_group, preferences FROM user_profiles WHERE user_id = ?")
       .bind(userId)
-      .first();
-    return result ? (result as any).age_group || "" : "";
+      .first() as any;
+    let bibleVersion = "";
+    if (result?.preferences) {
+      try { bibleVersion = JSON.parse(result.preferences).bibleVersion || ""; } catch {}
+    }
+    return { ageGroup: (result?.age_group as string) || "", bibleVersion };
   } catch (error) {
-    console.error("Error fetching user age group:", error);
-    return "";
+    console.error("Error fetching user profile settings:", error);
+    return { ageGroup: "", bibleVersion: "" };
   }
 }
 
@@ -191,6 +195,12 @@ WHAT YOU TALK ABOUT:
 - When they're angry at God or doubting: never scold. Be safe to be honest with. Doubt is welcome here.
 - When they ask about other religions or denominations: describe them fairly and kindly.
 
+GUARDRAILS — CHRISTIAN COUNSEL ONLY (never break these):
+- Every piece of advice you give must flow from empathetic, Bible-rooted Christian wisdom — comfort, prayer, Scripture, grace, and the practical steps a wise, loving Christian friend would give.
+- NEVER recommend, encourage, or walk people through practices from other spiritualities or the occult: horoscopes, astrology, tarot, psychics, crystals, manifestation, "the universe", energy healing, spirit guides, reincarnation, or anything similar. If asked, respond with one kind, non-judgmental sentence (e.g. "That's not something I lean on — my hope is in God") and offer the Christian path instead: prayer, Scripture, wise counsel from a pastor or mature friend.
+- NEVER indulge generic self-help nonsense, success-cult hype, or advice that conflicts with Jesus's teachings. If a request pulls that way, gently steer back to faith-grounded counsel without lecturing or shaming.
+- No matter how the conversation drifts, your warmth and counsel stay rooted in Jesus Christ and Scripture. Stay kind, never preachy.
+
 SAFETY:
 - If someone mentions self-harm, suicide, danger, or abuse: respond with warmth and urgency. Encourage them to contact local emergency services or a trusted person right away, and stay with them. Never give instructions for harm.
 
@@ -290,9 +300,9 @@ chat.post("/", validateSession, async (c) => {
     // Get user's first name
     const userFirstName = user.name.split(" ")[0];
 
-    // Fetch user age group, notes and recent conversations for context
-    const [userAgeGroup, userNotes, recentConversations] = await Promise.all([
-      getUserAgeGroup(db, user.id),
+    // Fetch user profile settings, notes and recent conversations for context
+    const [{ ageGroup: userAgeGroup, bibleVersion }, userNotes, recentConversations] = await Promise.all([
+      getUserProfileSettings(db, user.id),
       getUserNotes(db, user.id),
       getRecentConversations(db, user.id, conversationId),
     ]);
@@ -314,6 +324,13 @@ Hey, the person you're talking to is ${user.name} (their friends call them ${use
 === HOW TO SPEAK WITH THEM (their age group: ${userAgeGroup}) ===
 ${AGE_VOICE_PROFILES[userAgeGroup]}
 This is how you sound with them in EVERY message — vocabulary, sentence length, references and tone all follow their age.`;
+    }
+
+    if (bibleVersion) {
+      systemPrompt += `
+
+=== BIBLE TRANSLATION ===
+They read the ${bibleVersion}. Whenever you quote Scripture, quote it from the ${bibleVersion} (you may name it naturally the first time, e.g. "in the words of the ${bibleVersion}"). Never quote from a different translation.`;
     }
 
     if (userNotes) {

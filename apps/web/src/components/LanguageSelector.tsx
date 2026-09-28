@@ -60,6 +60,8 @@ export default function LanguageSelector({
   const handleLanguageSelect = (langCode: string) => {
     setCurrentLanguage(langCode);
     setIsOpen(false);
+    // Notify the page (chat.astro drives Google Translate from this event)
+    window.dispatchEvent(new CustomEvent('languageChange', { detail: { language: langCode } }));
     if (onLanguageChange) {
       onLanguageChange(langCode);
     }
