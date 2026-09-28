@@ -460,7 +460,20 @@ import LanguageSelector from '../components/LanguageSelector.tsx'
     // Handle language change events from LanguageSelector
     window.addEventListener('languageChange', function(e) {
       const langCode = e.detail.language;
-      if (langCode === 'en') return;
+
+      if (langCode === 'en') {
+        // Reverting to English: clear GT's persisted translation (it stores
+        // googtrans=/en/<lang> cookies on both the host and parent domain,
+        // which re-translate every page load) and reload for a guaranteed
+        // return to the original English page. GT's in-place combo revert
+        // is unreliable after UI-driven translation cycles.
+        const expiry = 'expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+        document.cookie = `googtrans=; ${expiry}; domain=${location.hostname}`;
+        document.cookie = `googtrans=; ${expiry}; domain=.${location.hostname.split('.').slice(-2).join('.')}`;
+        document.cookie = `googtrans=; ${expiry}`;
+        window.location.reload();
+        return;
+      }
 
       // Wait for Google Translate to be ready
       const checkTranslate = setInterval(function() {
