@@ -67,6 +67,27 @@ let currentAudio: HTMLAudioElement | null = null;
 // Set when the server's neural voice is unavailable (e.g. free mode) so
 // we stop requesting it every reply and go straight to the free voice.
 let serverTtsDisabled = false;
+// Bumped on every new speak run; queued chunks of an older run stop
+// playing as soon as their run is cancelled.
+let speechSeq = 0;
+
+// Sentence-split so the free voice speaks phrase by phrase with natural
+// pauses, which sounds far friendlier than one flat block of text.
+// Tiny fragments are merged into the next chunk so it doesn't sound choppy.
+function splitSentences(text: string): string[] {
+  const raw = text.match(/[^.!?…]+(?:[.!?…]+|\s*\n\s*|$)/g) || [text];
+  const chunks: string[] = [];
+  for (const piece of raw) {
+    const s = piece.trim();
+    if (!s) continue;
+    if (chunks.length && (s.length < 15 || chunks[chunks.length - 1].length < 15)) {
+      chunks[chunks.length - 1] = `${chunks[chunks.length - 1]} ${s}`;
+    } else {
+      chunks.push(s);
+    }
+  }
+  return chunks.length ? chunks : [text];
+}
 
 // Names that suggest a female voice, used to pick the best free voice
 const FEMALE_HINTS = [
@@ -140,34 +161,61 @@ export async function speak(text: string, appLanguage?: string, onEnd?: () => vo
   }
 
   // 2. Free voice: the browser's built-in speechSynthesis.
-  // Prefer a comfortable female voice with a matching language.
+  // Prefer a comfortable female voice; speak sentence by sentence with
+  // natural pauses and gentle pitch variation, so it feels like a warm
+  // friend rather than flat reading.
   try {
-    const utterance = new SpeechSynthesisUtterance(clean);
-    utterance.lang = langTag(appLanguage);
-    const voices = window.speechSynthesis.getVoices();
+    const synth = window.speechSynthesis;
+    if (!synth) return false;
+    const utteranceLang = langTag(appLanguage);
+    const voices = synth.getVoices();
     const matching = voices.filter((v) =>
-      v.lang.toLowerCase().replace('_', '-').startsWith(utterance.lang.toLowerCase().split('-')[0].slice(0, 2))
-      || v.lang.toLowerCase().replace('_', '-') === utterance.lang.toLowerCase(),
+      v.lang.toLowerCase().replace('_', '-').startsWith(utteranceLang.toLowerCase().split('-')[0].slice(0, 2))
+      || v.lang.toLowerCase().replace('_', '-') === utteranceLang.toLowerCase(),
     );
     const voice = preferFemale(matching)
       || preferFemale(voices)
       || matching[0]
       || voices.find((v) => v.lang.toLowerCase().startsWith(appLanguage || 'en'))
       || voices[0];
-    if (voice) utterance.voice = voice;
-    utterance.pitch = 1.05; // a touch brighter for a gentler, warmer feel
-    utterance.rate = 0.95; // a touch slower feels calm and prayerful
-    utterance.onend = () => {
-      // Only report "finished" if this utterance is still the active one —
-      // cancel() also fires onend, and a replaced utterance shouldn't clear
-      // the speaking state of a newer one.
-      if (currentUtterance === utterance) {
+
+    const chunks = splitSentences(clean);
+    const myRun = ++speechSeq;
+
+    const finish = () => {
+      if (myRun === speechSeq) {
         currentUtterance = null;
         onEnd?.();
       }
     };
-    currentUtterance = utterance;
-    window.speechSynthesis.speak(utterance);
+
+    const speakChunk = (i: number) => {
+      if (myRun !== speechSeq) return; // a newer run cancelled this one
+      if (i >= chunks.length) {
+        finish();
+        return;
+      }
+      const chunk = new SpeechSynthesisUtterance(chunks[i]);
+      if (voice) chunk.voice = voice;
+      chunk.lang = utteranceLang;
+      chunk.rate = (i % 2 === 0 ? 0.96 : 0.92); // subtle cadence variation
+      chunk.pitch = (i % 2 === 0 ? 1.05 : 1.1); // a touch brighter, warmer
+      chunk.onend = () => {
+        if (myRun !== speechSeq) return;
+        currentUtterance = chunk;
+        // A small natural pause between sentences — like real speech
+        window.setTimeout(() => speakChunk(i + 1), i < chunks.length - 1 ? 220 : 0);
+      };
+      // If one chunk fails to play, keep the queue going
+      chunk.onerror = () => {
+        if (myRun !== speechSeq) return;
+        window.setTimeout(() => speakChunk(i + 1), 0);
+      };
+      currentUtterance = chunk;
+      synth.speak(chunk);
+    };
+
+    speakChunk(0);
     return true;
   } catch {
     return false;
@@ -175,6 +223,7 @@ export async function speak(text: string, appLanguage?: string, onEnd?: () => vo
 }
 
 export function stopSpeaking(): void {
+  speechSeq++; // invalidate any queued sentence chunks
   currentUtterance = null;
   stopAudio();
   if (typeof window !== 'undefined' && window.speechSynthesis) {
@@ -185,4 +234,14 @@ export function stopSpeaking(): void {
 export function isSpeaking(): boolean {
   if (currentAudio) return !currentAudio.paused;
   return !!currentUtterance;
+}
+
+// Warm up the voice list: Chrome loads voices lazily and fires
+// voiceschanged when they're ready. Fetching once here (and on that
+// event) means the female voice is available for the first reply.
+if (typeof window !== 'undefined' && window.speechSynthesis) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.addEventListener?.('voiceschanged', () => {
+    window.speechSynthesis.getVoices();
+  });
 }
