@@ -63,43 +63,98 @@ function speakableText(text: string): string {
 }
 
 let currentUtterance: SpeechSynthesisUtterance | null = null;
+let currentAudio: HTMLAudioElement | null = null;
 
-// Speak text aloud; onEnd fires when this utterance finishes (or is
-// cancelled/replaced), so the UI can clear its "speaking" state.
-export function speak(text: string, appLanguage?: string, onEnd?: () => void): boolean {
-  if (typeof window === 'undefined' || !window.speechSynthesis) return false;
+// Stop any neural-audio playback (server TTS)
+function stopAudio(): void {
+  if (currentAudio) {
+    const audio = currentAudio;
+    currentAudio = null;
+    audio.pause();
+    audio.src = '';
+  }
+}
+
+// Speak text aloud. Spirit's reply is rendered with a warm female neural
+// voice through the worker (AI Gateway TTS) so she sounds like a real
+// person; if that fails we fall back to the browser's built-in voice.
+// onEnd fires when playback finishes (or is cancelled/replaced).
+export async function speak(text: string, appLanguage?: string, onEnd?: () => void): Promise<boolean> {
+  if (typeof window === 'undefined') return false;
+  stopAudio();
+  window.speechSynthesis?.cancel();
+  currentUtterance = null;
+
   const clean = speakableText(text);
   if (!clean) return false;
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(clean);
-  utterance.lang = langTag(appLanguage);
-  // Prefer a voice matching the language; fall back to the default voice
-  const voices = window.speechSynthesis.getVoices();
-  const voice = voices.find((v) => v.lang.toLowerCase().replace('_', '-') === utterance.lang.toLowerCase())
-    || voices.find((v) => v.lang.toLowerCase().startsWith(appLanguage || 'en'));
-  if (voice) utterance.voice = voice;
-  utterance.rate = 0.95; // a touch slower feels calm and prayerful
-  utterance.onend = () => {
-    // Only report "finished" if this utterance is still the active one —
-    // cancel() also fires onend, and a replaced utterance shouldn't clear
-    // the speaking state of a newer one.
-    if (currentUtterance === utterance) {
-      currentUtterance = null;
-      onEnd?.();
+
+  // 1. Neural voice through the worker — sounds human, not robotic
+  try {
+    const token = localStorage.getItem('session_token');
+    const base = (window as any).PUBLIC_BASE_API_URL || 'https://3in1-worker.ailabs-hq.workers.dev';
+    const res = await fetch(`${base}/api/voice/speech`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({ text: clean }),
+    });
+    if (res.ok && res.headers.get('content-type')?.includes('audio')) {
+      const blob = await res.blob();
+      const audio = new Audio();
+      audio.src = URL.createObjectURL(blob);
+      currentAudio = audio;
+      audio.onended = () => {
+        if (currentAudio === audio) {
+          currentAudio = null;
+          URL.revokeObjectURL(audio.src);
+          onEnd?.();
+        }
+      };
+      await audio.play();
+      return true;
     }
-  };
-  currentUtterance = utterance;
-  window.speechSynthesis.speak(utterance);
-  return true;
+  } catch {
+    // fall through to the browser voice
+  }
+
+  // 2. Fallback: the browser's built-in speechSynthesis voice
+  try {
+    const utterance = new SpeechSynthesisUtterance(clean);
+    utterance.lang = langTag(appLanguage);
+    // Prefer a voice matching the language; fall back to the default voice
+    const voices = window.speechSynthesis.getVoices();
+    const voice = voices.find((v) => v.lang.toLowerCase().replace('_', '-') === utterance.lang.toLowerCase())
+      || voices.find((v) => v.lang.toLowerCase().startsWith(appLanguage || 'en'));
+    if (voice) utterance.voice = voice;
+    utterance.rate = 0.95; // a touch slower feels calm and prayerful
+    utterance.onend = () => {
+      // Only report "finished" if this utterance is still the active one —
+      // cancel() also fires onend, and a replaced utterance shouldn't clear
+      // the speaking state of a newer one.
+      if (currentUtterance === utterance) {
+        currentUtterance = null;
+        onEnd?.();
+      }
+    };
+    currentUtterance = utterance;
+    window.speechSynthesis.speak(utterance);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function stopSpeaking(): void {
   currentUtterance = null;
+  stopAudio();
   if (typeof window !== 'undefined' && window.speechSynthesis) {
     window.speechSynthesis.cancel();
   }
 }
 
 export function isSpeaking(): boolean {
+  if (currentAudio) return !currentAudio.paused;
   return !!currentUtterance;
 }

@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { getDailyVerse, getVersesByTheme, getRandomVerse, type BibleVerse } from '../../data/bible-verses';
+import { speak, stopSpeaking } from '../voice';
 
 interface DailyVerseProps {
   className?: string;
@@ -71,8 +72,6 @@ export default function DailyVerse({ className = '', onClose }: DailyVerseProps)
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
-  const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
-
   // Show the verse in the reader's saved Bible version: ask the worker
   // to render this reference in their translation, cached per version.
   // Falls back silently to the built-in text if the request fails.
@@ -120,59 +119,21 @@ export default function DailyVerse({ className = '', onClose }: DailyVerseProps)
     applyBibleVersion(dailyVerse);
   }, []);
 
-  // Text-to-speech functionality
+  // Text-to-speech — Spirit's shared warm human voice (AI Gateway neural
+  // TTS, with the browser voice as fallback)
   const speakVerse = (text: string) => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-      alert('Text-to-speech is not supported in this browser.');
-      return;
-    }
-
-    // Stop any ongoing speech
-    stopSpeaking();
-
-    const synth = window.speechSynthesis;
-    const utterance = new SpeechSynthesisUtterance(text);
-
-    // Get available voices
-    const voices = synth.getVoices();
-    const englishVoice = voices.find(voice =>
-      voice.lang.startsWith('en') && voice.name.includes('Google')
-    ) || voices.find(voice =>
-      voice.lang.startsWith('en')
-    );
-
-    if (englishVoice) {
-      utterance.voice = englishVoice;
-    }
-
-    utterance.rate = 0.9; // Slightly slower for Bible verses
-    utterance.pitch = 1;
-    utterance.volume = 1;
-
-    utterance.onstart = () => {
-      setIsPlaying(true);
-      setIsPaused(false);
-    };
-
-    utterance.onend = () => {
+    const lang = localStorage.getItem('app_language') || 'en';
+    speak(text, lang, () => {
       setIsPlaying(false);
       setIsPaused(false);
-    };
-
-    utterance.onerror = (event) => {
-      console.error('Speech synthesis error:', event);
-      setIsPlaying(false);
-    };
-
-    speechRef.current = utterance;
-    synth.speak(utterance);
-  };
-
-  const stopSpeaking = () => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      const synth = window.speechSynthesis;
-      synth.cancel();
-    }
+    }).then((ok) => {
+      if (ok) {
+        setIsPlaying(true);
+        setIsPaused(false);
+      } else {
+        alert('Text-to-speech is not supported in this browser.');
+      }
+    });
   };
 
   const handlePlayPause = () => {

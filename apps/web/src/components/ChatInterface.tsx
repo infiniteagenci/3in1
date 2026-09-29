@@ -179,11 +179,13 @@ export default function ChatInterface() {
     }
     stopListening(); // can't listen and hear at the same time
     const lang = localStorage.getItem('app_language') || 'en';
-    if (speak(text, lang, () => setSpeakingMessageId((cur) => (cur === id ? null : cur)))) {
-      setSpeakingMessageId(id);
-    } else {
-      setSpeakingMessageId(null);
-    }
+    // Optimistically mark as speaking; revert if the voice can't play
+    setSpeakingMessageId(id);
+    speak(text, lang, () => setSpeakingMessageId((cur) => (cur === id ? null : cur))).then(
+      (ok) => {
+        if (!ok) setSpeakingMessageId((cur) => (cur === id ? null : cur));
+      },
+    );
   }, [speakingMessageId, stopListening]);
 
   const toggleAutoVoice = useCallback(() => {
@@ -508,13 +510,15 @@ export default function ChatInterface() {
       setStatus('ready');
       fetchConversations();
 
-      // Voice conversation: Spirit reads the finished reply aloud so the
-      // exchange feels like two voices, not a screenful of text.
+      // Voice conversation: Spirit reads the finished reply aloud in her
+      // warm neural voice, so the exchange feels like two real voices.
       if (autoVoiceRef.current && assistantText.trim()) {
         const lang = (typeof window !== 'undefined' && localStorage.getItem('app_language')) || 'en';
-        if (speak(assistantText, lang, () => setSpeakingMessageId((cur) => (cur === aiMsgId ? null : cur)))) {
-          setSpeakingMessageId(aiMsgId);
-        }
+        speak(assistantText, lang, () => setSpeakingMessageId((cur) => (cur === aiMsgId ? null : cur))).then(
+          (ok) => {
+            if (ok) setSpeakingMessageId((cur) => cur ?? aiMsgId);
+          },
+        );
       }
     } catch (error) {
       console.error('Error sending message:', error);

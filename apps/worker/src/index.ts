@@ -11,6 +11,7 @@ import notes from './routes/notes';
 import study from './routes/study';
 import suggestions from './routes/suggestions';
 import user from './routes/user';
+import voice from './routes/voice';
 
 type Bindings = {
   DB: D1Database;
@@ -59,6 +60,7 @@ app.route('/api/notes', notes);
 app.route('/api/study', study);
 app.route('/api/suggestions', suggestions);
 app.route('/api/user', user);
+app.route('/api/voice', voice);
 
 // Debug route to test if chat module is loaded
 app.get('/api/test', (c) => {

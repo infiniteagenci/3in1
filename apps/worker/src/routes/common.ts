@@ -10,6 +10,10 @@ export type Bindings = {
   AI_GATEWAY_API_KEY?: string;
   // Optional override for the chat model via AI Gateway (e.g. "openai/gpt-4.1")
   AI_CHAT_MODEL?: string;
+  // Optional overrides for Spirit's spoken voice via AI Gateway TTS
+  // (e.g. "openai/tts-1", voice "shimmer")
+  AI_TTS_MODEL?: string;
+  AI_TTS_VOICE?: string;
 };
 
 export type Variables = {
