@@ -64,8 +64,8 @@ function speakableText(text: string): string {
 
 let currentUtterance: SpeechSynthesisUtterance | null = null;
 let currentAudio: HTMLAudioElement | null = null;
-// Set when the server's neural voice is unavailable (e.g. free mode) so
-// we stop requesting it every reply and go straight to the free voice.
+// Set when the worker's free neural voice is unavailable so we stop
+// requesting it every reply and go straight to the browser's own voice.
 let serverTtsDisabled = false;
 // Bumped on every new speak run; queued chunks of an older run stop
 // playing as soon as their run is cancelled.
@@ -123,19 +123,20 @@ export async function speak(text: string, appLanguage?: string, onEnd?: () => vo
   const clean = speakableText(text);
   if (!clean) return false;
 
-  // 1. Neural voice through the worker — sounds human, not robotic.
-  // Skipped when we know it's disabled (free mode).
+  // 1. Free neural voice through the worker — Edge's natural Read Aloud
+  // voices (calm, friendly, female, native per language), no cost.
+  // Skipped when we know it's unavailable.
   if (!serverTtsDisabled) {
     try {
       const token = localStorage.getItem('session_token');
       const base = (window as any).PUBLIC_BASE_API_URL || 'https://3in1-worker.ailabs-hq.workers.dev';
-      const res = await fetch(`${base}/api/voice/speech`, {
+      const res = await fetch(`${base}/api/voice/edge`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ text: clean }),
+        body: JSON.stringify({ text: clean, lang: appLanguage || 'en' }),
       });
       if (!res.ok) {
         // Free mode / gateway down — remember and use the free voice
