@@ -6,15 +6,22 @@ const voice = new Hono<{ Bindings: Bindings }>();
 
 // POST /api/voice/speech { text }
 // Renders Spirit's reply as spoken audio through the Vercel AI Gateway
-// (neural TTS, warm female voice) so she sounds like a real person
-// rather than the robotic built-in browser voice. The client falls back
-// to browser speech if this endpoint fails.
+// (neural TTS, warm female voice). Disabled by default — it bills per
+// character — and enabled only with AI_TTS_ENABLED=true. Clients fall
+// back to the browser's built-in (free) speech voice when this fails.
 voice.post("/speech", validateSession, async (c) => {
   const body = await c.req.json().catch(() => ({}) as Record<string, unknown>);
   const text =
     typeof body.text === "string" ? body.text.slice(0, 3000).trim() : "";
   if (!text) {
     return c.json({ error: "text is required" }, 400);
+  }
+
+  // Free-only mode: gateway TTS bills per character, so it stays off
+  // unless explicitly enabled with AI_TTS_ENABLED=true. Clients fall
+  // back to the browser's built-in (free) speech voice.
+  if (c.env.AI_TTS_ENABLED !== "true") {
+    return c.json({ error: "TTS is disabled" }, 403);
   }
   if (!c.env.AI_GATEWAY_API_KEY) {
     return c.json({ error: "TTS unavailable" }, 503);

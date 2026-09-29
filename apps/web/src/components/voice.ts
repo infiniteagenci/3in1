@@ -1,6 +1,6 @@
-// Browser speech helpers for talking with Spirit — uses the built-in
-// Web Speech APIs (SpeechRecognition + speechSynthesis), so there are
-// no API keys, no worker changes and nothing extra to pay for.
+// Browser speech helpers for talking with Spirit — free Web Speech APIs
+// (SpeechRecognition + speechSynthesis), plus an optional neural TTS
+// through the worker that is currently disabled (free-only mode).
 
 type AnyRecognition = any;
 
@@ -64,6 +64,20 @@ function speakableText(text: string): string {
 
 let currentUtterance: SpeechSynthesisUtterance | null = null;
 let currentAudio: HTMLAudioElement | null = null;
+// Set when the server's neural voice is unavailable (e.g. free mode) so
+// we stop requesting it every reply and go straight to the free voice.
+let serverTtsDisabled = false;
+
+// Names that suggest a female voice, used to pick the best free voice
+const FEMALE_HINTS = [
+  'samantha', 'female', 'woman', 'karen', 'moira', 'tessa', 'veena', 'fiona',
+  'zira', 'aria', 'jenny', 'susan', 'catherine', 'serena', 'shelley', 'yuna',
+  'paulina', 'helena', 'amelie', 'google uk english female', 'sonia', 'ava',
+];
+
+function preferFemale(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | undefined {
+  return voices.find((v) => FEMALE_HINTS.some((h) => v.name.toLowerCase().includes(h)));
+}
 
 // Stop any neural-audio playback (server TTS)
 function stopAudio(): void {
@@ -88,46 +102,60 @@ export async function speak(text: string, appLanguage?: string, onEnd?: () => vo
   const clean = speakableText(text);
   if (!clean) return false;
 
-  // 1. Neural voice through the worker — sounds human, not robotic
-  try {
-    const token = localStorage.getItem('session_token');
-    const base = (window as any).PUBLIC_BASE_API_URL || 'https://3in1-worker.ailabs-hq.workers.dev';
-    const res = await fetch(`${base}/api/voice/speech`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-      body: JSON.stringify({ text: clean }),
-    });
-    if (res.ok && res.headers.get('content-type')?.includes('audio')) {
-      const blob = await res.blob();
-      const audio = new Audio();
-      audio.src = URL.createObjectURL(blob);
-      currentAudio = audio;
-      audio.onended = () => {
-        if (currentAudio === audio) {
-          currentAudio = null;
-          URL.revokeObjectURL(audio.src);
-          onEnd?.();
-        }
-      };
-      await audio.play();
-      return true;
+  // 1. Neural voice through the worker — sounds human, not robotic.
+  // Skipped when we know it's disabled (free mode).
+  if (!serverTtsDisabled) {
+    try {
+      const token = localStorage.getItem('session_token');
+      const base = (window as any).PUBLIC_BASE_API_URL || 'https://3in1-worker.ailabs-hq.workers.dev';
+      const res = await fetch(`${base}/api/voice/speech`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ text: clean }),
+      });
+      if (!res.ok) {
+        // Free mode / gateway down — remember and use the free voice
+        serverTtsDisabled = true;
+      } else if (res.headers.get('content-type')?.includes('audio')) {
+        const blob = await res.blob();
+        const audio = new Audio();
+        audio.src = URL.createObjectURL(blob);
+        currentAudio = audio;
+        audio.onended = () => {
+          if (currentAudio === audio) {
+            currentAudio = null;
+            URL.revokeObjectURL(audio.src);
+            onEnd?.();
+          }
+        };
+        await audio.play();
+        return true;
+      }
+    } catch {
+      serverTtsDisabled = true; // network error — stop asking every reply
     }
-  } catch {
-    // fall through to the browser voice
   }
 
-  // 2. Fallback: the browser's built-in speechSynthesis voice
+  // 2. Free voice: the browser's built-in speechSynthesis.
+  // Prefer a comfortable female voice with a matching language.
   try {
     const utterance = new SpeechSynthesisUtterance(clean);
     utterance.lang = langTag(appLanguage);
-    // Prefer a voice matching the language; fall back to the default voice
     const voices = window.speechSynthesis.getVoices();
-    const voice = voices.find((v) => v.lang.toLowerCase().replace('_', '-') === utterance.lang.toLowerCase())
-      || voices.find((v) => v.lang.toLowerCase().startsWith(appLanguage || 'en'));
+    const matching = voices.filter((v) =>
+      v.lang.toLowerCase().replace('_', '-').startsWith(utterance.lang.toLowerCase().split('-')[0].slice(0, 2))
+      || v.lang.toLowerCase().replace('_', '-') === utterance.lang.toLowerCase(),
+    );
+    const voice = preferFemale(matching)
+      || preferFemale(voices)
+      || matching[0]
+      || voices.find((v) => v.lang.toLowerCase().startsWith(appLanguage || 'en'))
+      || voices[0];
     if (voice) utterance.voice = voice;
+    utterance.pitch = 1.05; // a touch brighter for a gentler, warmer feel
     utterance.rate = 0.95; // a touch slower feels calm and prayerful
     utterance.onend = () => {
       // Only report "finished" if this utterance is still the active one —
